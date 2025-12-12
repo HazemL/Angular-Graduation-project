@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CraftsmanRegistrationService } from '../../../services/craftsman-registration.service';
-import { RegistrationStep } from '../../../models/craftsman-registration.model';
+import { RegistrationStep } from '../../../../model/craftsman-registration.model';
 
 @Component({
     selector: 'app-basic-info',

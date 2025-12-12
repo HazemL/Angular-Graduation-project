@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReportsService } from '../../../services/reports.service';
-import { ContactMethod, ReportedCraftsman, ReportTip, ReportType } from '../../../models/report.model';
+import { ContactMethod, ReportedCraftsman, ReportTip, ReportType } from '../../../../model/report.model';
 
 @Component({
     selector: 'app-report-form',

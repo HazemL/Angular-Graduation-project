@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CraftsmenSearchService } from '../../../services/craftsmen-search.service';
-import { BreadcrumbItem, Craftsman, SearchFilters } from '../../../models/craftsman.model';
+import { BreadcrumbItem, Craftsman, SearchFilters } from '../../../../model/craftsman.model';
 
 @Component({
     selector: 'app-search-results',
