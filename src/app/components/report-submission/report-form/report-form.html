@@ -1,0 +1,253 @@
+<div class="min-vh-100 d-flex flex-column">
+    <!-- Header -->
+    <header class="sticky-top bg-white bg-opacity-75 backdrop-blur border-bottom py-3">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-primary-custom" style="width: 32px; height: 32px;">
+                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <g clip-path="url(#clip0_6_543)">
+                            <path
+                                d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z"
+                                fill="currentColor"></path>
+                        </g>
+                    </svg>
+                </div>
+                <h1 class="mb-0 fs-5 fw-bold text-dark">صنايعي مصر</h1>
+            </div>
+            <nav class="d-none d-lg-flex align-items-center gap-4" aria-label="التنقل الرئيسي">
+                <a class="text-dark text-decoration-none small fw-medium nav-link-custom" href="#">الرئيسية</a>
+                <a class="text-dark text-decoration-none small fw-medium nav-link-custom" href="#">الصنايعية</a>
+                <a class="text-dark text-decoration-none small fw-medium nav-link-custom" href="#">طلباتي</a>
+                <a class="text-dark text-decoration-none small fw-medium nav-link-custom" href="#">الرسائل</a>
+            </nav>
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-primary-custom rounded-3 px-3 py-2 fw-bold small">إنشاء
+                    طلب</button>
+                <button type="button" class="btn btn-light rounded-3 d-flex align-items-center justify-content-center"
+                    style="width: 40px; height: 40px;" aria-label="الإشعارات">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+                <div class="rounded-circle" [style.background-image]="'url(' + userImage + ')'"
+                    style="width: 40px; height: 40px; background-size: cover; background-position: center;" role="img"
+                    aria-label="صورة المستخدم"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow-1 py-4">
+        <div class="container" style="max-width: 1200px;">
+            <!-- Page Header -->
+            <div class="d-flex align-items-center gap-4 mb-4">
+                <div class="d-flex align-items-center justify-content-center rounded-3"
+                    style="width: 56px; height: 56px; background-color: rgba(31, 137, 229, 0.1);">
+                    <span class="material-symbols-outlined text-primary-custom fs-1"
+                        style="font-variation-settings: 'FILL' 1;">security</span>
+                </div>
+                <div>
+                    <h2 class="fs-2 fw-bold text-dark mb-1">تقديم بلاغ</h2>
+                    <p class="text-secondary mb-0">نحن نأخذ سلامتك على محمل الجد</p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Main Form -->
+                <div class="col-lg-8">
+                    <div class="form-card p-4 p-md-5">
+                        <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+                            <!-- Section 1: Report Info -->
+                            <div class="mb-4">
+                                <h3 class="fs-5 fw-bold text-dark border-bottom pb-3 mb-4">معلومات البلاغ</h3>
+                                <div
+                                    class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3 mb-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle"
+                                            [style.background-image]="'url(' + reportedCraftsman.profileImage + ')'"
+                                            style="width: 56px; height: 56px; background-size: cover; background-position: center;">
+                                        </div>
+                                        <div>
+                                            <p class="fw-medium text-dark mb-0">{{ reportedCraftsman.name }}</p>
+                                            <p class="small text-secondary mb-0">{{ reportedCraftsman.profession }}</p>
+                                        </div>
+                                    </div>
+                                    <span class="small text-secondary">الصنايعي المبلغ عنه</span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-medium" for="reportType">نوع البلاغ</label>
+                                    <select class="form-select py-3" id="reportType" formControlName="reportType"
+                                        [class.is-invalid]="reportForm.get('reportType')?.touched && reportForm.get('reportType')?.invalid">
+                                        @for (type of reportTypes; track type.value) {
+                                        <option [value]="type.value">{{ type.label }}</option>
+                                        }
+                                    </select>
+                                    @if (reportForm.get('reportType')?.touched && reportForm.get('reportType')?.invalid)
+                                    {
+                                    <div class="invalid-feedback">يرجى اختيار نوع البلاغ</div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Section 2: Report Details -->
+                            <div class="mb-4">
+                                <h3 class="fs-5 fw-bold text-dark border-bottom pb-3 mb-4">تفاصيل البلاغ</h3>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <label class="form-label fw-medium mb-0" for="description">وصف تفصيلي
+                                            للمشكلة</label>
+                                        <span class="small text-secondary">{{ descriptionLength() }}/1000</span>
+                                    </div>
+                                    <textarea class="form-control" id="description" rows="5"
+                                        placeholder="اشرح ما حدث بالتفصيل..." formControlName="description"
+                                        (input)="onDescriptionChange($event)"
+                                        [class.is-invalid]="reportForm.get('description')?.touched && reportForm.get('description')?.invalid"
+                                        aria-describedby="descriptionHelp"></textarea>
+                                    @if (reportForm.get('description')?.touched &&
+                                    reportForm.get('description')?.invalid) {
+                                    <div class="invalid-feedback">يرجى وصف المشكلة</div>
+                                    }
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-medium" for="incidentDate">تاريخ الحادثة</label>
+                                    <input type="date" class="form-control py-3" id="incidentDate"
+                                        formControlName="incidentDate"
+                                        [class.is-invalid]="reportForm.get('incidentDate')?.touched && reportForm.get('incidentDate')?.invalid">
+                                    @if (reportForm.get('incidentDate')?.touched &&
+                                    reportForm.get('incidentDate')?.invalid) {
+                                    <div class="invalid-feedback">يرجى تحديد تاريخ الحادثة</div>
+                                    }
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-medium">إرفاق صور أو مستندات (اختياري)</label>
+                                    <div class="upload-zone p-4 text-center" (drop)="onFileDrop($event)"
+                                        (dragover)="onDragOver($event)">
+                                        <span class="material-symbols-outlined text-secondary"
+                                            style="font-size: 48px;">upload_file</span>
+                                        <p class="text-secondary mb-1">اسحب وأفلت الملفات هنا</p>
+                                        <p class="small text-secondary mb-2">أو</p>
+                                        <label
+                                            class="btn btn-link text-primary-custom fw-bold text-decoration-none p-0 small"
+                                            for="fileInput" style="cursor: pointer;">اختر ملف</label>
+                                        <input type="file" id="fileInput" class="d-none" multiple accept="image/*,.pdf"
+                                            (change)="onFileSelect($event)">
+                                    </div>
+                                    @if (uploadedFiles().length > 0) {
+                                    <div class="mt-2">
+                                        @for (file of uploadedFiles(); track file.name; let i = $index) {
+                                        <div
+                                            class="d-flex align-items-center justify-content-between bg-light rounded p-2 mb-1">
+                                            <span class="small">{{ file.name }}</span>
+                                            <button type="button" class="btn btn-sm btn-link text-danger p-0"
+                                                (click)="removeFile(i)" aria-label="حذف الملف">
+                                                <span class="material-symbols-outlined"
+                                                    style="font-size: 18px;">close</span>
+                                            </button>
+                                        </div>
+                                        }
+                                    </div>
+                                    }
+                                    <p class="small text-secondary mt-1">يمكنك رفع 5 ملفات بحد أقصى.</p>
+                                </div>
+                            </div>
+
+                            <!-- Section 3: Contact Info -->
+                            <div class="mb-4">
+                                <h3 class="fs-5 fw-bold text-dark border-bottom pb-3 mb-4">معلومات التواصل</h3>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-sm-6">
+                                        <label class="form-label fw-medium" for="phone">رقم الهاتف</label>
+                                        <input type="tel" class="form-control py-3" id="phone" [value]="userPhone"
+                                            disabled>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label fw-medium" for="alternativeContact">وسيلة تواصل بديلة
+                                            (اختياري)</label>
+                                        <input type="text" class="form-control py-3" id="alternativeContact"
+                                            formControlName="alternativeContact">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="form-label fw-medium">طريقة التواصل المفضلة</label>
+                                    <div class="d-flex flex-wrap gap-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="phoneContact"
+                                                formControlName="phoneContact">
+                                            <label class="form-check-label" for="phoneContact">هاتف</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="emailContact"
+                                                formControlName="emailContact">
+                                            <label class="form-check-label" for="emailContact">بريد إلكتروني</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="whatsappContact"
+                                                formControlName="whatsappContact">
+                                            <label class="form-check-label" for="whatsappContact">واتساب</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notice -->
+                            <div class="alert alert-warning d-flex align-items-start gap-3 border-0 border-start border-4 border-warning"
+                                style="background-color: rgba(251, 191, 36, 0.1);" role="alert">
+                                <span class="material-symbols-outlined text-warning" aria-hidden="true">info</span>
+                                <p class="mb-0 small">سيتم مراجعة البلاغ خلال 24-48 ساعة. قد نحتاج للتواصل معك للمزيد من
+                                    التفاصيل.</p>
+                            </div>
+
+                            <!-- Privacy -->
+                            <div class="form-check my-4">
+                                <input class="form-check-input" type="checkbox" id="privacy"
+                                    formControlName="privacyAccepted"
+                                    [class.is-invalid]="reportForm.get('privacyAccepted')?.touched && reportForm.get('privacyAccepted')?.invalid">
+                                <label class="form-check-label small text-secondary" for="privacy">أوافق على معالجة
+                                    بياناتي لغرض معالجة هذا البلاغ. <a href="#"
+                                        class="text-primary-custom fw-medium">سياسة الخصوصية</a>.</label>
+                                @if (reportForm.get('privacyAccepted')?.touched &&
+                                reportForm.get('privacyAccepted')?.invalid) {
+                                <div class="invalid-feedback d-block">يجب الموافقة على سياسة الخصوصية</div>
+                                }
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-flex flex-column flex-sm-row gap-3 pt-4 border-top">
+                                <button type="submit" class="btn btn-primary-custom flex-grow-1 py-3 fw-bold"
+                                    [disabled]="isSubmitting()">
+                                    @if (isSubmitting()) {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true"></span>
+                                    }
+                                    إرسال البلاغ
+                                </button>
+                                <button type="button" class="btn btn-light py-3 fw-bold px-4"
+                                    (click)="cancel()">إلغاء</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4 d-none d-lg-block">
+                    <div class="position-sticky" style="top: 100px;">
+                        <div class="info-aside p-4 mb-4">
+                            <h3 class="fs-5 fw-bold text-dark mb-3">تحتاج مساعدة؟</h3>
+                            <p class="small text-secondary mb-3">فريق الدعم لدينا متاح لمساعدتك في أي وقت.</p>
+                            <a href="#" class="btn w-100 rounded-3 fw-bold mb-2 small btn-support">تواصل مع الدعم</a>
+                            <a href="#" class="btn btn-light w-100 rounded-3 fw-bold small">الأسئلة الشائعة</a>
+                        </div>
+                        <div class="info-aside p-4">
+                            <h3 class="fs-5 fw-bold text-dark mb-3">نصائح لتقديم بلاغ فعّال</h3>
+                            <ul class="list-unstyled mb-0">
+                                @for (tip of tips; track tip.text; let isLast = $last) {
+                                <li class="d-flex align-items-start gap-2" [class.mb-3]="!isLast">
+                                    <span class="material-symbols-outlined text-success">{{ tip.icon }}</span>
+                                    <span class="small text-secondary">{{ tip.text }}</span>
+                                </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

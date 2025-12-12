@@ -1,0 +1,262 @@
+<div class="min-vh-100 d-flex flex-column">
+    <!-- Header -->
+    <header class="sticky-top bg-white border-bottom py-3">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-primary-custom" style="width: 24px; height: 24px;">
+                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path
+                            d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"
+                            fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h1 class="mb-0 fs-5 fw-bold text-dark">صنايعي مصر</h1>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-primary-custom rounded-3 px-3 py-2 fw-bold small">تسجيل
+                    الدخول</button>
+                <button type="button" class="btn btn-light rounded-3 px-3 py-2 fw-bold small">English</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow-1 py-5">
+        <div class="container" style="max-width: 900px;">
+            <!-- Progress Steps -->
+            <nav class="d-flex align-items-center justify-content-between mb-5" aria-label="خطوات التسجيل">
+                @for (step of steps; track step.stepNumber; let isLast = $last) {
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="progress-step" [class.active]="step.isActive"
+                        [class.inactive]="!step.isActive && !step.isCompleted" [class.completed]="step.isCompleted"
+                        [attr.aria-current]="step.isActive ? 'step' : null">
+                        {{ step.stepNumber }}
+                    </div>
+                    <p class="mt-2 small fw-medium" [class.text-primary-custom]="step.isActive"
+                        [class.text-secondary]="!step.isActive">
+                        {{ step.label }}
+                    </p>
+                </div>
+                @if (!isLast) {
+                <div class="progress-line mx-2" aria-hidden="true"></div>
+                }
+                }
+            </nav>
+
+            <!-- Form Card -->
+            <div class="form-card p-4 p-md-5 mx-auto" style="max-width: 600px;">
+                <div class="text-center mb-4">
+                    <h2 class="fs-3 fw-bold text-dark">إنشاء حساب جديد</h2>
+                    <p class="text-secondary">الخطوة 1 من 4: المعلومات الأساسية</p>
+                </div>
+
+                <form [formGroup]="basicInfoForm" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-4">
+                    <!-- Profile Photo -->
+                    <div class="d-flex flex-column align-items-center gap-3 mb-2">
+                        <div class="photo-upload">
+                            @if (profilePhotoUrl()) {
+                            <img [src]="profilePhotoUrl()" alt="صورة الملف الشخصي"
+                                class="w-100 h-100 rounded-circle object-fit-cover">
+                            } @else {
+                            <div
+                                class="w-100 h-100 rounded-circle bg-secondary d-flex align-items-center justify-content-center">
+                                <span class="material-symbols-outlined text-white"
+                                    style="font-size: 40px;">person</span>
+                            </div>
+                            }
+                            <label class="photo-upload-btn" for="photoInput" role="button" tabindex="0">
+                                <span class="material-symbols-outlined" style="font-size: 16px;"
+                                    aria-hidden="true">photo_camera</span>
+                                <span class="visually-hidden">تحميل صورة شخصية</span>
+                            </label>
+                            <input type="file" id="photoInput" class="d-none" accept="image/*"
+                                (change)="onPhotoUpload($event)">
+                        </div>
+                        <label for="photoInput"
+                            class="btn btn-link text-primary-custom fw-semibold text-decoration-none p-0 small"
+                            style="cursor: pointer;">
+                            تحميل صورة شخصية
+                        </label>
+                    </div>
+
+                    <!-- Full Name -->
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="fullName" formControlName="fullName"
+                            placeholder="الاسم الكامل"
+                            [class.is-invalid]="basicInfoForm.get('fullName')?.touched && basicInfoForm.get('fullName')?.invalid"
+                            aria-describedby="fullNameError">
+                        <label for="fullName">الاسم الكامل</label>
+                        @if (basicInfoForm.get('fullName')?.touched && basicInfoForm.get('fullName')?.invalid) {
+                        <div id="fullNameError" class="invalid-feedback">
+                            @if (basicInfoForm.get('fullName')?.hasError('required')) {
+                            الاسم الكامل مطلوب
+                            } @else if (basicInfoForm.get('fullName')?.hasError('minlength')) {
+                            يجب أن يكون الاسم 3 أحرف على الأقل
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Email -->
+                    <div class="position-relative">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email" formControlName="email"
+                                placeholder="البريد الإلكتروني"
+                                [class.is-invalid]="basicInfoForm.get('email')?.touched && basicInfoForm.get('email')?.invalid"
+                                [class.is-valid]="basicInfoForm.get('email')?.touched && basicInfoForm.get('email')?.valid"
+                                aria-describedby="emailError">
+                            <label for="email">البريد الإلكتروني</label>
+                        </div>
+                        @if (basicInfoForm.get('email')?.touched && basicInfoForm.get('email')?.valid) {
+                        <span class="material-symbols-outlined text-success position-absolute"
+                            style="left: 16px; top: 50%; transform: translateY(-50%);"
+                            aria-hidden="true">check_circle</span>
+                        }
+                        @if (basicInfoForm.get('email')?.touched && basicInfoForm.get('email')?.invalid) {
+                        <div id="emailError" class="invalid-feedback d-block">
+                            @if (basicInfoForm.get('email')?.hasError('required')) {
+                            البريد الإلكتروني مطلوب
+                            } @else if (basicInfoForm.get('email')?.hasError('email')) {
+                            يرجى إدخال بريد إلكتروني صحيح
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="position-relative">
+                        <div class="form-floating">
+                            <input type="tel" class="form-control" id="phone" formControlName="phone"
+                                placeholder="رقم الهاتف" style="padding-right: 90px;"
+                                [class.is-invalid]="basicInfoForm.get('phone')?.touched && basicInfoForm.get('phone')?.invalid"
+                                aria-describedby="phoneError">
+                            <label for="phone" style="right: 90px;">رقم الهاتف</label>
+                        </div>
+                        <div class="position-absolute d-flex align-items-center gap-2"
+                            style="right: 16px; top: 50%; transform: translateY(-50%);">
+                            <span class="text-secondary">+20</span>
+                        </div>
+                        @if (basicInfoForm.get('phone')?.touched && basicInfoForm.get('phone')?.invalid) {
+                        <div id="phoneError" class="invalid-feedback d-block">
+                            @if (basicInfoForm.get('phone')?.hasError('required')) {
+                            رقم الهاتف مطلوب
+                            } @else if (basicInfoForm.get('phone')?.hasError('pattern')) {
+                            يرجى إدخال رقم هاتف مصري صحيح
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <!-- National ID -->
+                    <div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="nationalId" formControlName="nationalId"
+                                placeholder="الرقم القومي" maxlength="14"
+                                [class.is-invalid]="basicInfoForm.get('nationalId')?.touched && basicInfoForm.get('nationalId')?.invalid"
+                                aria-describedby="nationalIdHelp nationalIdError">
+                            <label for="nationalId">الرقم القومي</label>
+                        </div>
+                        <p id="nationalIdHelp" class="small text-secondary mt-1 pe-2">يجب أن يتكون من 14 رقمًا.</p>
+                        @if (basicInfoForm.get('nationalId')?.touched && basicInfoForm.get('nationalId')?.invalid) {
+                        <div id="nationalIdError" class="text-danger small">
+                            @if (basicInfoForm.get('nationalId')?.hasError('required')) {
+                            الرقم القومي مطلوب
+                            } @else if (basicInfoForm.get('nationalId')?.hasError('minlength') ||
+                            basicInfoForm.get('nationalId')?.hasError('maxlength') ||
+                            basicInfoForm.get('nationalId')?.hasError('pattern')) {
+                            يجب أن يتكون الرقم القومي من 14 رقمًا
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Password -->
+                    <div class="position-relative">
+                        <div class="form-floating">
+                            <input [type]="showPassword() ? 'text' : 'password'" class="form-control" id="password"
+                                formControlName="password" placeholder="كلمة المرور"
+                                [class.is-invalid]="basicInfoForm.get('password')?.touched && basicInfoForm.get('password')?.invalid"
+                                aria-describedby="passwordError">
+                            <label for="password">كلمة المرور</label>
+                        </div>
+                        <button type="button" class="btn btn-link text-secondary position-absolute p-0"
+                            style="left: 16px; top: 50%; transform: translateY(-50%);"
+                            (click)="togglePasswordVisibility()"
+                            [attr.aria-label]="showPassword() ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'">
+                            <span class="material-symbols-outlined">{{ showPassword() ? 'visibility_off' : 'visibility'
+                                }}</span>
+                        </button>
+                        @if (basicInfoForm.get('password')?.touched && basicInfoForm.get('password')?.invalid) {
+                        <div id="passwordError" class="invalid-feedback d-block">
+                            @if (basicInfoForm.get('password')?.hasError('required')) {
+                            كلمة المرور مطلوبة
+                            } @else if (basicInfoForm.get('password')?.hasError('minlength')) {
+                            يجب أن تكون كلمة المرور 8 أحرف على الأقل
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="position-relative">
+                        <div class="form-floating">
+                            <input [type]="showConfirmPassword() ? 'text' : 'password'" class="form-control"
+                                id="confirmPassword" formControlName="confirmPassword" placeholder="تأكيد كلمة المرور"
+                                [class.is-invalid]="basicInfoForm.get('confirmPassword')?.touched && (!passwordsMatch() || basicInfoForm.get('confirmPassword')?.invalid)"
+                                [class.is-valid]="basicInfoForm.get('confirmPassword')?.touched && passwordsMatch() && basicInfoForm.get('confirmPassword')?.valid"
+                                aria-describedby="confirmPasswordError">
+                            <label for="confirmPassword"
+                                [class.text-danger]="basicInfoForm.get('confirmPassword')?.touched && !passwordsMatch()">تأكيد
+                                كلمة المرور</label>
+                        </div>
+                        @if (basicInfoForm.get('confirmPassword')?.touched && passwordsMatch() &&
+                        basicInfoForm.get('confirmPassword')?.valid) {
+                        <span class="material-symbols-outlined text-success position-absolute"
+                            style="left: 16px; top: 50%; transform: translateY(-50%);"
+                            aria-hidden="true">check_circle</span>
+                        }
+                        @if (basicInfoForm.get('confirmPassword')?.touched && !passwordsMatch()) {
+                        <span class="material-symbols-outlined text-danger position-absolute"
+                            style="left: 16px; top: 50%; transform: translateY(-50%);" aria-hidden="true">cancel</span>
+                        <div id="confirmPasswordError" class="text-danger small mt-1">كلمتا المرور غير متطابقتين</div>
+                        }
+                        @if (basicInfoForm.get('confirmPassword')?.touched &&
+                        basicInfoForm.get('confirmPassword')?.hasError('required')) {
+                        <div id="confirmPasswordError" class="invalid-feedback d-block">تأكيد كلمة المرور مطلوب</div>
+                        }
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="terms" formControlName="termsAccepted"
+                            [class.is-invalid]="basicInfoForm.get('termsAccepted')?.touched && basicInfoForm.get('termsAccepted')?.invalid">
+                        <label class="form-check-label small" for="terms">
+                            أوافق على <a href="#" class="text-primary-custom fw-medium">الشروط والأحكام</a>
+                        </label>
+                        @if (basicInfoForm.get('termsAccepted')?.touched && basicInfoForm.get('termsAccepted')?.invalid)
+                        {
+                        <div class="invalid-feedback d-block">يجب الموافقة على الشروط والأحكام</div>
+                        }
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="btn btn-primary-custom py-3 fs-5 fw-bold rounded-3"
+                        [disabled]="isSubmitting()">
+                        @if (isSubmitting()) {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        جاري التحميل...
+                        } @else {
+                        التالي
+                        }
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="text-secondary small">
+                        لديك حساب بالفعل؟
+                        <a href="#" class="text-primary-custom fw-medium text-decoration-none">تسجيل الدخول</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

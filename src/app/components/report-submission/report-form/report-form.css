@@ -1,0 +1,51 @@
+/* Form Card */
+.form-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+/* Upload Zone */
+.upload-zone {
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    background-color: var(--bg-light);
+    transition: border-color 0.2s;
+}
+
+.upload-zone:hover {
+    border-color: var(--primary);
+}
+
+/* Info Aside */
+.info-aside {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+/* Nav Link Custom */
+.nav-link-custom:hover {
+    color: var(--primary) !important;
+}
+
+/* Backdrop Blur */
+.backdrop-blur {
+    backdrop-filter: blur(8px);
+}
+
+/* Support Button */
+.btn-support {
+    background-color: rgba(31, 137, 229, 0.1);
+    color: var(--primary);
+}
+
+.btn-support:hover {
+    background-color: rgba(31, 137, 229, 0.2);
+    color: var(--primary);
+}
+
+/* Material symbols */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

@@ -1,0 +1,68 @@
+/* Filter Card */
+.filter-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Craftsman Card */
+.craftsman-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s;
+}
+
+.craftsman-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Profession Badge */
+.badge-profession {
+    background-color: rgba(31, 137, 229, 0.2);
+    color: var(--primary);
+}
+
+/* Premium Badge */
+.badge-premium {
+    background-color: #fbbf24;
+    color: #000;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 0 12px 0 8px;
+}
+
+/* Profile Button */
+.btn-profile {
+    background-color: rgba(31, 137, 229, 0.1);
+    color: var(--primary);
+    border: none;
+}
+
+.btn-profile:hover {
+    background-color: rgba(31, 137, 229, 0.2);
+    color: var(--primary);
+}
+
+/* Star rating buttons */
+.btn.text-warning,
+.btn.text-secondary {
+    font-size: 1.5rem;
+    line-height: 1;
+    background: transparent;
+}
+
+.btn.text-warning:hover,
+.btn.text-secondary:hover {
+    transform: scale(1.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .filter-card {
+        position: static !important;
+    }
+}
