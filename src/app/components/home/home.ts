@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GovernorateCitiesService } from '../../services/governorate-cities.service';
 import { CraftsmanServicesService,Service } from '../../services/craftsman-services.service';
-import { Testimonial } from '../../model/testimonial';
-import { WorkStep } from '../../model/work-step';
+import { Testimonial } from '../../../model/testimonial';
+import { WorkStep } from '../../../model/work-step';
 
 
 
