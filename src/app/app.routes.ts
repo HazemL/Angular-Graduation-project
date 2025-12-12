@@ -13,6 +13,28 @@ export const routes: Routes = [
   {path:'login',component:Login},
   {path:'register',component:Register},
   {path:'services',component:Services},
+  
+   {
+        path: 'register/craftsman',
+        loadChildren: () =>
+            import('./components/craftsman-registration/craftsman-registration.routes')
+                .then(m => m.craftsmanRegistrationRoutes)
+    },
+    {
+        path: 'search',
+        loadChildren: () =>
+            import('./components/craftsmen-search/craftsmen-search.routes')
+                .then(m => m.craftsmenSearchRoutes)
+    },
+   
+    {
+        path: 'report',
+        loadChildren: () =>
+            import('./components/report-submission/report-submission.routes')
+                .then(m => m.reportSubmissionRoutes)
+    },
+  
+  
   { path: '**', redirectTo: '' },
 
 ];
