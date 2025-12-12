@@ -1,0 +1,210 @@
+<div class="min-vh-100">
+    <main class="py-4">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Filters Sidebar -->
+                <aside class="col-lg-4 col-xl-3">
+                    <div class="filter-card p-4 sticky-top" style="top: 20px;">
+                        <h2 class="fs-5 fw-bold text-dark mb-4">الفلاتر</h2>
+                        <div class="d-flex flex-column gap-4">
+                            <!-- Profession Filter -->
+                            <div>
+                                <label class="form-label fw-medium" for="professionFilter">المهنة</label>
+                                <select class="form-select" id="professionFilter" [ngModel]="selectedProfession()"
+                                    (ngModelChange)="selectedProfession.set($event)">
+                                    @for (profession of professions; track profession.value) {
+                                    <option [value]="profession.value">{{ profession.label }}</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <!-- Governorate Filter -->
+                            <div>
+                                <label class="form-label fw-medium" for="governorateFilter">المحافظة</label>
+                                <select class="form-select" id="governorateFilter" [ngModel]="selectedGovernorate()"
+                                    (ngModelChange)="selectedGovernorate.set($event)">
+                                    @for (gov of governorates; track gov.value) {
+                                    <option [value]="gov.value">{{ gov.label }}</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <!-- City Filter -->
+                            <div>
+                                <label class="form-label fw-medium" for="cityFilter">المدينة</label>
+                                <select class="form-select" id="cityFilter" [ngModel]="selectedCity()"
+                                    (ngModelChange)="selectedCity.set($event)">
+                                    @for (city of cities; track city.value) {
+                                    <option [value]="city.value">{{ city.label }}</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <!-- Price Range -->
+                            <div>
+                                <label class="form-label fw-medium" for="priceRange">نطاق السعر</label>
+                                <input type="range" class="form-range" id="priceRange" min="100" max="1000"
+                                    [ngModel]="priceRange()" (ngModelChange)="priceRange.set($event)">
+                                <div class="d-flex justify-content-between small text-secondary">
+                                    <span>100 جنيه</span>
+                                    <span>{{ priceRange() }} جنيه</span>
+                                </div>
+                            </div>
+
+                            <!-- Verified Only -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="verifiedOnly"
+                                    [ngModel]="verifiedOnly()" (ngModelChange)="verifiedOnly.set($event)">
+                                <label class="form-check-label fw-medium" for="verifiedOnly">موثق فقط</label>
+                            </div>
+
+                            <!-- Rating Filter -->
+                            <div>
+                                <label class="form-label fw-medium">التقييم</label>
+                                <div class="d-flex gap-1 text-warning fs-4" role="group" aria-label="اختيار التقييم">
+                                    @for (star of [1, 2, 3, 4, 5]; track star) {
+                                    <button type="button" class="btn p-0 border-0"
+                                        [class.text-warning]="star <= selectedRating()"
+                                        [class.text-secondary]="star > selectedRating()"
+                                        (click)="selectedRating.set(star)" [attr.aria-label]="star + ' نجوم'">
+                                        ★
+                                    </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary-custom w-100 mt-4 py-2 fw-bold"
+                            (click)="applyFilters()" [disabled]="isLoading()">
+                            @if (isLoading()) {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            }
+                            تطبيق الفلاتر
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- Results -->
+                <div class="col-lg-8 col-xl-9">
+                    <!-- Breadcrumb & Title -->
+                    <div class="mb-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb small">
+                                @for (crumb of breadcrumbs; track crumb.label) {
+                                <li class="breadcrumb-item" [class.active]="crumb.isActive"
+                                    [attr.aria-current]="crumb.isActive ? 'page' : null">
+                                    @if (crumb.url && !crumb.isActive) {
+                                    <a [href]="crumb.url" class="text-secondary text-decoration-none">{{ crumb.label
+                                        }}</a>
+                                    } @else {
+                                    {{ crumb.label }}
+                                    }
+                                </li>
+                                }
+                            </ol>
+                        </nav>
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                            <h1 class="fs-3 fw-bold text-dark mb-0">وجدنا {{ totalCount() }} صنايعي</h1>
+                            <div class="d-flex gap-2" role="group" aria-label="ترتيب النتائج">
+                                <button type="button"
+                                    class="btn btn-light border rounded-3 d-flex align-items-center gap-2 small fw-medium"
+                                    [class.btn-primary-custom]="sortBy() === 'rating'" (click)="setSortBy('rating')">
+                                    <span>الأعلى تقييماً</span>
+                                    <span class="material-symbols-outlined text-secondary"
+                                        style="font-size: 20px;">keyboard_arrow_down</span>
+                                </button>
+                                <button type="button" class="btn btn-light border rounded-3 small fw-medium"
+                                    [class.btn-primary-custom]="sortBy() === 'newest'" (click)="setSortBy('newest')">
+                                    الأحدث
+                                </button>
+                                <button type="button" class="btn btn-light border rounded-3 small fw-medium"
+                                    [class.btn-primary-custom]="sortBy() === 'nearest'" (click)="setSortBy('nearest')">
+                                    الأقرب
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cards Grid -->
+                    <div class="row g-4">
+                        @for (craftsman of craftsmen(); track craftsman.id) {
+                        <div class="col-md-6">
+                            <article class="craftsman-card p-4 position-relative">
+                                @if (craftsman.isPremium) {
+                                <span class="badge-premium px-3 py-1 small fw-bold">عضوية مميزة</span>
+                                }
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <img [src]="craftsman.profileImage" [alt]="craftsman.name" class="rounded-circle"
+                                        style="width: 64px; height: 64px; object-fit: cover;">
+                                    <div>
+                                        <h3 class="fs-5 fw-bold text-dark mb-1">{{ craftsman.name }}</h3>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span
+                                                class="badge badge-profession rounded-pill px-2 py-1 small fw-medium">{{
+                                                craftsman.profession }}</span>
+                                            @if (craftsman.isVerified) {
+                                            <span class="d-flex align-items-center gap-1 small fw-medium text-success">
+                                                <span class="material-symbols-outlined"
+                                                    style="font-size: 16px; font-variation-settings: 'FILL' 1;">verified</span>
+                                                موثق
+                                            </span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-3 small text-secondary mb-3">
+                                    <span class="d-flex align-items-center gap-1">
+                                        <span class="text-warning">★</span>
+                                        <strong class="text-dark">{{ craftsman.rating }}</strong>
+                                        ({{ craftsman.reviewCount }} تقييم)
+                                    </span>
+                                    <span class="border-start ps-3">{{ craftsman.yearsOfExperience }} سنوات خبرة</span>
+                                </div>
+                                <div class="border-top pt-3 small">
+                                    <p class="mb-1"><strong>نطاق السعر:</strong> {{ craftsman.priceRangeMin }} - {{
+                                        craftsman.priceRangeMax }} جنيه</p>
+                                    <p class="mb-0"><strong>مناطق الخدمة:</strong> {{ craftsman.serviceAreas.join('، ')
+                                        }}</p>
+                                </div>
+                                <button type="button" class="btn btn-profile w-100 mt-3 py-2 fw-bold"
+                                    (click)="viewProfile(craftsman)">
+                                    عرض الملف الشخصي
+                                </button>
+                            </article>
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav class="d-flex justify-content-center mt-5 pt-4 border-top" aria-label="صفحات النتائج">
+                        <ul class="pagination">
+                            <li class="page-item" [class.disabled]="currentPage() === 1">
+                                <button type="button" class="page-link" (click)="previousPage()"
+                                    [attr.aria-label]="'الصفحة السابقة'" [disabled]="currentPage() === 1">
+                                    <span class="material-symbols-outlined"
+                                        style="font-size: 20px;">chevron_right</span>
+                                </button>
+                            </li>
+                            @for (page of paginationPages(); track $index) {
+                            <li class="page-item" [class.active]="page === currentPage()"
+                                [class.disabled]="page === '...'">
+                                <button type="button" class="page-link"
+                                    [class.bg-primary-custom]="page === currentPage()"
+                                    [class.border-0]="page === currentPage()" (click)="goToPage(page)"
+                                    [attr.aria-current]="page === currentPage() ? 'page' : null">
+                                    {{ page }}
+                                </button>
+                            </li>
+                            }
+                            <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+                                <button type="button" class="page-link" (click)="nextPage()"
+                                    [attr.aria-label]="'الصفحة التالية'" [disabled]="currentPage() === totalPages()">
+                                    <span class="material-symbols-outlined" style="font-size: 20px;">chevron_left</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

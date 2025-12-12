@@ -1,0 +1,33 @@
+/* Component-specific styles for Basic Info */
+
+/* Ensure proper RTL spacing for phone input */
+#phone {
+    padding-right: 90px !important;
+}
+
+/* Form card responsive adjustments */
+@media (max-width: 576px) {
+    .form-card {
+        margin: 0 -12px;
+        border-radius: 0;
+    }
+
+    .progress-step {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+}
+
+/* Photo upload hover effect */
+.photo-upload:hover .photo-upload-btn {
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Password visibility button focus state */
+.btn-link:focus {
+    box-shadow: none;
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
