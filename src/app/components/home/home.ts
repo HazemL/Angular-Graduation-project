@@ -6,13 +6,20 @@ import { GovernorateCitiesService } from '../../services/governorate-cities.serv
 import { CraftsmanServicesService,Service } from '../../services/craftsman-services.service';
 import { Testimonial } from '../../../model/testimonial';
 import { WorkStep } from '../../../model/work-step';
+<<<<<<< HEAD
 import { RouterLink } from '@angular/router';
+=======
+>>>>>>> 7e1f683aff7da544e1f1cf5f92fd37aa01125cfb
 
 
 
 @Component({
   selector: 'app-home',
+<<<<<<< HEAD
   imports: [CommonModule, FormsModule,RouterLink],
+=======
+  imports: [CommonModule, FormsModule],
+>>>>>>> 7e1f683aff7da544e1f1cf5f92fd37aa01125cfb
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
