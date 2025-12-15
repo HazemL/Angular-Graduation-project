@@ -1,14 +1,12 @@
-<<<<<<< HEAD
 @if (showMainNavbar()) {
 <app-navbar></app-navbar>
 }
-=======
-<app-navbar></app-navbar>
->>>>>>> 7e1f683aff7da544e1f1cf5f92fd37aa01125cfb
 <div class="min-h-screen flex flex-col">
   <router-outlet></router-outlet>
 </div>
+@if (showFooter()) {
 <app-footer></app-footer>
+}
 
 <!-- <h2>second page</h2>
 <app-basic-info></app-basic-info>

@@ -1,0 +1,35 @@
+ body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f6f7f8;
+    }
+
+    .bg-primary-custom {
+      background-color: #1f89e5;
+    }
+
+    .text-primary-custom {
+      color: #1f89e5;
+    }
+
+    .profile-img {
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .icon-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #e9f2fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sticky-sidebar {
+      position: sticky;
+      top: 20px;
+    }

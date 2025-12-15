@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Craftsman Profile Page</title>
+
+  <!-- Bootstrap 5 RTL -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+ 
+</head>
+<body>
+
+<main class="container my-4">
+  <div class="row g-4">
+
+    <!-- Sidebar -->
+    <aside class="col-lg-4">
+      <div class="card shadow-sm sticky-sidebar">
+        <div class="card-body">
+          <h5 class="fw-bold mb-3">احجز هذا الصنايعي</h5>
+
+          <form class="d-grid gap-3">
+            <div>
+              <label class="form-label">نوع الخدمة</label>
+              <select class="form-select">
+                <option>تركيب كهرباء</option>
+                <option>صيانة أجهزة</option>
+                <option>تأسيس شقة</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label">التاريخ المفضل</label>
+              <input type="date" class="form-control">
+            </div>
+
+            <div>
+              <label class="form-label">رسالة</label>
+              <textarea class="form-control" rows="3"></textarea>
+            </div>
+
+            <button class="btn btn-primary bg-primary-custom border-0 py-2">
+              أرسل طلب الحجز
+            </button>
+          </form>
+
+          <hr>
+
+          <button class="btn btn-link w-100 text-decoration-none text-secondary">
+            <span class="material-symbols-outlined">share</span>
+            مشاركة الملف الشخصي
+          </button>
+
+          <button class="btn btn-link w-100 text-danger text-decoration-none">
+            <span class="material-symbols-outlined">flag</span>
+            تبليغ عن مشكلة
+          </button>
+        </div>
+      </div>
+    </aside>
+    <section class="col-lg-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+          <div class="d-flex flex-wrap gap-4 align-items-center">
+            <div class="profile-img"
+                 style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1JfUfrWNpiLzfpha6CXFdHFuyLw09wzsjKZMxJ2G-OiQkFLytE2oIp4rQb3l1iaelY5k8GVeS_pwN8NXenjGKTRTRvQFWzQiNVCw1oWMHTKc8EOS3-Czrpa6XLRthSsxaS8hBoPn5ZaIDebOo8hzz_UVlY3RAjfQKTKTjWHKVa8cg1BUpFy3YGKI1OQ4BsFm5o6kRjO-WMf6gvosaPOr14z-l4ZU8e6dRCmuWA14StkhOmk0hgHL0ToA6zcSiO0VaHjGAt4SuHOmC');">
+            </div>
+
+            <div class="flex-grow-1">
+              <h4 class="fw-bold">كريم محمد - كهربائي محترف</h4>
+
+              <div class="d-flex gap-3 text-muted small">
+                <span class="text-success">✔ حساب موثق</span>
+                <span class="text-warning">⭐ عضو مميز</span>
+              </div>
+
+              <div class="d-flex gap-4 mt-3">
+                <div>
+                  <strong>4.8</strong> ⭐
+                </div>
+                <div>
+                  <strong>150</strong> عملية ناجحة
+                </div>
+                <div>
+                  <strong>8</strong> سنوات خبرة
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 flex-wrap">
+              <button class="btn btn-primary bg-primary-custom border-0">أرسل رسالة</button>
+              <button class="btn btn-light">اتصل الآن</button>
+              <button class="btn btn-success">واتساب</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tab" href="#about">نبذة عني</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="tab" href="#gallery">معرض الأعمال</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="tab" href="#skills">المهارات</a>
+        </li>
+      </ul>
+
+      <div class="tab-content card shadow-sm">
+        <div class="tab-pane fade show active p-4" id="about">
+          <h5 class="fw-bold mb-2">عن كريم محمد</h5>
+          <p class="text-muted">
+            كهربائي محترف بخبرة أكثر من 8 سنوات في تأسيس وصيانة الأنظمة الكهربائية
+            مع الالتزام بالجودة والدقة في العمل.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

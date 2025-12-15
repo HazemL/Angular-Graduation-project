@@ -1,0 +1,52 @@
+body {
+  background: #f6f7f8;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  background: #fff;
+  border-left: 1px solid #dee2e6;
+  z-index: 1000;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: #333;
+  border-radius: .5rem;
+}
+
+.sidebar a:hover {
+  background: #f1f1f1;
+}
+
+.sidebar .active {
+  background: rgba(31,137,229,.15);
+  color: #1f89e5;
+}
+
+/* Content */
+.main-content {
+  margin-right: 240px;
+}
+
+/* Cards */
+.stat-card {
+  border: 1px solid #dee2e6;
+  border-radius: .75rem;
+  background: #fff;
+}
+
+/* Avatar */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+}
