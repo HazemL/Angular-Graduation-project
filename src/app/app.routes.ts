@@ -33,6 +33,18 @@ export const routes: Routes = [
             import('./components/report-submission/report-submission.routes')
                 .then(m => m.reportSubmissionRoutes)
     },
+    {
+        path: 'reviews',
+        loadChildren: () =>
+            import('./components/reviews-management/reviews-management.routes')
+                .then(m => m.reviewsManagementRoutes)
+    },
+       {
+        path: 'pricing',
+        loadChildren: () =>
+            import('./components/subscription-plans/subscription-plans.routes')
+                .then(m => m.subscriptionPlansRoutes)
+    },
   
   
   // { path: '**', redirectTo: '' },

@@ -1,0 +1,122 @@
+/* Pricing Card */
+.pricing-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-card.featured {
+    border: 2px solid var(--primary);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    transform: scale(1.03);
+    z-index: 10;
+    position: relative;
+}
+
+@media (max-width: 992px) {
+    .pricing-card.featured {
+        transform: none;
+    }
+}
+
+/* Popular Badge */
+.popular-badge {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--primary);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Billing Toggle */
+.billing-toggle {
+    background-color: rgba(100, 116, 139, 0.2);
+    border-radius: 12px;
+    padding: 6px;
+}
+
+.billing-toggle button {
+    padding: 8px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+}
+
+/* Save Badge */
+.save-badge {
+    position: absolute;
+    top: -8px;
+    right: -40px;
+    background-color: rgba(31, 137, 229, 0.8);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 32px;
+    transform: rotate(45deg);
+}
+
+/* FAQ Item */
+.faq-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+}
+
+.faq-item summary {
+    cursor: pointer;
+    list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Feature Icon */
+.feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+/* Custom Background Classes */
+.bg-primary-light {
+    background-color: rgba(31, 137, 229, 0.1);
+}
+
+.bg-warning-light {
+    background-color: rgba(251, 191, 36, 0.1);
+}
+
+/* Button Variants */
+.btn-dark-custom {
+    background-color: #1e293b;
+    border-color: #1e293b;
+    color: white;
+}
+
+.btn-dark-custom:hover {
+    background-color: #334155;
+    border-color: #334155;
+    color: white;
+}
+
+/* Backdrop Blur */
+.backdrop-blur {
+    backdrop-filter: blur(8px);
+}
+
+/* Nav Link Custom */
+.nav-link-custom:hover {
+    color: var(--primary) !important;
+}
