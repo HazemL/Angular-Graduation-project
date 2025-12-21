@@ -72,6 +72,11 @@ export const routes: Routes = [
     loadComponent: () => import('./components/ac-technician-list/ac-technician-list').then(m => m.AcTechnicianList),
     title: 'فني تكييف - شحن وصيانة'
   },
+    {
+    path: 'painter',
+    loadComponent: () => import('./components/painter-list/painter-list').then(m => m.PainterList),
+    title: 'نقاش - دهانات وتشطيبات'
+  },
   // { path: '**', redirectTo: '' },
 
 ];
