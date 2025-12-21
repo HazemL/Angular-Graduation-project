@@ -62,7 +62,11 @@ export const routes: Routes = [
             import('./components/subscription-plans/subscription-plans.routes')
                 .then(m => m.subscriptionPlansRoutes)
     },
-  
+  {
+    path: 'carpenter',
+    loadComponent: () => import('./components/carpenter-list/carpenter-list').then(m => m.CarpenterList),
+    title: 'نجار - تصنيع وتركيب'
+  },
   
   // { path: '**', redirectTo: '' },
 
