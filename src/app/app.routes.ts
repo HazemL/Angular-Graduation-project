@@ -77,6 +77,11 @@ export const routes: Routes = [
     loadComponent: () => import('./components/painter-list/painter-list').then(m => m.PainterList),
     title: 'نقاش - دهانات وتشطيبات'
   },
+  {
+    path: 'aluminum-technician',
+    loadComponent: () => import('./components/aluminum-technician-list/aluminum-technician-list').then(m => m.AluminumTechnicianList),
+    title: 'فني ألوميتال - مطابخ وشبابيك'
+  },
   // { path: '**', redirectTo: '' },
 
 ];
