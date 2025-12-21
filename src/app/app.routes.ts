@@ -7,6 +7,7 @@ import { Services } from './components/services/services';
 import { Dashboard } from './components/dashboard/dashboard';
 import { CraftsmanDashboard } from './components/craftsman-dashboard/craftsman-dashboard';
 import { CraftsmanProfile } from './components/craftsman-profile/craftsman-profile';
+import { PlumberList } from './components/plumber-list/plumber-list';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -39,6 +40,11 @@ export const routes: Routes = [
             import('./components/report-submission/report-submission.routes')
                 .then(m => m.reportSubmissionRoutes)
     },
+    {
+    path: 'plumber',
+    loadComponent: () => import('./components/plumber-list/plumber-list').then(m => m.PlumberList),
+    title: 'سباك - إصلاح وتركيب'
+  },
     {
         path: 'reviews',
         loadChildren: () =>

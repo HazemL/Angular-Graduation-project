@@ -1,0 +1,168 @@
+<div class="container py-5" dir="rtl">
+  <!-- Header -->
+  <div class="text-center mb-5">
+    <h1 class="display-4 fw-bold text-primary mb-3">سباك - إصلاح وتركيب</h1>
+    <p class="lead text-muted">اختر أفضل سباك محترف لخدماتك</p>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 400px;" role="status">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">جاري التحميل...</span>
+      </div>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error()) {
+    <div class="alert alert-danger text-center" role="alert">
+      <p class="mb-3">{{ error() }}</p>
+      <button type="button" class="btn btn-primary" (click)="loadPlumbers()">
+        إعادة المحاولة
+      </button>
+    </div>
+  }
+
+  <!-- Content -->
+  @if (!loading() && !error()) {
+    <!-- Search -->
+    <div class="row mb-4">
+      <div class="col-12 col-md-8 col-lg-6 mx-auto">
+        <input
+          type="search"
+          class="form-control form-control-lg"
+          placeholder="ابحث عن سباك..."
+          [value]="searchQuery()"
+          (input)="onSearch($event)"
+          aria-label="البحث عن سباك"
+        />
+      </div>
+    </div>
+
+    <!-- Plumbers Grid -->
+    <div class="row g-4">
+      @for (plumber of filteredPlumbers(); track plumber.id) {
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm">
+            <!-- Card Image/Header -->
+            <div class="position-relative" style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              @if (plumber.imageUrl) {
+                <img 
+                  [src]="plumber.imageUrl" 
+                  [alt]="plumber.name"
+                  class="card-img-top h-100 w-100"
+                  style="object-fit: cover;"
+                  loading="lazy"
+                />
+              } @else {
+                <div class="d-flex align-items-center justify-content-center h-100 text-white">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
+                  </svg>
+                </div>
+              }
+              
+              <!-- Availability Badge -->
+              @if (plumber.availability) {
+                <span class="badge bg-success position-absolute top-0 start-0 m-3">متاح</span>
+              } @else {
+                <span class="badge bg-secondary position-absolute top-0 start-0 m-3">غير متاح</span>
+              }
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+              <h5 class="card-title fw-bold mb-3">{{ plumber.name }}</h5>
+              
+              <div class="mb-3">
+                <!-- Email -->
+                <div class="d-flex align-items-start mb-2 small">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-primary ms-2 flex-shrink-0" aria-hidden="true">
+                    <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="currentColor"/>
+                  </svg>
+                  <span class="text-break">{{ plumber.email }}</span>
+                </div>
+
+                <!-- Phone -->
+                <div class="d-flex align-items-center mb-2 small">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-primary ms-2 flex-shrink-0" aria-hidden="true">
+                    <path d="M6.62 10.79C8.06 13.62 10.38 15.94 13.21 17.38L15.41 15.18C15.69 14.9 16.08 14.82 16.43 14.93C17.55 15.3 18.75 15.5 20 15.5C20.55 15.5 21 15.95 21 16.5V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z" fill="currentColor"/>
+                  </svg>
+                  <span>{{ plumber.phone }}</span>
+                </div>
+
+                <!-- Address -->
+                <div class="d-flex align-items-start mb-2 small">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-primary ms-2 flex-shrink-0" aria-hidden="true">
+                    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="currentColor"/>
+                  </svg>
+                  <span>{{ plumber.address }}</span>
+                </div>
+
+                <!-- Specialization -->
+                <div class="d-flex align-items-center mb-2 small">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-primary ms-2 flex-shrink-0" aria-hidden="true">
+                    <path d="M22.7 19L13.6 9.9C14.5 7.6 14 4.9 12.1 3C9.6 0.5 5.6 0.5 3.1 3C0.6 5.5 0.6 9.5 3.1 12C5 13.9 7.7 14.4 10 13.5L13 16.5L11.6 17.9L13 19.3L14.4 17.9L15.8 19.3L17.2 17.9L18.6 19.3L20 17.9L21.3 19.3L22.7 19ZM5.8 10.6C4.8 9.6 4.8 8 5.8 7C6.8 6 8.4 6 9.4 7C10.4 8 10.4 9.6 9.4 10.6C8.4 11.6 6.8 11.6 5.8 10.6Z" fill="currentColor"/>
+                  </svg>
+                  <span>{{ plumber.specialization }}</span>
+                </div>
+
+                <!-- Experience -->
+                <div class="d-flex align-items-center mb-2 small">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-primary ms-2 flex-shrink-0" aria-hidden="true">
+                    <path d="M11.99 2C6.47 2 2 6.48 2 12C2 17.52 6.47 22 11.99 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 11.99 2ZM12 20C7.58 20 4 16.42 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20ZM12.5 7H11V13L16.25 16.15L17 14.92L12.5 12.25V7Z" fill="currentColor"/>
+                  </svg>
+                  <span>{{ plumber.experience }} سنوات خبرة</span>
+                </div>
+
+                <!-- Rating -->
+                <div class="d-flex align-items-center mt-3">
+                  <div class="d-flex ms-2" [attr.aria-label]="'التقييم: ' + plumber.rating + ' من 5'">
+                    @for (star of [1,2,3,4,5]; track star) {
+                      <svg 
+                        width="20" 
+                        height="20" 
+                        viewBox="0 0 24 24" 
+                        [class]="star <= plumber.rating ? 'text-warning' : 'text-muted'"
+                        aria-hidden="true"
+                      >
+                        <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" fill="currentColor"/>
+                      </svg>
+                    }
+                  </div>
+                  <span class="fw-bold">{{ plumber.rating }}</span>
+                </div>
+              </div>
+
+              <!-- Card Actions -->
+              <div class="d-flex gap-2">
+                <button 
+                  type="button"
+                  class="btn btn-primary flex-fill"
+                  (click)="contactPlumber(plumber)"
+                  [attr.aria-label]="'تواصل مع ' + plumber.name"
+                >
+                  تواصل الآن
+                </button>
+                <a 
+                  [routerLink]="['/plumber', plumber.id]"
+                  class="btn btn-outline-secondary flex-fill"
+                  [attr.aria-label]="'عرض تفاصيل ' + plumber.name"
+                >
+                  التفاصيل
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="col-12">
+          <div class="alert alert-info text-center">
+            <p class="mb-0">لا توجد نتائج</p>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
