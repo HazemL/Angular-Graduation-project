@@ -51,6 +51,11 @@ export const routes: Routes = [
             import('./components/reviews-management/reviews-management.routes')
                 .then(m => m.reviewsManagementRoutes)
     },
+    {
+    path: 'electrician',
+    loadComponent: () => import('./components/electrician-list/electrician-list').then(m => m.ElectricianList),
+    title: 'كهربائي - صيانة وتأسيس'
+  },
        {
         path: 'pricing',
         loadChildren: () =>
