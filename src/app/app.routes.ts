@@ -82,6 +82,11 @@ export const routes: Routes = [
     loadComponent: () => import('./components/aluminum-technician-list/aluminum-technician-list').then(m => m.AluminumTechnicianList),
     title: 'فني ألوميتال - مطابخ وشبابيك'
   },
+  {
+path: 'gas-technician',
+loadComponent: () => import('./components/gas-technician-list/gas-technician-list').then(m => m.GasTechnicianList),
+title: 'فني غاز - صيانة وتركيب'
+},
   // { path: '**', redirectTo: '' },
 
 ];
