@@ -87,6 +87,11 @@ path: 'gas-technician',
 loadComponent: () => import('./components/gas-technician-list/gas-technician-list').then(m => m.GasTechnicianList),
 title: 'فني غاز - صيانة وتركيب'
 },
+{
+path: 'device-repair',
+loadComponent: () => import('./components/device-repair-list/device-repair-list').then(m => m.DeviceRepairList),
+title: 'إصلاح أجهزة - غسالات وثلاجات'
+},
   // { path: '**', redirectTo: '' },
 
 ];
