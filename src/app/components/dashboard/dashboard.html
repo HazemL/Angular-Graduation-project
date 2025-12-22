@@ -25,16 +25,12 @@
       </div>
 
       <nav class="nav flex-column gap-1">
-        <a class="nav-link active rounded px-3 py-2" href="#">لوحة التحكم</a>
-        <a class="nav-link rounded px-3 py-2" href="#">المستخدمين <span class="badge bg-secondary ms-2">567</span></a>
-        <a class="nav-link rounded px-3 py-2" href="#">الصنايعية <span class="badge bg-secondary ms-2">234</span></a>
-        <a class="nav-link rounded px-3 py-2" href="#">البلاغات <span class="badge bg-danger ms-2">12</span></a>
-        <a class="nav-link rounded px-3 py-2" href="#">المهن</a>
-        <a class="nav-link rounded px-3 py-2" href="#">المهارات</a>
-        <a class="nav-link rounded px-3 py-2" href="#">الاشتراكات</a>
-        <a class="nav-link rounded px-3 py-2" href="#">المدفوعات</a>
+        <a class="nav-link rounded px-3 py-2" [routerLink]="['/dashboard']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">لوحة التحكم</a>
+        <a class="nav-link rounded px-3 py-2" [routerLink]="['users']" routerLinkActive="active">المستخدمين <span class="badge bg-secondary ms-2">{{usersCount}}</span></a>
+        <a class="nav-link rounded px-3 py-2" [routerLink]="['dashCraft']" routerLinkActive="active">الصنايعية <span class="badge bg-secondary ms-2">{{craftsCount}}</span></a>
+        <a class="nav-link rounded px-3 py-2" [routerLink]="['reports']" routerLinkActive="active">البلاغات <span class="badge bg-danger ms-2">{{reportsCount}}</span></a>
         <a class="nav-link rounded px-3 py-2" href="#">الإعدادات</a>
-        <a class="nav-link rounded px-3 py-2" href="#">التحليلات</a>
+      
       </nav>
     </div>
   </aside>
@@ -48,12 +44,15 @@
       <div class="d-flex align-items-center gap-3">
         <button class="btn btn-light position-relative">
           <span class="material-symbols-outlined">notifications</span>
-          <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">!</span>
+          
         </button>
-        <img src="https://via.placeholder.com/40" class="rounded-circle" alt="profile">
+        <img [src]="adminProfile.image" class="rounded-circle" alt="profile" [title]="adminProfile.name">
       </div>
     </nav>
-    <main class="p-4">
+    
+    <router-outlet></router-outlet>
+    
+    <main class="p-4" *ngIf="isMainDashboard()">
 
       <h3 class="fw-bold mb-1">مرحباً، Admin</h3>
       <p class="text-muted mb-4">Tuesday, 28 May 2024</p>
@@ -67,7 +66,7 @@
                 <span class="material-symbols-outlined text-primary">groups</span>
               </div>
             </div>
-            <h3 class="fw-bold mt-2">567</h3>
+            <h3 class="fw-bold mt-2">{{usersCount}}</h3>
             <small class="text-success">↑ 12% من الشهر الماضي</small>
           </div>
         </div>
@@ -80,7 +79,7 @@
                 <span class="material-symbols-outlined text-primary">engineering</span>
               </div>
             </div>
-            <h3 class="fw-bold mt-2">234</h3>
+            <h3 class="fw-bold mt-2">{{craftsCount}}</h3>
             <small class="text-success">↑ 8%</small>
           </div>
         </div>
@@ -113,11 +112,11 @@
           </div>
         </div>
       </div>
-
     </main>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
 

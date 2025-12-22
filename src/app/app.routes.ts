@@ -17,8 +17,30 @@ export const routes: Routes = [
   {path:'login',component:Login},
   {path:'register',component:Register},
   {path:'services',component:Services},
-  {path: 'dashboard',component: Dashboard},
-  {path:'craftsman-dashboard',component:CraftsmanDashboard},
+  {path: 'dashboard',component: Dashboard,
+    children: [
+      {
+        path: 'users',
+        loadComponent: () => import('./components/dashboard/users/users').then(m => m.UsersComponent) 
+      },
+      {
+        path:'dashCraft',
+        loadComponent:() => import('./components/dashboard/dash-craftsman/dash-craftsman').then(m=>m.DashCraftsman)
+      },
+      {
+        path:'reports',
+        loadComponent:() => import('./components/dashboard/dashreports/dashreports').then(m=>m.Dashreports) 
+      }
+      
+    ]
+  },
+  {path:'craftsman-dashboard',component:CraftsmanDashboard,
+    children: [
+      {path:'profile', loadComponent: () => import('./components/craftsman-dashboard/dashprofile/dashprofile').then(m => m.Dashprofile)},
+      {path:'jobs-collection', loadComponent: () => import('./components/craftsman-dashboard/jobs-collection/jobs-collection').then(m => m.JobsCollection)}
+    ]
+    
+  },
   {path:'craftsman-profile',component:CraftsmanProfile},
   
    {

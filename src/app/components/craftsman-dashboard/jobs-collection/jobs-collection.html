@@ -1,0 +1,32 @@
+<div class="container" *ngIf="!loading">
+  <h3 class="mb-4">معرض الأعمال</h3>
+
+  <div class="row g-4">
+    <div class="col-md-4" *ngFor="let job of jobs">
+      <div class="card h-100 shadow-sm">
+        <img
+          [src]="job.imageUrl"
+          class="card-img-top"
+          alt="work image"
+        />
+
+        <div class="card-body">
+          <h5 class="card-title">{{ job.title }}</h5>
+          <p class="card-text text-muted">
+            {{ job.description }}
+          </p>
+        </div>
+
+        <div class="card-footer text-muted small">
+          {{ job.createdAt | date:'mediumDate' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading">جاري التحميل...</div>
+
+<div *ngIf="!loading && jobs.length === 0" class="text-center text-muted">
+  لا يوجد أعمال بعد
+</div>

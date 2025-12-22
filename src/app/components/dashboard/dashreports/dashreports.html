@@ -1,0 +1,96 @@
+<div class="reports-container" dir="rtl">
+  <div class="header-section">
+    <div>
+      <h2 class="page-title">البلاغات</h2>
+      <p class="page-subtitle">إدارة ومتابعة بلاغات المستخدمين</p>
+    </div>
+   
+  </div>
+
+  <div class="search-filter-section">
+    <div class="search-box">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="البحث عن بلاغ..." [(ngModel)]="searchTerm" (input)="onSearch()">
+    </div>
+    <div class="filter-options">
+      <select class="filter-select">
+        <option>جميع البلاغات</option>
+        <option>قيد المراجعة</option>
+        <option>تم الحل</option>
+        <option>مرفوض</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>جاري تحميل البلاغات...</p>
+  </div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table class="reports-table">
+      <thead>
+        <tr>
+          <th>م</th>
+          <th>المستخدم</th>
+          <th>النوع</th>
+          <th>الوصف</th>
+          <th>التاريخ</th>
+          <th>الحالة</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let report of filteredReports; let i = index" class="table-row">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <div class="user-info">
+              <div class="user-avatar">{{ report.user?.name?.charAt(0) || 'U' }}</div>
+              <span class="user-name">{{ report.user?.name || 'غير محدد' }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="type-badge">
+              <span class="material-symbols-outlined">report_problem</span>
+              {{ report.type?.name || 'غير محدد' }}
+            </span>
+          </td>
+          <td>
+            <span class="description-text">{{ report.description || 'لا يوجد وصف' }}</span>
+          </td>
+          <td>
+            <span class="date-text">
+              <span class="material-symbols-outlined">calendar_today</span>
+              {{ report.createdAt | date:'dd/MM/yyyy' }}
+            </span>
+          </td>
+          <td>
+            <select 
+              class="status-select"
+              [value]="report.status"
+              [class.status-pending]="report.status === 'pending'"
+              [class.status-resolved]="report.status === 'resolved'"
+              [class.status-rejected]="report.status === 'rejected'"
+              (change)="changeStatus(report.id, $any($event.target).value)">
+              <option value="pending">قيد المراجعة</option>
+              <option value="resolved">تم الحل</option>
+              <option value="rejected">مرفوض</option>
+            </select>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon" title="عرض">
+                <span class="material-symbols-outlined">visibility</span>
+              </button>
+              <button class="btn-icon btn-danger" title="حذف">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+ 
+</div>

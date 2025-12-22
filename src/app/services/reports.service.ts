@@ -26,4 +26,19 @@ export class ReportsService {
     getReportStatus(reportId: string): Observable<ApiResponse<{ status: string; updatedAt: string }>> {
         return this.http.get<ApiResponse<{ status: string; updatedAt: string }>>(`${this.baseUrl}/${reportId}/status`);
     }
+    
+getAllReports(): Observable<ApiResponse<any[]>> {
+  return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/admin`);
+}
+
+updateReportStatus(
+  reportId: string,
+  status: 'pending' | 'resolved' | 'rejected'
+): Observable<ApiResponse<any>> {
+  return this.http.patch<ApiResponse<any>>(
+    `${this.baseUrl}/admin/${reportId}/status`,
+    { status }
+  );
+}
+
 }

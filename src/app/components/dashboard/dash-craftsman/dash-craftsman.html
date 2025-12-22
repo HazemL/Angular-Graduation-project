@@ -1,0 +1,87 @@
+<div class="craftsman-container" dir="rtl">
+  <div class="header-section">
+    <div>
+      <h2 class="page-title">الصنايعية</h2>
+      <p class="page-subtitle">إدارة ومراقبة حسابات الصنايعية</p>
+    </div>
+ 
+  </div>
+
+  <div class="search-filter-section">
+    <div class="search-box">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="البحث عن صنايعي..." [(ngModel)]="searchTerm" (input)="onSearch()">
+    </div>
+    <div class="filter-options">
+      <select class="filter-select">
+        <option>جميع المهن</option>
+        <option>سباك</option>
+        <option>كهربائي</option>
+        <option>نجار</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="craftsman-table">
+      <thead>
+        <tr>
+          <th>م</th>
+          <th>الاسم</th>
+          <th>المهنة</th>
+          <th>المحافظة</th>
+          <th>التقييم</th>
+          <th>الحالة</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let craft of filteredCrafts; let i = index" class="table-row">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <div class="user-info">
+              <div class="user-avatar">{{ craft.name?.charAt(0) }}</div>
+              <span class="user-name">{{ craft.name }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="job-badge">
+              <span class="material-symbols-outlined">build</span>
+              {{ craft.job }}
+            </span>
+          </td>
+          <td>
+            <span class="location-badge">
+              <span class="material-symbols-outlined">location_on</span>
+              {{ craft.city }}
+            </span>
+          </td>
+          <td>
+            <div class="rating">
+              <span class="material-symbols-outlined filled">star</span>
+              <span>4.5</span>
+            </div>
+          </td>
+          <td>
+            <span class="status-badge status-active">نشط</span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon" title="عرض">
+                <span class="material-symbols-outlined">visibility</span>
+              </button>
+              <button class="btn-icon" title="تعديل">
+                <span class="material-symbols-outlined">edit</span>
+              </button>
+              <button class="btn-icon btn-danger" title="حذف">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+</div>
