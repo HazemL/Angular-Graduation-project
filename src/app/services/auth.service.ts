@@ -1,0 +1,72 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable, signal, inject } from '@angular/core';
+import { Observable, tap, of, throwError } from 'rxjs';
+import { LoginRequest, LoginResponse } from '../../model/auth.model';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AuthService {
+    private http = inject(HttpClient);
+
+    // Signal to track login state
+    readonly currentUser = signal<LoginResponse['user'] | null>(this.getUserFromStorage());
+    readonly isAuthenticated = signal<boolean>(!!this.getToken());
+
+    private readonly API_URL = 'http://localhost:3000/api'; // Replace with actual API URL
+
+    login(credentials: LoginRequest): Observable<LoginResponse> {
+        // For now, we'll mock the login since the backend might not be ready
+        // TODO: Replace with actual HTTP call: return this.http.post<LoginResponse>(`${this.API_URL}/auth/login`, credentials).pipe(...)
+
+        // Mock login logic
+        if (credentials.email === 'test@example.com' && credentials.password === 'password') {
+            const mockResponse: LoginResponse = {
+                token: 'mock-jwt-token',
+                user: {
+                    id: '1',
+                    fullName: 'Test User',
+                    email: credentials.email,
+                    role: 'user'
+                }
+            };
+
+            return of(mockResponse).pipe(
+                tap(response => this.handleAuthSuccess(response))
+            );
+        }
+
+        return throwError(() => new Error('البريد الإلكتروني أو كلمة المرور غير صحيحة'));
+    }
+
+    logout(): void {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_user');
+        this.currentUser.set(null);
+        this.isAuthenticated.set(false);
+    }
+
+    private handleAuthSuccess(response: LoginResponse): void {
+        this.setToken(response.token);
+        this.setUser(response.user);
+        this.currentUser.set(response.user);
+        this.isAuthenticated.set(true);
+    }
+
+    private setToken(token: string): void {
+        localStorage.setItem('auth_token', token);
+    }
+
+    private getToken(): string | null {
+        return localStorage.getItem('auth_token');
+    }
+
+    private setUser(user: LoginResponse['user']): void {
+        localStorage.setItem('auth_user', JSON.stringify(user));
+    }
+
+    private getUserFromStorage(): LoginResponse['user'] | null {
+        const userStr = localStorage.getItem('auth_user');
+        return userStr ? JSON.parse(userStr) : null;
+    }
+}

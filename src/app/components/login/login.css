@@ -1,0 +1,51 @@
+/* Component-specific styles for Login */
+
+/* Ensure all form controls have right-aligned text (including placeholders in RTL) */
+.form-control {
+    text-align: right;
+}
+
+/* Password visibility button focus state */
+.btn-link:focus {
+    box-shadow: none;
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* RTL Floating Label Adjustment */
+.form-floating>label {
+    right: 0;
+    left: auto;
+    transform-origin: 100% 0;
+    text-align: right;
+}
+
+/* Ensure the label moves to the right top corner when focused/filled */
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label {
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+
+/* Move validation icons to the left for RTL */
+.form-control.is-invalid,
+.form-control.is-valid {
+    background-position: left calc(0.375em + 0.1875rem) center;
+    padding-left: calc(1.5em + 0.75rem) !important;
+}
+
+/* RTL Checkbox Alignment */
+.rtl-checkbox {
+    text-align: right;
+    padding-left: 0 !important;
+    padding-right: 1.5em !important;
+}
+
+.rtl-checkbox .form-check-input {
+    float: right !important;
+    margin-left: 0 !important;
+    margin-right: -1.5em !important;
+}
+
+.rtl-checkbox .form-check-label {
+    margin-right: 0.5rem;
+}

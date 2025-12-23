@@ -174,4 +174,8 @@ export class BasicInfoComponent {
             }
         });
     }
+
+    navigateToLogin(): void {
+        this.router.navigate(['/login']);
+    }
 }

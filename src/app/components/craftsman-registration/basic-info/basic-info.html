@@ -13,9 +13,18 @@
                 <h1 class="mb-0 fs-5 fw-bold text-dark">صنايعي مصر</h1>
             </div>
             <div class="d-flex align-items-center gap-2">
-                <button type="button" class="btn btn-primary-custom rounded-3 px-3 py-2 fw-bold small">تسجيل
+                <button type="button" class="btn btn-primary-custom rounded-3 px-3 py-2 fw-bold small"
+                    (click)="navigateToLogin()">تسجيل
                     الدخول</button>
                 <button type="button" class="btn btn-light rounded-3 px-3 py-2 fw-bold small">English</button>
+            </div>
+            <!-- ... -->
+            <div class="text-center mt-4">
+                <p class="text-secondary small">
+                    لديك حساب بالفعل؟
+                    <a href="javascript:void(0)" (click)="navigateToLogin()"
+                        class="text-primary-custom fw-medium text-decoration-none">تسجيل الدخول</a>
+                </p>
             </div>
         </div>
     </header>
@@ -208,6 +217,14 @@
                                 [class.text-danger]="basicInfoForm.get('confirmPassword')?.touched && !passwordsMatch()">تأكيد
                                 كلمة المرور</label>
                         </div>
+                        <button type="button" class="btn btn-link text-secondary position-absolute p-0"
+                            style="left: 16px; top: 50%; transform: translateY(-50%);"
+                            (click)="toggleConfirmPasswordVisibility()"
+                            [attr.aria-label]="showConfirmPassword() ? 'إخفاء تأكيد كلمة المرور' : 'إظهار تأكيد كلمة المرور'">
+                            <span class="material-symbols-outlined">{{ showConfirmPassword() ? 'visibility_off' :
+                                'visibility'
+                                }}</span>
+                        </button>
                         @if (basicInfoForm.get('confirmPassword')?.touched && passwordsMatch() &&
                         basicInfoForm.get('confirmPassword')?.valid) {
                         <span class="material-symbols-outlined text-success position-absolute"

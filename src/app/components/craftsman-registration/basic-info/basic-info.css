@@ -51,6 +51,48 @@
     margin-right: -1.5em !important;
 }
 
-.rtl-checkbox .form-check-label {
-    margin-right: 0.5rem;
+
+/* RTL Floating Label Adjustment */
+.form-floating>label {
+    right: 0;
+    left: auto;
+    transform-origin: 100% 0;
+    text-align: right;
+}
+
+/* Ensure the label moves to the right top corner when focused/filled */
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label {
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+
+/* Move validation icons to the left for RTL */
+.form-control.is-invalid,
+.form-control.is-valid {
+    background-position: left calc(0.375em + 0.1875rem) center;
+    padding-left: calc(1.5em + 0.75rem) !important;
+}
+
+/* Adjust password toggle position when validation icon is present to prevent overlap */
+.form-control.is-invalid~.btn-link,
+.form-control.is-valid~.btn-link {
+    left: 44px !important;
+}
+
+/* Increase padding for password field to accommodate both icons */
+input[type="password"].is-invalid,
+input[type="password"].is-valid,
+input[id="password"].is-invalid,
+input[id="password"].is-valid,
+input[id="confirmPassword"].is-invalid,
+input[id="confirmPassword"].is-valid {
+    padding-left: 4.5rem !important;
+}
+
+/* Specific adjustment for phone input which has custom padding */
+#phone.is-invalid,
+#phone.is-valid {
+    padding-right: 90px !important;
+    /* Keep the space for the country code */
+    background-position: left calc(0.375em + 0.1875rem) center;
 }
