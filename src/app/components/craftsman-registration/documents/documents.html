@@ -1,0 +1,197 @@
+<div class="min-vh-100 d-flex flex-column">
+    <!-- Header -->
+    <header class="sticky-top bg-white border-bottom py-3">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-primary-custom" style="width: 24px; height: 24px;">
+                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path
+                            d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"
+                            fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h1 class="mb-0 fs-5 fw-bold text-dark">صنايعي مصر</h1>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-primary-custom rounded-3 px-3 py-2 fw-bold small">تسجيل
+                    الدخول</button>
+                <button type="button" class="btn btn-light rounded-3 px-3 py-2 fw-bold small">English</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow-1 py-5">
+        <div class="container" style="max-width: 900px;">
+            <!-- Progress Steps -->
+            <nav class="d-flex align-items-center justify-content-between mb-5" aria-label="خطوات التسجيل">
+                @for (step of steps; track step.stepNumber; let isLast = $last) {
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="progress-step" [class.active]="step.isActive"
+                        [class.inactive]="!step.isActive && !step.isCompleted" [class.completed]="step.isCompleted"
+                        [attr.aria-current]="step.isActive ? 'step' : null">
+                        {{ step.stepNumber }}
+                    </div>
+                    <p class="mt-2 small fw-medium" [class.text-primary-custom]="step.isActive"
+                        [class.text-secondary]="!step.isActive">
+                        {{ step.label }}
+                    </p>
+                </div>
+                @if (!isLast) {
+                <div class="progress-line mx-2" aria-hidden="true"></div>
+                }
+                }
+            </nav>
+
+            <!-- Form Card -->
+            <div class="form-card p-4 p-md-5 mx-auto" style="max-width: 600px;">
+                <div class="text-center mb-4">
+                    <h2 class="fs-3 fw-bold text-dark">المستندات المطلوبة</h2>
+                    <p class="text-secondary">
+                        @if (steps.length === 4) {
+                        الخطوة 4 من 4: توثيق الهوية
+                        } @else {
+                        الخطوة 2 من 2: توثيق الهوية
+                        }
+                    </p>
+                </div>
+
+                <form [formGroup]="documentsForm" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-4">
+
+                    <!-- National ID Front -->
+                    <div class="upload-section">
+                        <label class="form-label fw-bold mb-2">صورة البطاقة (الوجه الأمامي) <span
+                                class="text-danger">*</span></label>
+                        <div class="upload-box border rounded-3 p-4 text-center position-relative"
+                            [class.border-valid]="documentsForm.controls.nationalIdFront.valid"
+                            [class.bg-light]="!documentsForm.controls.nationalIdFront.value">
+
+                            @if (isUploadingFront()) {
+                            <div class="py-3">
+                                <span class="spinner-border spinner-border-sm text-primary-custom mb-2"
+                                    role="status"></span>
+                                <p class="mb-0 small text-secondary">جاري التحميل...</p>
+                            </div>
+                            } @else if (documentsForm.controls.nationalIdFront.value) {
+                            <div class="position-relative">
+                                <img [src]="documentsForm.controls.nationalIdFront.value"
+                                    class="img-fluid rounded shadow-sm" style="max-height: 150px;">
+                                <button type="button"
+                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 rounded-circle"
+                                    (click)="documentsForm.controls.nationalIdFront.setValue('')">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+                                </button>
+                            </div>
+                            } @else {
+                            <span class="material-symbols-outlined fs-1 text-secondary mb-2">id_card</span>
+                            <p class="mb-2 text-dark fw-medium">قم برفع صورة الوجه الأمامي للبطاقة</p>
+                            <p class="small text-secondary mb-3">JPG, PNG بحد أقصى 5 ميجابايت</p>
+                            <label class="btn btn-outline-primary btn-sm px-4 rounded-pill">
+                                اختر ملف
+                                <input type="file" class="d-none" accept="image/*"
+                                    (change)="onFileSelected($event, 'nationalIdFront')">
+                            </label>
+                            }
+                        </div>
+                        @if (documentsForm.controls.nationalIdFront.invalid &&
+                        documentsForm.controls.nationalIdFront.touched) {
+                        <div class="text-danger small mt-1">هذا المستند مطلوب</div>
+                        }
+                    </div>
+
+                    <!-- National ID Back -->
+                    <div class="upload-section">
+                        <label class="form-label fw-bold mb-2">صورة البطاقة (الوجه الخلفي) <span
+                                class="text-danger">*</span></label>
+                        <div class="upload-box border rounded-3 p-4 text-center position-relative"
+                            [class.border-valid]="documentsForm.controls.nationalIdBack.valid"
+                            [class.bg-light]="!documentsForm.controls.nationalIdBack.value">
+
+                            @if (isUploadingBack()) {
+                            <div class="py-3">
+                                <span class="spinner-border spinner-border-sm text-primary-custom mb-2"
+                                    role="status"></span>
+                                <p class="mb-0 small text-secondary">جاري التحميل...</p>
+                            </div>
+                            } @else if (documentsForm.controls.nationalIdBack.value) {
+                            <div class="position-relative">
+                                <img [src]="documentsForm.controls.nationalIdBack.value"
+                                    class="img-fluid rounded shadow-sm" style="max-height: 150px;">
+                                <button type="button"
+                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 rounded-circle"
+                                    (click)="documentsForm.controls.nationalIdBack.setValue('')">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+                                </button>
+                            </div>
+                            } @else {
+                            <span class="material-symbols-outlined fs-1 text-secondary mb-2">style</span>
+                            <p class="mb-2 text-dark fw-medium">قم برفع صورة الوجه الخلفي للبطاقة</p>
+                            <p class="small text-secondary mb-3">JPG, PNG بحد أقصى 5 ميجابايت</p>
+                            <label class="btn btn-outline-primary btn-sm px-4 rounded-pill">
+                                اختر ملف
+                                <input type="file" class="d-none" accept="image/*"
+                                    (change)="onFileSelected($event, 'nationalIdBack')">
+                            </label>
+                            }
+                        </div>
+                        @if (documentsForm.controls.nationalIdBack.invalid &&
+                        documentsForm.controls.nationalIdBack.touched) {
+                        <div class="text-danger small mt-1">هذا المستند مطلوب</div>
+                        }
+                    </div>
+
+                    <!-- Criminal Record -->
+                    <div class="upload-section">
+                        <label class="form-label fw-bold mb-2">صحيفة الحالة الجنائية (الفيش) <span
+                                class="text-danger">*</span></label>
+                        <div class="upload-box border rounded-3 p-4 text-center position-relative"
+                            [class.border-valid]="documentsForm.controls.criminalRecord.valid"
+                            [class.bg-light]="!documentsForm.controls.criminalRecord.value">
+
+                            @if (isUploadingRecord()) {
+                            <div class="py-3">
+                                <span class="spinner-border spinner-border-sm text-primary-custom mb-2"
+                                    role="status"></span>
+                                <p class="mb-0 small text-secondary">جاري التحميل...</p>
+                            </div>
+                            } @else if (documentsForm.controls.criminalRecord.value) {
+                            <div class="position-relative">
+                                <img [src]="documentsForm.controls.criminalRecord.value"
+                                    class="img-fluid rounded shadow-sm" style="max-height: 150px;">
+                                <button type="button"
+                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 rounded-circle"
+                                    (click)="documentsForm.controls.criminalRecord.setValue('')">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+                                </button>
+                            </div>
+                            } @else {
+                            <span class="material-symbols-outlined fs-1 text-secondary mb-2">verified_user</span>
+                            <p class="mb-2 text-dark fw-medium">قم برفع صورة صحيفة الحالة الجنائية</p>
+                            <p class="small text-secondary mb-3">JPG, PNG بحد أقصى 5 ميجابايت</p>
+                            <label class="btn btn-outline-primary btn-sm px-4 rounded-pill">
+                                اختر ملف
+                                <input type="file" class="d-none" accept="image/*"
+                                    (change)="onFileSelected($event, 'criminalRecord')">
+                            </label>
+                            }
+                        </div>
+                        @if (documentsForm.controls.criminalRecord.invalid &&
+                        documentsForm.controls.criminalRecord.touched) {
+                        <div class="text-danger small mt-1">هذا المستند مطلوب</div>
+                        }
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary-custom py-3 fs-5 fw-bold rounded-3 mt-3"
+                        [disabled]="isSubmitting() || documentsForm.invalid">
+                        @if (isSubmitting()) {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        جاري التسجيل...
+                        } @else {
+                        إتمام التسجيل
+                        }
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

@@ -6,6 +6,26 @@ export interface BasicInfoFormData {
   password: string;
   profilePhoto?: string;
   termsAccepted: boolean;
+  isCraftsman?: boolean;
+}
+
+export interface ProfessionSkillsFormData {
+  profession: string;
+  skills: string[];
+  yearsOfExperience?: number;
+  description?: string;
+  previousWork: string[]; // URLs of previous work photos/videos
+}
+
+export interface ServiceAreasFormData {
+  governorates: string[];
+  cities: string[]; // List of all selected cities across governorates
+}
+
+export interface DocumentsFormData {
+  nationalIdFront: string; // URL
+  nationalIdBack: string; // URL
+  criminalRecord: string; // URL
 }
 
 export interface RegistrationStep {

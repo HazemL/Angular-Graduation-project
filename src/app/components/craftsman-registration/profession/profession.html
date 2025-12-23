@@ -1,0 +1,142 @@
+<div class="min-vh-100 d-flex flex-column">
+    <!-- Header -->
+    <header class="sticky-top bg-white border-bottom py-3">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-primary-custom" style="width: 24px; height: 24px;">
+                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path
+                            d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"
+                            fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h1 class="mb-0 fs-5 fw-bold text-dark">صنايعي مصر</h1>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-primary-custom rounded-3 px-3 py-2 fw-bold small">تسجيل
+                    الدخول</button>
+                <button type="button" class="btn btn-light rounded-3 px-3 py-2 fw-bold small">English</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow-1 py-5">
+        <div class="container" style="max-width: 900px;">
+            <!-- Progress Steps -->
+            <nav class="d-flex align-items-center justify-content-between mb-5" aria-label="خطوات التسجيل">
+                @for (step of steps; track step.stepNumber; let isLast = $last) {
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="progress-step" [class.active]="step.isActive"
+                        [class.inactive]="!step.isActive && !step.isCompleted" [class.completed]="step.isCompleted"
+                        [attr.aria-current]="step.isActive ? 'step' : null">
+                        {{ step.stepNumber }}
+                    </div>
+                    <p class="mt-2 small fw-medium" [class.text-primary-custom]="step.isActive"
+                        [class.text-secondary]="!step.isActive">
+                        {{ step.label }}
+                    </p>
+                </div>
+                @if (!isLast) {
+                <div class="progress-line mx-2" aria-hidden="true"></div>
+                }
+                }
+            </nav>
+
+            <!-- Form Card -->
+            <div class="form-card p-4 p-md-5 mx-auto" style="max-width: 600px;">
+                <div class="text-center mb-4">
+                    <h2 class="fs-3 fw-bold text-dark">المهنة والمهارات</h2>
+                    <p class="text-secondary">الخطوة 2 من 4: بيانات المهنة</p>
+                </div>
+
+                <form [formGroup]="professionForm" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-4">
+
+                    <!-- Profession Selection -->
+                    <div class="form-floating">
+                        <select id="profession" formControlName="profession" class="form-select"
+                            (change)="onProfessionChange()"
+                            [class.is-invalid]="professionForm.controls.profession.invalid && professionForm.controls.profession.touched">
+                            <option value="" disabled selected>اختر مهنتك</option>
+                            @for (service of professions; track service.title) {
+                            <option [value]="service.title">{{ service.title }}</option>
+                            }
+                        </select>
+                        <label for="profession">المهنة</label>
+                        @if (professionForm.controls.profession.invalid && professionForm.controls.profession.touched) {
+                        <div class="invalid-feedback">
+                            يرجى اختيار المهنة
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Skills Selection -->
+                    @if (professionForm.controls.profession.value) {
+                    <div>
+                        <label class="form-label fw-bold mb-3">المهارات <span class="text-danger">*</span></label>
+
+                        @if (isLoadingSkills()) {
+                        <div class="text-center py-3 text-secondary">
+                            <span class="spinner-border spinner-border-sm text-primary-custom" role="status"></span>
+                            <span class="ms-2">جاري تحميل المهارات...</span>
+                        </div>
+                        } @else {
+                        <div class="row g-2">
+                            @for (skill of availableSkills(); track skill) {
+                            <div class="col-6 col-md-4">
+                                <div class="form-check p-0">
+                                    <input type="checkbox" class="btn-check" [id]="'skill-' + skill"
+                                        [checked]="isSkillSelected(skill)" (change)="onSkillToggle(skill, $event)">
+                                    <label
+                                        class="btn btn-outline-secondary w-100 text-end d-flex justify-content-between align-items-center px-3"
+                                        [for]="'skill-' + skill" style="min-height: 45px;">
+                                        <span class="small">{{ skill }}</span>
+                                        @if (isSkillSelected(skill)) {
+                                        <span class="material-symbols-outlined fs-6 text-primary-custom">check</span>
+                                        }
+                                    </label>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        @if (availableSkills().length === 0) {
+                        <p class="text-secondary small fst-italic mt-2">لا توجد مهارات متاحة لهذه المهنة حالياً</p>
+                        }
+                        }
+
+                        @if (professionForm.controls.skills.invalid && professionForm.controls.skills.touched) {
+                        <div class="text-danger small mt-2">
+                            يرجى اختيار مهارة واحدة على الأقل
+                        </div>
+                        }
+                    </div>
+                    }
+
+                    <!-- Years of Experience -->
+                    <div class="form-floating">
+                        <input type="number" id="experience" formControlName="yearsOfExperience" class="form-control"
+                            min="0" placeholder="سنوات الخبرة">
+                        <label for="experience">سنوات الخبرة</label>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-floating">
+                        <textarea id="description" formControlName="description" class="form-control"
+                            style="height: 120px" placeholder="نبذة عن خبرتك"></textarea>
+                        <label for="description">نبذة عن خبرتك (اختياري)</label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary-custom py-3 fs-5 fw-bold rounded-3"
+                        [disabled]="isSubmitting()">
+                        @if (isSubmitting()) {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        جاري الحفظ...
+                        } @else {
+                        التالي
+                        }
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

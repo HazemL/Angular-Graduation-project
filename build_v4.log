@@ -1,0 +1,116 @@
+
+> test-project@0.0.0 build
+> ng build
+
+[33m❯[39m Building...
+[32m✔[39m Building...
+[1mInitial chunk files[22m  [2m | [22m[1mNames[22m                   [2m | [22m [1mRaw size[22m[2m | [22m[1mEstimated transfer size[22m
+[32mchunk-S6K2K3QA.js[39m    [2m | [22m[2m-[22m                       [2m | [22m[36m188.75 kB[39m[2m | [22m               [36m54.01 kB[39m
+[32mchunk-C2BWOU73.js[39m    [2m | [22m[2m-[22m                       [2m | [22m [36m84.06 kB[39m[2m | [22m               [36m21.30 kB[39m
+[32mmain-UIAFOKZY.js[39m     [2m | [22m[2mmain[22m                    [2m | [22m [36m59.05 kB[39m[2m | [22m               [36m12.31 kB[39m
+[32mchunk-3AZU24IY.js[39m    [2m | [22m[2m-[22m                       [2m | [22m [36m44.49 kB[39m[2m | [22m                [36m8.86 kB[39m
+[32mpolyfills-5CFQRCPP.js[39m[2m | [22m[2mpolyfills[22m               [2m | [22m [36m34.59 kB[39m[2m | [22m               [36m11.33 kB[39m
+[32mchunk-ETLBCTNE.js[39m    [2m | [22m[2m-[22m                       [2m | [22m [36m11.40 kB[39m[2m | [22m                [36m1.85 kB[39m
+[32mstyles-BNY5XMKR.css[39m  [2m | [22m[2mstyles[22m                  [2m | [22m  [36m6.28 kB[39m[2m | [22m              [36m965 bytes[39m
+[32mchunk-PLDQOPRE.js[39m    [2m | [22m[2m-[22m                       [2m | [22m  [36m1.75 kB[39m[2m | [22m              [36m517 bytes[39m
+[32mchunk-52UF3UZZ.js[39m    [2m | [22m[2m-[22m                       [2m | [22m[36m688 bytes[39m[2m | [22m              [36m688 bytes[39m
+[32mchunk-2NFLSA4Y.js[39m    [2m | [22m[2m-[22m                       [2m | [22m[36m449 bytes[39m[2m | [22m              [36m449 bytes[39m
+[32mchunk-XFRWY4A7.js[39m    [2m | [22m[2m-[22m                       [2m | [22m[36m319 bytes[39m[2m | [22m              [36m319 bytes[39m
+[32mchunk-RN42ZJCS.js[39m    [2m | [22m[2m-[22m                       [2m | [22m[36m317 bytes[39m[2m | [22m              [36m317 bytes[39m
+
+[1m [22m                    [2m | [22m[1mInitial total[22m           [2m | [22m[1m432.14 kB[22m[2m | [22m              [1m112.93 kB[22m
+
+[1mLazy chunk files[22m     [2m | [22m[1mNames[22m                   [2m | [22m [1mRaw size[22m[2m | [22m[1mEstimated transfer size[22m
+[32mchunk-A32APZKF.js[39m    [2m | [22m[2mpricing-page[22m            [2m | [22m [36m24.16 kB[39m[2m | [22m                [36m5.94 kB[39m
+[32mchunk-6Z2NU2YF.js[39m    [2m | [22m[2mreport-form[22m             [2m | [22m [36m20.90 kB[39m[2m | [22m                [36m5.63 kB[39m
+[32mchunk-NNLOB73D.js[39m    [2m | [22m[2mreviews-page[22m            [2m | [22m [36m20.34 kB[39m[2m | [22m                [36m6.11 kB[39m
+[32mchunk-EZ365UZS.js[39m    [2m | [22m[2mbasic-info[22m              [2m | [22m [36m20.11 kB[39m[2m | [22m                [36m4.59 kB[39m
+[32mchunk-45KSLCBP.js[39m    [2m | [22m[2msearch-results[22m          [2m | [22m [36m18.07 kB[39m[2m | [22m                [36m5.17 kB[39m
+[32mchunk-OSK7O33O.js[39m    [2m | [22m[2mgas-technician-list[22m     [2m | [22m [36m16.23 kB[39m[2m | [22m                [36m4.42 kB[39m
+[32mchunk-3BKLH7I3.js[39m    [2m | [22m[2mdevice-repair-list[22m      [2m | [22m [36m15.90 kB[39m[2m | [22m                [36m4.45 kB[39m
+[32mchunk-3VUPJXH4.js[39m    [2m | [22m[2maluminum-technician-list[22m[2m | [22m [36m14.68 kB[39m[2m | [22m                [36m4.10 kB[39m
+[32mchunk-7JRF63FZ.js[39m    [2m | [22m[2mac-technician-list[22m      [2m | [22m [36m14.54 kB[39m[2m | [22m                [36m4.24 kB[39m
+[32mchunk-E46KDG2I.js[39m    [2m | [22m[2mpainter-list[22m            [2m | [22m [36m13.65 kB[39m[2m | [22m                [36m4.01 kB[39m
+[32mchunk-L2GSGSEB.js[39m    [2m | [22m[2mcarpenter-list[22m          [2m | [22m [36m12.89 kB[39m[2m | [22m                [36m3.94 kB[39m
+[32mchunk-OKJ3RAUF.js[39m    [2m | [22m[2mdocuments[22m               [2m | [22m [36m12.33 kB[39m[2m | [22m                [36m3.02 kB[39m
+[32mchunk-UBQTTTFU.js[39m    [2m | [22m[2melectrician-list[22m        [2m | [22m [36m11.68 kB[39m[2m | [22m                [36m3.56 kB[39m
+[32mchunk-O2WOUHIY.js[39m    [2m | [22m[2mdashreports[22m             [2m | [22m [36m11.25 kB[39m[2m | [22m                [36m2.93 kB[39m
+[32mchunk-PYUBD4MN.js[39m    [2m | [22m[2mprofession[22m              [2m | [22m [36m10.57 kB[39m[2m | [22m                [36m3.19 kB[39m
+[2m...and 13 more lazy chunks files. Use "--verbose" to show all the files.[22m
+
+Application bundle generation complete. [7.453 seconds] - 2025-12-23T17:22:22.301Z
+
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: BasicInfoComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:42:
+[37m      20 │ ...utlet, Footer, Navbar, [32mBasicInfoComponent[37m, SearchResultsCompone...
+         ╵                           [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SearchResultsComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:62:
+[37m      20 │ ... BasicInfoComponent, [32mSearchResultsComponent[37m, ReportFormComponen...
+         ╵                         [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: ReportFormComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:86:
+[37m      20 │ ...archResultsComponent, [32mReportFormComponent[37m, ConfirmationComponen...
+         ╵                          [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: ConfirmationComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:107:
+[37m      20 │ ...ReportFormComponent, [32mConfirmationComponent[37m, PricingPageComponen...
+         ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PricingPageComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:130:
+[37m      20 │ ...onfirmationComponent, [32mPricingPageComponent[37m, ReviewsPageComponen...
+         ╵                          [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: ReviewsPageComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:152:
+[37m      20 │ ...PricingPageComponent, [32mReviewsPageComponent[37m, PlumberList, Search...
+         ╵                          [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PlumberList is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:174:
+[37m      20 │ ...ngPageComponent, ReviewsPageComponent, [32mPlumberList[37m, Search, Home],
+         ╵                                           [32m~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: Search is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:187:
+[37m      20 │ ...ngPageComponent, ReviewsPageComponent, PlumberList, [32mSearch[37m, Home],
+         ╵                                                        [32m~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: Home is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:195:
+[37m      20 │ ...ngPageComponent, ReviewsPageComponent, PlumberList, Search, [32mHome[37m],
+         ╵                                                                [32m~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1msrc/app/components/home/home.css exceeded maximum budget. Budget 4.00 kB was not met by 3.90 kB with a total of 7.90 kB.[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1msrc/app/components/dashboard/dashreports/dashreports.css exceeded maximum budget. Budget 4.00 kB was not met by 554 bytes with a total of 4.55 kB.[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1msrc/app/components/dashboard/dash-craftsman/dash-craftsman.css exceeded maximum budget. Budget 4.00 kB was not met by 193 bytes with a total of 4.19 kB.[0m
+
+[39m[22m
+Output location: C:\Users\drapo\Desktop\Angular-Graduation-project\dist\test-Project
+

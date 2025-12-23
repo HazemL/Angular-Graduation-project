@@ -1,0 +1,18 @@
+.upload-box {
+    border: 2px dashed #dee2e6 !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.upload-box:hover {
+    border-color: var(--primary) !important;
+    background-color: #f8f9fa;
+}
+
+.upload-box.border-valid {
+    border-color: #198754 !important;
+    border-style: solid !important;
+}
+
+.form-label span.text-danger {
+    margin-right: 4px;
+}

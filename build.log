@@ -1,0 +1,85 @@
+
+> test-project@0.0.0 build
+> ng build
+
+[33m❯[39m Building...
+[32m✔[39m Building...
+Application bundle generation failed. [7.461 seconds] - 2025-12-23T17:17:00.650Z
+
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: BasicInfoComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:42:
+[37m      20 │ ...utlet, Footer, Navbar, [32mBasicInfoComponent[37m, SearchResultsCompone...
+         ╵                           [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SearchResultsComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:62:
+[37m      20 │ ... BasicInfoComponent, [32mSearchResultsComponent[37m, ReportFormComponen...
+         ╵                         [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: ReportFormComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:86:
+[37m      20 │ ...archResultsComponent, [32mReportFormComponent[37m, ConfirmationComponen...
+         ╵                          [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: ConfirmationComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:107:
+[37m      20 │ ...ReportFormComponent, [32mConfirmationComponent[37m, PricingPageComponen...
+         ╵                         [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PricingPageComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:130:
+[37m      20 │ ...onfirmationComponent, [32mPricingPageComponent[37m, ReviewsPageComponen...
+         ╵                          [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: ReviewsPageComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:152:
+[37m      20 │ ...PricingPageComponent, [32mReviewsPageComponent[37m, PlumberList, Search...
+         ╵                          [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PlumberList is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:174:
+[37m      20 │ ...ngPageComponent, ReviewsPageComponent, [32mPlumberList[37m, Search, Home],
+         ╵                                           [32m~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: Search is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:187:
+[37m      20 │ ...ngPageComponent, ReviewsPageComponent, PlumberList, [32mSearch[37m, Home],
+         ╵                                                        [32m~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: Home is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:20:195:
+[37m      20 │ ...ngPageComponent, ReviewsPageComponent, PlumberList, Search, [32mHome[37m],
+         ╵                                                                [32m~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8004: No pipe found with name 'keyvalue'.
+To fix this, import the "KeyValuePipe" class from "@angular/common" and add it to the "imports" array of the component.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/craftsman-registration/service-areas/service-areas.html:94:61:
+[37m      94 │ ...     @for (entry of selectedAreas() | [32mkeyvalue[37m; track entry.key) {
+         ╵                                          [32m~~~~~~~~[0m
+
+  Error occurs in the template of component ServiceAreas.
+
+    src/app/components/craftsman-registration/service-areas/service-areas.ts:10:17:
+[37m      10 │     templateUrl: [32m'./service-areas.html'[37m,
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m

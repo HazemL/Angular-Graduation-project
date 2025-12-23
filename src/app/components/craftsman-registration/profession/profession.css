@@ -1,0 +1,16 @@
+/* Custom styles for checkbox button */
+.btn-check:checked+.btn-outline-secondary {
+    background-color: #ebf5ff;
+    /* Light primary color */
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-check:checked+.btn-outline-secondary .material-symbols-outlined {
+    color: var(--primary) !important;
+}
+
+/* Ensure icons align */
+.material-symbols-outlined {
+    vertical-align: middle;
+}

@@ -1,0 +1,34 @@
+/* Dashed border for empty state */
+.border-dashed {
+    border-style: dashed !important;
+}
+
+/* Badge styling adjustments */
+.city-badge {
+    transition: all 0.2s;
+}
+
+.city-badge:hover {
+    background-color: #f8f9fa;
+    border-color: #dee2e6 !important;
+}
+
+.city-badge button {
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.city-badge button:hover {
+    opacity: 1;
+}
+
+/* Scrollable container for many areas if needed */
+.selected-areas-container {
+    max-height: 300px;
+    overflow-y: auto;
+}

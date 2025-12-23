@@ -31,3 +31,26 @@
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
+
+/* Ensure all form controls have right-aligned text (including placeholders in RTL) */
+.form-control {
+    text-align: right;
+}
+
+
+/* RTL Checkbox Alignment */
+.rtl-checkbox {
+    text-align: right;
+    padding-left: 0 !important;
+    padding-right: 1.5em !important;
+}
+
+.rtl-checkbox .form-check-input {
+    float: right !important;
+    margin-left: 0 !important;
+    margin-right: -1.5em !important;
+}
+
+.rtl-checkbox .form-check-label {
+    margin-right: 0.5rem;
+}

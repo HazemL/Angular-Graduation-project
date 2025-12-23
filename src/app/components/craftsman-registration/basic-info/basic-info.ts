@@ -20,12 +20,13 @@ export class BasicInfoComponent {
     protected readonly showConfirmPassword = signal(false);
     protected readonly profilePhotoUrl = signal<string | null>(null);
 
-    protected readonly steps: RegistrationStep[] = [
+    // Reactive steps based on selection
+    protected steps = signal<RegistrationStep[]>([
         { stepNumber: 1, label: 'المعلومات الأساسية', isActive: true, isCompleted: false },
         { stepNumber: 2, label: 'المهنة والمهارات', isActive: false, isCompleted: false },
         { stepNumber: 3, label: 'مناطق الخدمة', isActive: false, isCompleted: false },
         { stepNumber: 4, label: 'المستندات', isActive: false, isCompleted: false }
-    ];
+    ]);
 
     protected readonly basicInfoForm = new FormGroup({
         fullName: new FormControl('', {
@@ -60,7 +61,8 @@ export class BasicInfoComponent {
         termsAccepted: new FormControl(false, {
             nonNullable: true,
             validators: [Validators.requiredTrue]
-        })
+        }),
+        isCraftsman: new FormControl(true, { nonNullable: true })
     });
 
     protected readonly passwordsMatch = computed(() => {
@@ -72,6 +74,29 @@ export class BasicInfoComponent {
     protected readonly isFormValid = computed(() => {
         return this.basicInfoForm.valid && this.passwordsMatch();
     });
+
+    constructor() {
+        // Monitor checkbox changes to update steps and service state
+        this.basicInfoForm.controls.isCraftsman.valueChanges.subscribe(isCraftsman => {
+            this.updateSteps(isCraftsman);
+        });
+    }
+
+    private updateSteps(isCraftsman: boolean) {
+        if (isCraftsman) {
+            this.steps.set([
+                { stepNumber: 1, label: 'المعلومات الأساسية', isActive: true, isCompleted: false },
+                { stepNumber: 2, label: 'المهنة والمهارات', isActive: false, isCompleted: false },
+                { stepNumber: 3, label: 'مناطق الخدمة', isActive: false, isCompleted: false },
+                { stepNumber: 4, label: 'المستندات', isActive: false, isCompleted: false }
+            ]);
+        } else {
+            this.steps.set([
+                { stepNumber: 1, label: 'المعلومات الأساسية', isActive: true, isCompleted: false },
+                { stepNumber: 2, label: 'المستندات', isActive: false, isCompleted: false }
+            ]);
+        }
+    }
 
     togglePasswordVisibility(): void {
         this.showPassword.update(v => !v);
@@ -103,13 +128,16 @@ export class BasicInfoComponent {
     }
 
     onSubmit(): void {
+        console.log('Submit button clicked');
         if (!this.isFormValid()) {
+            console.log('Form invalid', this.basicInfoForm.errors);
             this.basicInfoForm.markAllAsTouched();
             return;
         }
 
         this.isSubmitting.set(true);
         const formValue = this.basicInfoForm.getRawValue();
+        console.log('Submitting form data', formValue);
 
         this.registrationService.submitBasicInfo({
             fullName: formValue.fullName,
@@ -118,17 +146,31 @@ export class BasicInfoComponent {
             nationalId: formValue.nationalId,
             password: formValue.password,
             profilePhoto: this.profilePhotoUrl() ?? undefined,
-            termsAccepted: formValue.termsAccepted
+            termsAccepted: formValue.termsAccepted,
+            isCraftsman: formValue.isCraftsman
         }).subscribe({
             next: (response) => {
+                console.log('API Response', response);
                 this.isSubmitting.set(false);
                 if (response.success) {
+                    console.log('Navigating to profession');
                     // Navigate to next step
-                    this.router.navigate(['/register/craftsman/profession']);
+                    this.registrationService.isCraftsman.set(formValue.isCraftsman ?? true);
+
+                    if (formValue.isCraftsman) {
+                        this.router.navigate(['/register/craftsman/profession']);
+                    } else {
+                        this.router.navigate(['/register/craftsman/documents']);
+                    }
+                } else {
+                    console.error('Registration failed', response.message);
+                    alert('Registration failed: ' + (response.message || 'Unknown error'));
                 }
             },
-            error: () => {
+            error: (error) => {
+                console.error('API Error', error);
                 this.isSubmitting.set(false);
+                alert('An error occurred during registration. Please check console.');
             }
         });
     }
