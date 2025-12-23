@@ -1,43 +1,4 @@
-<div class="d-flex min-vh-100">
-    <!-- Sidebar -->
-    <aside class="sidebar p-3 d-flex flex-column border-end">
-        <div class="d-flex align-items-center gap-3 p-2 mb-4">
-            <div class="rounded-circle" [style.background-image]="'url(' + craftsmanProfile.profileImage + ')'"
-                style="width: 48px; height: 48px; background-size: cover; background-position: center;">
-            </div>
-            <div>
-                <h2 class="mb-0 fs-6 fw-bold text-dark">{{ craftsmanProfile.name }}</h2>
-                <p class="mb-0 small text-secondary">{{ craftsmanProfile.profession }}</p>
-            </div>
-        </div>
-
-        <nav class="d-flex flex-column gap-2 flex-grow-1" aria-label="القائمة الجانبية">
-            @for (link of sidebarLinks; track link.route) {
-            <a [href]="link.route" class="sidebar-link" [class.active]="link.isActive"
-                (click)="$event.preventDefault(); navigateTo(link.route)">
-                <span class="material-symbols-outlined" [class.text-primary-custom]="link.isActive">{{ link.icon
-                    }}</span>
-                <span class="small" [class.fw-bold]="link.isActive" [class.fw-medium]="!link.isActive"
-                    [class.text-primary-custom]="link.isActive">{{ link.label }}</span>
-            </a>
-            }
-        </nav>
-
-        <div class="d-flex flex-column gap-2 mt-auto">
-            <button type="button" class="btn btn-primary-custom py-2 fw-bold small">عرض المتجر</button>
-            <a href="#" class="sidebar-link">
-                <span class="material-symbols-outlined">help</span>
-                <span class="small fw-medium">المساعدة</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <span class="material-symbols-outlined">logout</span>
-                <span class="small fw-medium">تسجيل الخروج</span>
-            </a>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="flex-grow-1 p-4">
+<div class="reviews-main-content p-4">
         <div class="row g-4">
             <!-- Reviews Section -->
             <div class="col-lg-8">
@@ -47,13 +8,13 @@
                 <div class="content-card p-4 mb-4">
                     <div class="row align-items-center">
                         <div class="col-auto text-center">
-                            <p class="display-4 fw-bold text-primary-custom mb-1">{{ averageRating }}</p>
+                            <p class="display-4 fw-bold text-primary-custom mb-1">{{ averageRating() | number:'1.1-1' }}</p>
                             <div class="text-warning mb-1">★★★★½</div>
-                            <p class="small text-secondary mb-0">من أصل {{ totalReviews }} تقييم</p>
+                            <p class="small text-secondary mb-0">من أصل {{ totalReviews() }} تقييم</p>
                         </div>
                         <div class="col">
                             <div class="d-flex flex-column gap-2">
-                                @for (dist of ratingDistribution; track dist.stars) {
+                                @for (dist of ratingDistribution(); track dist.stars) {
                                 <div class="d-flex align-items-center gap-2">
                                     <span class="small fw-medium" style="width: 50px;">{{ dist.stars }} ★</span>
                                     <div class="rating-bar flex-grow-1">
@@ -194,11 +155,11 @@
                         <h3 class="fs-5 fw-bold text-dark mb-3">أداء الردود</h3>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="small text-secondary">معدل الرد</span>
-                            <span class="fs-5 fw-bold text-success">{{ responseRate }}%</span>
+                            <span class="fs-5 fw-bold text-success">{{ responseRate() }}%</span>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span class="small text-secondary">متوسط وقت الرد</span>
-                            <span class="fs-5 fw-bold text-dark">{{ avgResponseTime }}</span>
+                            <span class="fs-5 fw-bold text-dark">{{ avgResponseTime() }}</span>
                         </div>
                     </div>
 
@@ -220,5 +181,4 @@
                 </div>
             </div>
         </div>
-    </main>
 </div>
