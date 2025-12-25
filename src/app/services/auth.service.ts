@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, inject } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { Observable, tap, of, throwError } from 'rxjs';
 import { LoginRequest, LoginResponse } from '../../model/auth.model';
 
@@ -13,30 +14,12 @@ export class AuthService {
     readonly currentUser = signal<LoginResponse['user'] | null>(this.getUserFromStorage());
     readonly isAuthenticated = signal<boolean>(!!this.getToken());
 
-    private readonly API_URL = 'http://localhost:3000/api'; // Replace with actual API URL
+    private readonly API_URL = `${environment.apiUrl}/api`;
 
     login(credentials: LoginRequest): Observable<LoginResponse> {
-        // For now, we'll mock the login since the backend might not be ready
-        // TODO: Replace with actual HTTP call: return this.http.post<LoginResponse>(`${this.API_URL}/auth/login`, credentials).pipe(...)
-
-        // Mock login logic
-        if (credentials.email === 'test@example.com' && credentials.password === 'password') {
-            const mockResponse: LoginResponse = {
-                token: 'mock-jwt-token',
-                user: {
-                    id: '1',
-                    fullName: 'Test User',
-                    email: credentials.email,
-                    role: 'user'
-                }
-            };
-
-            return of(mockResponse).pipe(
-                tap(response => this.handleAuthSuccess(response))
-            );
-        }
-
-        return throwError(() => new Error('البريد الإلكتروني أو كلمة المرور غير صحيحة'));
+        return this.http.post<LoginResponse>(`${this.API_URL}/auth/login`, credentials).pipe(
+            tap(response => this.handleAuthSuccess(response))
+        );
     }
 
     logout(): void {

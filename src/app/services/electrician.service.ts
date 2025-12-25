@@ -1,5 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { Electrician, ElectricianRegistration } from '../../model/electrician.model';
 
@@ -8,7 +9,7 @@ import { Electrician, ElectricianRegistration } from '../../model/electrician.mo
 })
 export class ElectricianService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'YOUR_API_BASE_URL/api/electricians';
+  private readonly apiUrl = `${environment.apiUrl}/api/electricians`;
   
   readonly electricians = signal<Electrician[]>([]);
   readonly loading = signal<boolean>(false);

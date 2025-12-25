@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../model/craftsman-registration.model';
 import { SubscriptionPlan } from '../../model/subscription.model';
@@ -7,7 +8,7 @@ import { SubscriptionPlan } from '../../model/subscription.model';
 @Injectable({ providedIn: 'root' })
 export class SubscriptionsService {
     private readonly http = inject(HttpClient);
-    private readonly baseUrl = '/api/subscriptions';
+    private readonly baseUrl = `${environment.apiUrl}/api/subscriptions`;
 
     getPlans(): Observable<ApiResponse<SubscriptionPlan[]>> {
         return this.http.get<ApiResponse<SubscriptionPlan[]>>(`${this.baseUrl}/plans`);

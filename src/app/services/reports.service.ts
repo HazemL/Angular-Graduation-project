@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../model/craftsman-registration.model';
 import { ReportFormData, ReportType } from '../../model/report.model';
@@ -7,7 +8,7 @@ import { ReportFormData, ReportType } from '../../model/report.model';
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
     private readonly http = inject(HttpClient);
-    private readonly baseUrl = '/api/reports';
+    private readonly baseUrl = `${environment.apiUrl}/api/reports`;
 
     submitReport(data: ReportFormData): Observable<ApiResponse<{ reportId: string }>> {
         return this.http.post<ApiResponse<{ reportId: string }>>(this.baseUrl, data);

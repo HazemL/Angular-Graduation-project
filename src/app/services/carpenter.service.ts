@@ -1,5 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { Carpenter, CarpenterRegistration } from '../../model/carpenter.model';
 
@@ -8,7 +9,7 @@ import { Carpenter, CarpenterRegistration } from '../../model/carpenter.model';
 })
 export class CarpenterService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'YOUR_API_BASE_URL/api/carpenters';
+  private readonly apiUrl = `${environment.apiUrl}/api/craftsmen`;
   
   readonly carpenters = signal<Carpenter[]>([]);
   readonly loading = signal<boolean>(false);

@@ -1,12 +1,13 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { ApiResponse, BasicInfoFormData, DocumentsFormData, ProfessionSkillsFormData, RegistrationResponse, ServiceAreasFormData } from '../../model/craftsman-registration.model';
 
 @Injectable({ providedIn: 'root' })
 export class CraftsmanRegistrationService {
     private http = inject(HttpClient);
-    private baseUrl = '/api/craftsman/registration';
+    private baseUrl = `${environment.apiUrl}/api/craftsman/registration`;
 
     // State to track if the user is registering as a craftsman (true) or just a basic user (false)
     readonly isCraftsman = signal(true);
