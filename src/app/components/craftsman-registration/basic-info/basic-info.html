@@ -1,9 +1,9 @@
-<div class="min-vh-100 d-flex flex-column">
+<div class="min-vh-100 d-flex flex-column bg-light-subtle">
     <!-- Header -->
-    <header class="sticky-top bg-white border-bottom py-3">
+    <header class="sticky-top bg-white border-bottom py-3 shadow-sm">
         <div class="container d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-3">
-                <div class="text-primary-custom" style="width: 24px; height: 24px;">
+                <div class="text-primary-custom" style="width: 28px; height: 28px;">
                     <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path
                             d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"
@@ -13,18 +13,9 @@
                 <h1 class="mb-0 fs-5 fw-bold text-dark">صنايعي مصر</h1>
             </div>
             <div class="d-flex align-items-center gap-2">
-                <button type="button" class="btn btn-primary-custom rounded-3 px-3 py-2 fw-bold small"
-                    (click)="navigateToLogin()">تسجيل
-                    الدخول</button>
-                <button type="button" class="btn btn-light rounded-3 px-3 py-2 fw-bold small">English</button>
-            </div>
-            <!-- ... -->
-            <div class="text-center mt-4">
-                <p class="text-secondary small">
-                    لديك حساب بالفعل؟
-                    <a href="javascript:void(0)" (click)="navigateToLogin()"
-                        class="text-primary-custom fw-medium text-decoration-none">تسجيل الدخول</a>
-                </p>
+                <button type="button" class="btn btn-primary-custom rounded-pill px-4 py-2 fw-bold small"
+                    (click )="navigateToLogin()">تسجيل الدخول</button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-2 fw-bold small">English</button>
             </div>
         </div>
     </header>
@@ -38,7 +29,8 @@
                     <div class="progress-step" [class.active]="step.isActive"
                         [class.inactive]="!step.isActive && !step.isCompleted" [class.completed]="step.isCompleted"
                         [attr.aria-current]="step.isActive ? 'step' : null">
-                        {{ step.stepNumber }}
+                        <i class="bi" [class.bi-check-lg]="step.isCompleted" [class.bi-dot]="!step.isCompleted"></i>
+                        <span class="visually-hidden">{{ step.label }}</span>
                     </div>
                     <p class="mt-2 small fw-medium" [class.text-primary-custom]="step.isActive"
                         [class.text-secondary]="!step.isActive">
@@ -52,7 +44,7 @@
             </nav>
 
             <!-- Form Card -->
-            <div class="form-card p-4 p-md-5 mx-auto" style="max-width: 600px;">
+            <div class="form-card p-4 p-md-5 mx-auto border-0 shadow-lg" style="max-width: 600px;">
                 <div class="text-center mb-4">
                     <h2 class="fs-3 fw-bold text-dark">إنشاء حساب جديد</h2>
                     <p class="text-secondary">الخطوة 1 من 4: المعلومات الأساسية</p>
@@ -63,18 +55,15 @@
                     <div class="d-flex flex-column align-items-center gap-3 mb-2">
                         <div class="photo-upload">
                             @if (profilePhotoUrl()) {
-                            <img [src]="profilePhotoUrl()" alt="صورة الملف الشخصي"
-                                class="w-100 h-100 rounded-circle object-fit-cover">
+                            <img [src]="profilePhotoUrl()" alt="صورة الملف الشخصي" class="w-100 h-100 rounded-circle object-fit-cover">
                             } @else {
                             <div
-                                class="w-100 h-100 rounded-circle bg-secondary d-flex align-items-center justify-content-center">
-                                <span class="material-symbols-outlined text-white"
-                                    style="font-size: 40px;">person</span>
+                                class="w-100 h-100 rounded-circle bg-secondary-subtle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-person-fill text-secondary" style="font-size: 48px;"></i>
                             </div>
                             }
                             <label class="photo-upload-btn" for="photoInput" role="button" tabindex="0">
-                                <span class="material-symbols-outlined" style="font-size: 16px;"
-                                    aria-hidden="true">photo_camera</span>
+                                <i class="bi bi-camera-fill" aria-hidden="true"></i>
                                 <span class="visually-hidden">تحميل صورة شخصية</span>
                             </label>
                             <input type="file" id="photoInput" class="d-none" accept="image/*"
@@ -116,9 +105,9 @@
                             <label for="email">البريد الإلكتروني</label>
                         </div>
                         @if (basicInfoForm.get('email')?.touched && basicInfoForm.get('email')?.valid) {
-                        <span class="material-symbols-outlined text-success position-absolute"
+                        <i class="bi bi-check-circle-fill text-success position-absolute"
                             style="left: 16px; top: 50%; transform: translateY(-50%);"
-                            aria-hidden="true">check_circle</span>
+                            aria-hidden="true"></i>
                         }
                         @if (basicInfoForm.get('email')?.touched && basicInfoForm.get('email')?.invalid) {
                         <div id="emailError" class="invalid-feedback d-block">
@@ -191,8 +180,7 @@
                             style="left: 16px; top: 50%; transform: translateY(-50%);"
                             (click)="togglePasswordVisibility()"
                             [attr.aria-label]="showPassword() ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'">
-                            <span class="material-symbols-outlined">{{ showPassword() ? 'visibility_off' : 'visibility'
-                                }}</span>
+                            <i class="bi" [class.bi-eye-slash-fill]="showPassword()" [class.bi-eye-fill]="!showPassword()"></i>
                         </button>
                         @if (basicInfoForm.get('password')?.touched && basicInfoForm.get('password')?.invalid) {
                         <div id="passwordError" class="invalid-feedback d-block">
@@ -210,30 +198,27 @@
                         <div class="form-floating">
                             <input [type]="showConfirmPassword() ? 'text' : 'password'" class="form-control"
                                 id="confirmPassword" formControlName="confirmPassword" placeholder="تأكيد كلمة المرور"
-                                [class.is-invalid]="basicInfoForm.get('confirmPassword')?.touched && (!passwordsMatch() || basicInfoForm.get('confirmPassword')?.invalid)"
-                                [class.is-valid]="basicInfoForm.get('confirmPassword')?.touched && passwordsMatch() && basicInfoForm.get('confirmPassword')?.valid"
+                                [class.is-invalid]="basicInfoForm.get('confirmPassword')?.touched && basicInfoForm.get('confirmPassword')?.invalid"
+                                [class.is-valid]="basicInfoForm.get('confirmPassword')?.touched && basicInfoForm.get('confirmPassword')?.valid"
                                 aria-describedby="confirmPasswordError">
                             <label for="confirmPassword"
-                                [class.text-danger]="basicInfoForm.get('confirmPassword')?.touched && !passwordsMatch()">تأكيد
+                                [class.text-danger]="basicInfoForm.get('confirmPassword')?.touched && basicInfoForm.get('confirmPassword')?.hasError('passwordMismatch')">تأكيد
                                 كلمة المرور</label>
                         </div>
                         <button type="button" class="btn btn-link text-secondary position-absolute p-0"
                             style="left: 16px; top: 50%; transform: translateY(-50%);"
                             (click)="toggleConfirmPasswordVisibility()"
                             [attr.aria-label]="showConfirmPassword() ? 'إخفاء تأكيد كلمة المرور' : 'إظهار تأكيد كلمة المرور'">
-                            <span class="material-symbols-outlined">{{ showConfirmPassword() ? 'visibility_off' :
-                                'visibility'
-                                }}</span>
+                            <i class="bi" [class.bi-eye-slash-fill]="showConfirmPassword()" [class.bi-eye-fill]="!showConfirmPassword()"></i>
                         </button>
-                        @if (basicInfoForm.get('confirmPassword')?.touched && passwordsMatch() &&
-                        basicInfoForm.get('confirmPassword')?.valid) {
-                        <span class="material-symbols-outlined text-success position-absolute"
+                        @if (basicInfoForm.get('confirmPassword')?.touched && basicInfoForm.get('confirmPassword')?.valid) {
+                        <i class="bi bi-check-circle-fill text-success position-absolute"
                             style="left: 16px; top: 50%; transform: translateY(-50%);"
-                            aria-hidden="true">check_circle</span>
+                            aria-hidden="true"></i>
                         }
-                        @if (basicInfoForm.get('confirmPassword')?.touched && !passwordsMatch()) {
-                        <span class="material-symbols-outlined text-danger position-absolute"
-                            style="left: 16px; top: 50%; transform: translateY(-50%);" aria-hidden="true">cancel</span>
+                        @if (basicInfoForm.get('confirmPassword')?.touched && basicInfoForm.get('confirmPassword')?.hasError('passwordMismatch')) {
+                        <i class="bi bi-x-circle-fill text-danger position-absolute"
+                            style="left: 16px; top: 50%; transform: translateY(-50%);" aria-hidden="true"></i>
                         <div id="confirmPasswordError" class="text-danger small mt-1">كلمتا المرور غير متطابقتين</div>
                         }
                         @if (basicInfoForm.get('confirmPassword')?.touched &&
@@ -264,7 +249,7 @@
                     </div>
 
                     <!-- Submit -->
-                    <button type="submit" class="btn btn-primary-custom py-3 fs-5 fw-bold rounded-3"
+                    <button type="submit" class="btn btn-primary-custom py-3 fs-5 fw-bold rounded-pill"
                         [disabled]="isSubmitting()">
                         @if (isSubmitting()) {
                         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>

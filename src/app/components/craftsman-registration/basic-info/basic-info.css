@@ -10,6 +10,7 @@
     .form-card {
         margin: 0 -12px;
         border-radius: 0;
+        box-shadow: none !important;
     }
 
     .progress-step {
@@ -20,8 +21,35 @@
 }
 
 /* Photo upload hover effect */
-.photo-upload:hover .photo-upload-btn {
-    transform: scale(1.1);
+.photo-upload {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.photo-upload:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.photo-upload-btn {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 32px;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
     transition: transform 0.2s ease-in-out;
 }
 
@@ -35,8 +63,14 @@
 /* Ensure all form controls have right-aligned text (including placeholders in RTL) */
 .form-control {
     text-align: right;
+    border-radius: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
+}
 
 /* RTL Checkbox Alignment */
 .rtl-checkbox {
@@ -49,8 +83,13 @@
     float: right !important;
     margin-left: 0 !important;
     margin-right: -1.5em !important;
+    border-radius: 4px;
 }
 
+.rtl-checkbox .form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
 
 /* RTL Floating Label Adjustment */
 .form-floating>label {
@@ -58,6 +97,7 @@
     left: auto;
     transform-origin: 100% 0;
     text-align: right;
+    padding: 1rem 1.5rem;
 }
 
 /* Ensure the label moves to the right top corner when focused/filled */
@@ -95,4 +135,44 @@ input[id="confirmPassword"].is-valid {
     padding-right: 90px !important;
     /* Keep the space for the country code */
     background-position: left calc(0.375em + 0.1875rem) center;
+}
+
+/* Progress Steps Enhancement */
+.progress-step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: 2px solid;
+}
+
+.progress-step.inactive {
+    background-color: #e9ecef;
+    border-color: #e9ecef;
+    color: #6c757d;
+}
+
+.progress-step.active {
+    background-color: white;
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
+}
+
+.progress-step.completed {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.progress-line {
+    flex-grow: 1;
+    height: 2px;
+    background-color: #e9ecef;
 }
