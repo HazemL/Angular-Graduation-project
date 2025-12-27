@@ -33,11 +33,11 @@
         <tr>
           <th>م</th>
           <th>المستخدم</th>
-          <th>النوع</th>
+          <th>الصنايعي</th>
           <th>الوصف</th>
           <th>التاريخ</th>
           <th>الحالة</th>
-          <th>الإجراءات</th>
+         
         </tr>
       </thead>
       <tbody>
@@ -45,18 +45,18 @@
           <td>{{ i + 1 }}</td>
           <td>
             <div class="user-info">
-              <div class="user-avatar">{{ report.user?.name?.charAt(0) || 'U' }}</div>
-              <span class="user-name">{{ report.user?.name || 'غير محدد' }}</span>
+              <div class="user-avatar">{{ report.reporterName?.charAt(0) || 'U' }}</div>
+              <span class="user-name">{{ report.reporterName || 'غير محدد' }}</span>
             </div>
           </td>
           <td>
             <span class="type-badge">
-              <span class="material-symbols-outlined">report_problem</span>
-              {{ report.type?.name || 'غير محدد' }}
+              
+              {{ report.craftsmanName || 'غير محدد' }}
             </span>
           </td>
           <td>
-            <span class="description-text">{{ report.description || 'لا يوجد وصف' }}</span>
+            <span class="description-text">{{ report.message || 'لا يوجد رسالة' }}</span>
           </td>
           <td>
             <span class="date-text">
@@ -65,28 +65,9 @@
             </span>
           </td>
           <td>
-            <select 
-              class="status-select"
-              [value]="report.status"
-              [class.status-pending]="report.status === 'pending'"
-              [class.status-resolved]="report.status === 'resolved'"
-              [class.status-rejected]="report.status === 'rejected'"
-              (change)="changeStatus(report.id, $any($event.target).value)">
-              <option value="pending">قيد المراجعة</option>
-              <option value="resolved">تم الحل</option>
-              <option value="rejected">مرفوض</option>
-            </select>
+           {{ report.status }}
           </td>
-          <td>
-            <div class="action-buttons">
-              <button class="btn-icon" title="عرض">
-                <span class="material-symbols-outlined">visibility</span>
-              </button>
-              <button class="btn-icon btn-danger" title="حذف">
-                <span class="material-symbols-outlined">delete</span>
-              </button>
-            </div>
-          </td>
+          
         </tr>
       </tbody>
     </table>

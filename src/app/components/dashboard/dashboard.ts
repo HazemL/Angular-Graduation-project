@@ -31,7 +31,7 @@ export class Dashboard implements OnInit {
         const admin = data.find(user => user.role === 'admin') || data[0];
         if (admin) {
           this.adminProfile = {
-            name: admin.name || 'Admin',
+            name: admin.fullName || 'Admin',
             image: admin.image ? `${this.baseUrl}${admin.image}` : 'assets/images/default-avatar.png'
           };
         }
@@ -40,11 +40,14 @@ export class Dashboard implements OnInit {
     });
     
     this.craftsService.getCrafts().subscribe({
-      next: (data) => this.craftsCount = data.length,
+      next: (data) => {
+        const craftsData = Array.isArray(data) ? data : (data?.data ?? []);
+        this.craftsCount = craftsData.length;
+      },
       error: (err) => console.error('Error fetching crafts:', err)
     });
     
-    this.reportsService.getAllReports().subscribe({
+    this.reportsService.getReports().subscribe({
       next: (reports: any) => {
         const reportsData = Array.isArray(reports) ? reports : (reports?.data ?? []);
         this.reportsCount = reportsData.length;

@@ -2,13 +2,14 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Carpenter, CarpenterRegistration } from '../../model/carpenter.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarpenterService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'YOUR_API_BASE_URL/api/carpenters';
+  private readonly apiUrl = `${environment.apiUrl}/carpenters`;
   
   readonly carpenters = signal<Carpenter[]>([]);
   readonly loading = signal<boolean>(false);

@@ -3,11 +3,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Craftsman, FilterOption, SearchFilters, SearchResult } from '../../model/craftsman.model';
 import { ApiResponse } from '../../model/craftsman-registration.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class CraftsmenSearchService {
     private readonly http = inject(HttpClient);
-    private readonly baseUrl = '/api/craftsmen';
+    private readonly baseUrl = `${environment.apiUrl}/craftsmen`;
 
     search(filters: SearchFilters, page = 1, pageSize = 10): Observable<ApiResponse<SearchResult>> {
         let params = new HttpParams().set('page', page.toString()).set('pageSize', pageSize.toString());

@@ -40,30 +40,32 @@
           <td>{{ i + 1 }}</td>
           <td>
             <div class="user-info">
-              <div class="user-avatar">{{ craft.name?.charAt(0) }}</div>
+              <div class="user-avatar">{{ craft.name.charAt(0) }}</div>
               <span class="user-name">{{ craft.name }}</span>
             </div>
           </td>
           <td>
             <span class="job-badge">
               <span class="material-symbols-outlined">build</span>
-              {{ craft.job }}
+              {{ craft.profession }}
             </span>
           </td>
           <td>
             <span class="location-badge">
               <span class="material-symbols-outlined">location_on</span>
-              {{ craft.city }}
+              {{ craft.serviceAreas?.[0] || 'غير محدد' }}
             </span>
           </td>
           <td>
             <div class="rating">
               <span class="material-symbols-outlined filled">star</span>
-              <span>4.5</span>
+              <span>{{ craft.rating || 0 }}</span>
             </div>
           </td>
           <td>
-            <span class="status-badge status-active">نشط</span>
+            <span class="status-badge" [ngClass]="craft.isVerified ? 'status-active' : 'status-inactive'">
+              {{ craft.isVerified ? 'موثق' : 'غير موثق' }}
+            </span>
           </td>
           <td>
             <div class="action-buttons">

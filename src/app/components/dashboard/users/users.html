@@ -13,10 +13,10 @@
       <input type="text" placeholder="البحث عن مستخدم..." [(ngModel)]="searchTerm" (input)="onSearch()">
     </div>
     <div class="filter-options">
-      <select class="filter-select">
-        <option>جميع المستخدمين</option>
-        <option>نشط</option>
-        <option>غير نشط</option>
+      <select class="filter-select" [(ngModel)]="statusFilter" (change)="onFilterChange()">
+        <option value="all">جميع المستخدمين</option>
+        <option value="active">نشط</option>
+        <option value="inactive">غير نشط</option>
       </select>
     </div>
   </div>
@@ -38,24 +38,26 @@
           <td>{{ i + 1 }}</td>
           <td>
             <div class="user-info">
-              <div class="user-avatar">{{ user.name?.charAt(0) }}</div>
-              <span class="user-name">{{ user.name }}</span>
+              <div class="user-avatar">{{ user.fullName?.charAt(0) }}</div>
+              <span class="user-name">{{ user.fullName }}</span>
             </div>
           </td>
           <td>{{ user.email }}</td>
           <td>{{ user.createdAt || 'غير محدد' }}</td>
           <td>
-            <span class="status-badge status-active">نشط</span>
+            <span class="status-badge" [ngClass]="user.isActive !== false ? 'status-active' : 'status-inactive'">
+              {{ user.isActive !== false ? 'نشط' : 'غير نشط' }}
+            </span>
           </td>
           <td>
             <div class="action-buttons">
-              <button class="btn-icon" title="عرض">
+              <button class="btn-icon" title="عرض" (click)="viewUser(user)">
                 <span class="material-symbols-outlined">visibility</span>
               </button>
-              <button class="btn-icon" title="تعديل">
+              <button class="btn-icon" title="تعديل" (click)="editUser(user)">
                 <span class="material-symbols-outlined">edit</span>
               </button>
-              <button class="btn-icon btn-danger" title="حذف">
+              <button class="btn-icon btn-danger" title="حذف" (click)="deleteUser(user)">
                 <span class="material-symbols-outlined">delete</span>
               </button>
             </div>
@@ -65,5 +67,73 @@
     </table>
   </div>
 
+  <!-- Modal عرض المستخدم -->
+  <div class="modal-overlay" *ngIf="showViewModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>تفاصيل المستخدم</h3>
+        <button class="close-btn" (click)="closeModal()">×</button>
+      </div>
+      <div class="modal-body" *ngIf="selectedUser">
+        <div class="user-details">
+          <div class="detail-item">
+            <label>الاسم:</label>
+            <span>{{ selectedUser.fullName }}</span>
+          </div>
+          <div class="detail-item">
+            <label>البريد الإلكتروني:</label>
+            <span>{{ selectedUser.email }}</span>
+          </div>
+          <div class="detail-item">
+            <label>تاريخ الانضمام:</label>
+            <span>{{ selectedUser.createdAt || 'غير محدد' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>الحالة:</label>
+            <span [class]="selectedUser.isActive !== false ? 'text-success' : 'text-danger'">
+              {{ selectedUser.isActive !== false ? 'نشط' : 'غير نشط' }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <label>الدور:</label>
+            <span>{{ selectedUser.role || 'مستخدم' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal تعديل المستخدم -->
+  <div class="modal-overlay" *ngIf="showEditModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>تعديل المستخدم</h3>
+        <button class="close-btn" (click)="closeModal()">×</button>
+      </div>
+      <div class="modal-body" *ngIf="selectedUser">
+        <form class="edit-form">
+          <div class="form-group">
+            <label>الاسم:</label>
+            <input type="text" [(ngModel)]="selectedUser.fullName" name="fullName" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>البريد الإلكتروني:</label>
+            <input type="email" [(ngModel)]="selectedUser.email" name="email" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>الحالة:</label>
+            <select [(ngModel)]="selectedUser.isActive" name="isActive" class="form-control">
+              <option [ngValue]="true">نشط</option>
+              <option [ngValue]="false">غير نشط</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-primary" (click)="saveUser()">حفظ التغييرات</button>
+            <button type="button" class="btn-secondary" (click)="closeModal()">إلغاء</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
   
 </div>

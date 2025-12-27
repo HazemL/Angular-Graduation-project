@@ -2,13 +2,14 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Painter, PainterRegistration } from '../../model/painter.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PainterService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'YOUR_API_BASE_URL/api/painters';
+  private readonly apiUrl = `${environment.apiUrl}/painters`;
   
   readonly painters = signal<Painter[]>([]);
   readonly loading = signal<boolean>(false);

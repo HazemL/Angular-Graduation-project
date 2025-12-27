@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../model/craftsman-registration.model';
 import { ReportFormData, ReportType } from '../../model/report.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
     private readonly http = inject(HttpClient);
-    private readonly baseUrl = '/api/reports';
+    private readonly baseUrl = `${environment.apiUrl}/reports`;
+    
 
     submitReport(data: ReportFormData): Observable<ApiResponse<{ reportId: string }>> {
         return this.http.post<ApiResponse<{ reportId: string }>>(this.baseUrl, data);
@@ -16,7 +18,7 @@ export class ReportsService {
     uploadAttachment(file: File): Observable<ApiResponse<{ fileUrl: string }>> {
         const formData = new FormData();
         formData.append('file', file);
-        return this.http.post<ApiResponse<{ fileUrl: string }>>(`${this.baseUrl}/upload`, formData);
+        return this.http.post<ApiResponse<{ fileUrl: string }>>(`${this.baseUrl}`, formData);
     }
 
     getReportTypes(): Observable<ApiResponse<ReportType[]>> {
@@ -24,19 +26,19 @@ export class ReportsService {
     }
 
     getReportStatus(reportId: string): Observable<ApiResponse<{ status: string; updatedAt: string }>> {
-        return this.http.get<ApiResponse<{ status: string; updatedAt: string }>>(`${this.baseUrl}/${reportId}/status`);
+        return this.http.get<ApiResponse<{ status: string; updatedAt: string }>>(`${this.baseUrl}/${reportId}`);
     }
     
-getAllReports(): Observable<ApiResponse<any[]>> {
-  return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/admin`);
-}
+  getReports(): Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl);
+  }
 
 updateReportStatus(
   reportId: string,
   status: 'pending' | 'resolved' | 'rejected'
 ): Observable<ApiResponse<any>> {
   return this.http.patch<ApiResponse<any>>(
-    `${this.baseUrl}/admin/${reportId}/status`,
+    `${this.baseUrl}/${reportId}`,
     { status }
   );
 }

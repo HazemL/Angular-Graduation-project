@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ReportsService } from '../../../services/reports.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { OnInit } from '@angular/core';
+
 
 @Component({
   selector: 'app-dashreports',
@@ -9,46 +11,34 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './dashreports.html',
   styleUrl: './dashreports.css',
 })
-export class Dashreports {
-  reports: any[] = [];
+export class Dashreports implements OnInit {
+ reports: any[] = [];
   filteredReports: any[] = [];
-  loading = true;
   searchTerm: string = '';
-  
+  loading: boolean = false;
+
   constructor(private reportsService: ReportsService) {}
 
-  ngOnInit(): void {
-    this.loadReports();
-  }
-
-  loadReports() {
-    this.reportsService.getAllReports().subscribe({
-      next: (reports: any) => {
-        this.reports = Array.isArray(reports) ? reports : (reports?.data ?? []);
+  ngOnInit() {
+    this.reportsService.getReports().subscribe({
+      next: (res) => {
+        this.reports = res;
         this.filteredReports = this.reports;
-        this.loading = false;
       },
-      error: err => {
-        console.error(err);
-        this.loading = false;
-      }
+      error: (err) => console.error('Error fetching reports:', err)
     });
   }
 
-  changeStatus(reportId: string, status: string) {
-    this.reportsService.updateReportStatus(reportId, status as any)
-      .subscribe(() => this.loadReports());
-  }
-  
   onSearch() {
     const term = this.searchTerm.toLowerCase().trim();
     if (!term) {
       this.filteredReports = this.reports;
     } else {
-      this.filteredReports = this.reports.filter(report => 
-        report.user?.name?.toLowerCase().includes(term) || 
-        report.type?.name?.toLowerCase().includes(term) ||
-        report.description?.toLowerCase().includes(term)
+      this.filteredReports = this.reports.filter(report =>
+        report.message?.toLowerCase().includes(term) ||
+        report.status?.toLowerCase().includes(term) ||
+        report.reporterName?.toLowerCase().includes(term) ||
+        report.craftsmanName?.toLowerCase().includes(term)
       );
     }
   }
