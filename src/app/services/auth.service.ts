@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, inject } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, of, throwError } from 'rxjs';
 import { LoginRequest, LoginResponse } from '../../model/auth.model';
 import { environment } from '../../environments/environment';
 
@@ -14,7 +14,10 @@ export class AuthService {
     readonly currentUser = signal<LoginResponse['user'] | null>(this.getUserFromStorage());
     readonly isAuthenticated = signal<boolean>(!!this.getToken());
 
-    private readonly API_URL = environment.apiUrl;
+
+
+    private readonly API_URL = `${environment.apiUrl}/api`;
+
 
     login(credentials: LoginRequest): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${this.API_URL}/auth/login`, credentials).pipe(

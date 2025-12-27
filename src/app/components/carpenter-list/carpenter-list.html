@@ -1,220 +1,294 @@
-<div class="container py-5" dir="rtl">
-  <!-- Header -->
-  <div class="text-center mb-5">
-    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning bg-opacity-10 p-4 mb-3">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" class="text-warning">
-        <path d="M22.61 18.99L13.53 9.91C14.46 7.57 14 4.81 12.09 2.9C9.79 0.6 6.21 0.4 3.66 2.26L7.5 6.11L6.08 7.52L2.25 3.69C0.39 6.23 0.59 9.82 2.89 12.12C4.8 14.03 7.56 14.49 9.9 13.56L18.98 22.64C19.54 23.2 20.43 23.2 20.99 22.64L22.6 21.03C23.17 20.47 23.17 19.55 22.61 18.99ZM19.59 20.59L9.95 10.95C9.78 11.15 9.59 11.34 9.39 11.51L18.98 21.1L19.59 20.59Z" fill="currentColor"/>
-      </svg>
-    </div>
-    <h1 class="display-4 fw-bold text-warning mb-3">نجار - تصنيع وتركيب</h1>
-    <p class="lead text-muted">اختر أفضل نجار محترف لأعمال النجارة والديكور</p>
-  </div>
-
-  <!-- Loading State -->
-  @if (loading()) {
-    <div class="d-flex justify-content-center align-items-center" style="min-height: 400px;" role="status">
-      <div class="spinner-border text-warning" style="width: 3rem; height: 3rem;">
-        <span class="visually-hidden">جاري التحميل...</span>
-      </div>
-    </div>
-  }
-
-  <!-- Error State -->
-  @if (error()) {
-    <div class="alert alert-danger text-center" role="alert">
-      <p class="mb-3">{{ error() }}</p>
-      <button type="button" class="btn btn-warning" (click)="loadCarpenters()">
-        إعادة المحاولة
-      </button>
-    </div>
-  }
-
-  <!-- Content -->
-  @if (!loading() && !error()) {
-    <!-- Search -->
-    <div class="row mb-4">
-      <div class="col-12 col-md-8 col-lg-6 mx-auto">
-        <div class="input-group input-group-lg shadow-sm">
-          <span class="input-group-text bg-white border-end-0">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-warning">
-              <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="currentColor"/>
+<!-- carpenter-list.html -->
+<div class="carpenter-showcase" dir="rtl">
+  <!-- Hero Header Section -->
+  <section class="hero-header">
+    <div class="container">
+      <div class="hero-content text-center">
+        <div class="icon-wrapper animate-float">
+          <div class="icon-circle">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+              <path d="M22.61 18.99L13.53 9.91C14.46 7.57 14 4.81 12.09 2.9C9.79 0.6 6.21 0.4 3.66 2.26L7.5 6.11L6.08 7.52L2.25 3.69C0.39 6.23 0.59 9.82 2.89 12.12C4.8 14.03 7.56 14.49 9.9 13.56L18.98 22.64C19.54 23.2 20.43 23.2 20.99 22.64L22.6 21.03C23.17 20.47 23.17 19.55 22.61 18.99ZM19.59 20.59L9.95 10.95C9.78 11.15 9.59 11.34 9.39 11.51L18.98 21.1L19.59 20.59Z" fill="currentColor"/>
             </svg>
-          </span>
-          <input
-            type="search"
-            class="form-control border-start-0"
-            placeholder="ابحث عن نجار..."
-            [value]="searchQuery()"
-            (input)="onSearch($event)"
-            aria-label="البحث عن نجار"
-          />
+          </div>
+        </div>
+        <h1 class="hero-title">نجار - تصنيع وتركيب</h1>
+        <p class="hero-subtitle">اختر أفضل نجار محترف لأعمال النجارة والديكور</p>
+        
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+          <div class="stat-item">
+            <span class="stat-value">{{ carpenters().length }}</span>
+            <span class="stat-label">نجار محترف</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">{{ verifiedCarpenters().length }}</span>
+            <span class="stat-label">موثق</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">24/7</span>
+            <span class="stat-label">متاح</span>
+          </div>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- Carpenters Grid -->
-    <div class="row g-4">
-      @for (carpenter of filteredCarpenters(); track carpenter.id) {
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="card h-100 border-0 shadow-sm hover-shadow">
-            <!-- Card Image/Header -->
-            <div class="position-relative" style="height: 200px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+  <!-- Main Content -->
+  <div class="container main-content">
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="loading-state">
+        <div class="spinner-wrapper">
+          <div class="custom-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" class="spinner-icon">
+              <path d="M22.61 18.99L13.53 9.91C14.46 7.57 14 4.81 12.09 2.9C9.79 0.6 6.21 0.4 3.66 2.26L7.5 6.11L6.08 7.52L2.25 3.69C0.39 6.23 0.59 9.82 2.89 12.12C4.8 14.03 7.56 14.49 9.9 13.56L18.98 22.64C19.54 23.2 20.43 23.2 20.99 22.64L22.6 21.03C23.17 20.47 23.17 19.55 22.61 18.99Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <p class="loading-text">جاري تحميل النجارين المحترفين...</p>
+        </div>
+      </div>
+    }
+
+    <!-- Error State -->
+    @if (error()) {
+      <div class="error-state">
+        <div class="error-card">
+          <div class="error-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3 class="error-title">عذراً، حدث خطأ</h3>
+          <p class="error-message">{{ error() }}</p>
+          <button class="btn btn-retry" (click)="loadCarpenters()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4C7.58 4 4.01 7.58 4.01 12C4.01 16.42 7.58 20 12 20C15.73 20 18.84 17.45 19.73 14H17.65C16.83 16.33 14.61 18 12 18C8.69 18 6 15.31 6 12C6 8.69 8.69 6 12 6C13.66 6 15.14 6.69 16.22 7.78L13 11H20V4L17.65 6.35Z" fill="currentColor"/>
+            </svg>
+            إعادة المحاولة
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Content -->
+    @if (!loading() && !error()) {
+      <!-- Search & Filter Bar -->
+      <div class="search-filter-section">
+        <div class="search-wrapper">
+          <div class="search-box">
+            <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="currentColor"/>
+            </svg>
+            <input
+              type="search"
+              class="search-input"
+              placeholder="ابحث عن نجار بالاسم، المنطقة أو التخصص..."
+              [value]="searchQuery()"
+              (input)="onSearch($event)"
+            />
+            @if (searchQuery()) {
+              <button class="clear-search" (click)="searchQuery.set('')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="currentColor"/>
+                </svg>
+              </button>
+            }
+          </div>
+          
+          <!-- Quick Filters -->
+          <div class="quick-filters">
+            <button class="filter-chip active">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L1 21H23L12 2Z" fill="currentColor"/>
+              </svg>
+              الكل
+            </button>
+            <button class="filter-chip" (click)="filterVerified()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor"/>
+              </svg>
+              موثق فقط
+            </button>
+            <button class="filter-chip">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" fill="currentColor"/>
+              </svg>
+              الأعلى تقييماً
+            </button>
+          </div>
+        </div>
+
+        <!-- Results Count -->
+        <div class="results-info">
+          <p class="results-text">
+            عرض <strong>{{ filteredCarpenters().length }}</strong> من <strong>{{ carpenters().length }}</strong> نجار
+          </p>
+        </div>
+      </div>
+
+      <!-- Carpenters Grid -->
+      <div class="carpenters-grid">
+        @for (carpenter of filteredCarpenters(); track carpenter.id; let idx = $index) {
+          <div class="carpenter-card" [style.animation-delay]="idx * 0.1 + 's'">
+            <!-- Card Header with Image -->
+            <div class="card-header-image">
               @if (carpenter.imageUrl) {
-                <img 
-                  [src]="carpenter.imageUrl" 
-                  [alt]="carpenter.name"
-                  class="card-img-top h-100 w-100"
-                  style="object-fit: cover;"
-                  loading="lazy"
-                />
+                <img [src]="carpenter.imageUrl" [alt]="carpenter.name" class="carpenter-image" loading="lazy"/>
               } @else {
-                <div class="d-flex align-items-center justify-content-center h-100 text-white">
-                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M22.61 18.99L13.53 9.91C14.46 7.57 14 4.81 12.09 2.9C9.79 0.6 6.21 0.4 3.66 2.26L7.5 6.11L6.08 7.52L2.25 3.69C0.39 6.23 0.59 9.82 2.89 12.12C4.8 14.03 7.56 14.49 9.9 13.56L18.98 22.64C19.54 23.2 20.43 23.2 20.99 22.64L22.6 21.03C23.17 20.47 23.17 19.55 22.61 18.99ZM19.59 20.59L9.95 10.95C9.78 11.15 9.59 11.34 9.39 11.51L18.98 21.1L19.59 20.59Z" fill="currentColor"/>
+                <div class="placeholder-image">
+                  <div class="placeholder-pattern"></div>
+                  <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
+                    <path d="M22.61 18.99L13.53 9.91C14.46 7.57 14 4.81 12.09 2.9C9.79 0.6 6.21 0.4 3.66 2.26L7.5 6.11L6.08 7.52L2.25 3.69C0.39 6.23 0.59 9.82 2.89 12.12C4.8 14.03 7.56 14.49 9.9 13.56L18.98 22.64C19.54 23.2 20.43 23.2 20.99 22.64L22.6 21.03C23.17 20.47 23.17 19.55 22.61 18.99Z" fill="currentColor" opacity="0.2"/>
                   </svg>
                 </div>
               }
               
-              <!-- Availability Badge -->
-              @if (carpenter.availability) {
-                <span class="badge bg-success position-absolute top-0 start-0 m-3 shadow-sm">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="ms-1" aria-hidden="true">
-                    <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor"/>
-                  </svg>
-                  متاح
-                </span>
-              } @else {
-                <span class="badge bg-secondary position-absolute top-0 start-0 m-3 shadow-sm">غير متاح</span>
-              }
+              <!-- Badges Overlay -->
+              <div class="card-badges">
+                @if (carpenter.isVerified) {
+                  <span class="badge badge-verified">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor"/>
+                    </svg>
+                    موثق
+                  </span>
+                }
+                @if (carpenter.availability) {
+                  <span class="badge badge-available">
+                    <span class="pulse-dot"></span>
+                    متاح الآن
+                  </span>
+                }
+              </div>
+
+              <!-- Rating Badge -->
+              <div class="rating-badge">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" fill="currentColor"/>
+                </svg>
+                <span>{{ carpenter.rating }}</span>
+              </div>
             </div>
 
             <!-- Card Body -->
             <div class="card-body">
-              <h5 class="card-title fw-bold mb-3 text-dark">{{ carpenter.name }}</h5>
-              
-              <div class="mb-3">
-                <!-- Email -->
-                <div class="d-flex align-items-start mb-2 small text-muted">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-warning ms-2 flex-shrink-0 mt-1" aria-hidden="true">
-                    <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="currentColor"/>
+              <!-- Name & Location -->
+              <div class="carpenter-header">
+                <h3 class="carpenter-name">{{ carpenter.name }}</h3>
+                <p class="carpenter-location">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="currentColor"/>
                   </svg>
-                  <span class="text-break">{{ carpenter.email }}</span>
+                  {{ carpenter.city }}, {{ carpenter.governorate }}
+                </p>
+              </div>
+
+              <!-- Specialization Badge -->
+              <div class="specialization-tag">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z" fill="currentColor"/>
+                </svg>
+                {{ carpenter.specialization }}
+              </div>
+
+              <!-- Bio -->
+              @if (carpenter.bio) {
+                <p class="carpenter-bio">{{ carpenter.bio }}</p>
+              }
+
+              <!-- Info Grid -->
+              <div class="info-grid">
+                <div class="info-item">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M20 6H16V4C16 2.89 15.11 2 14 2H10C8.89 2 8 2.89 8 4V6H4C2.89 6 2.01 6.89 2.01 8L2 19C2 20.11 2.89 21 4 21H20C21.11 21 22 20.11 22 19V8C22 6.89 21.11 6 20 6Z" fill="currentColor"/>
+                  </svg>
+                  <div class="info-content">
+                    <span class="info-label">الخبرة</span>
+                    <span class="info-value">{{ carpenter.experience }} سنوات</span>
+                  </div>
                 </div>
 
-                <!-- Phone -->
-                <div class="d-flex align-items-center mb-2 small text-muted">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-warning ms-2 flex-shrink-0" aria-hidden="true">
+                @if (carpenter.minPrice && carpenter.maxPrice) {
+                  <div class="info-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M11.8 10.9C9.53 10.31 8.8 9.7 8.8 8.75C8.8 7.66 9.81 6.9 11.5 6.9C13.28 6.9 13.94 7.75 14 9H16.21C16.14 7.28 15.09 5.7 13 5.19V3H10V5.16C8.06 5.58 6.5 6.84 6.5 8.77C6.5 11.08 8.41 12.23 11.2 12.9C13.7 13.5 14.2 14.38 14.2 15.31C14.2 16 13.71 17.1 11.5 17.1C9.44 17.1 8.63 16.18 8.52 15H6.32C6.44 17.19 8.08 18.42 10 18.83V21H13V18.85C14.95 18.48 16.5 17.35 16.5 15.3C16.5 12.46 14.07 11.49 11.8 10.9Z" fill="currentColor"/>
+                    </svg>
+                    <div class="info-content">
+                      <span class="info-label">السعر</span>
+                      <span class="info-value">{{ carpenter.minPrice }} - {{ carpenter.maxPrice }} جنيه</span>
+                    </div>
+                  </div>
+                }
+              </div>
+
+              <!-- Services Tags -->
+              @if (carpenter.services && carpenter.services.length > 0) {
+                <div class="services-section">
+                  <p class="services-title">الخدمات المتاحة</p>
+                  <div class="services-tags">
+                    @for (service of carpenter.services.slice(0, 3); track service) {
+                      <span class="service-tag">{{ service }}</span>
+                    }
+                    @if (carpenter.services.length > 3) {
+                      <span class="service-tag more-tag">+{{ carpenter.services.length - 3 }}</span>
+                    }
+                  </div>
+                </div>
+              }
+
+              <!-- Contact Info (Collapsed) -->
+              <div class="contact-preview">
+                <div class="contact-item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                     <path d="M6.62 10.79C8.06 13.62 10.38 15.94 13.21 17.38L15.41 15.18C15.69 14.9 16.08 14.82 16.43 14.93C17.55 15.3 18.75 15.5 20 15.5C20.55 15.5 21 15.95 21 16.5V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z" fill="currentColor"/>
                   </svg>
                   <span>{{ carpenter.phone }}</span>
                 </div>
-
-                <!-- Address -->
-                <div class="d-flex align-items-start mb-2 small text-muted">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-warning ms-2 flex-shrink-0 mt-1" aria-hidden="true">
-                    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="currentColor"/>
+                <div class="contact-item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="currentColor"/>
                   </svg>
-                  <span>{{ carpenter.address }}</span>
-                </div>
-
-                <!-- Specialization -->
-                <div class="d-flex align-items-center mb-2">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-warning ms-2 flex-shrink-0" aria-hidden="true">
-                    <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z" fill="currentColor"/>
-                  </svg>
-                  <span class="badge bg-warning bg-opacity-10 text-warning">{{ carpenter.specialization }}</span>
-                </div>
-
-                <!-- Experience -->
-                <div class="d-flex align-items-center mb-3 small text-muted">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-warning ms-2 flex-shrink-0" aria-hidden="true">
-                    <path d="M20 6H16V4C16 2.89 15.11 2 14 2H10C8.89 2 8 2.89 8 4V6H4C2.89 6 2.01 6.89 2.01 8L2 19C2 20.11 2.89 21 4 21H20C21.11 21 22 20.11 22 19V8C22 6.89 21.11 6 20 6ZM14 6H10V4H14V6Z" fill="currentColor"/>
-                  </svg>
-                  <span>{{ carpenter.experience }} سنوات خبرة</span>
-                </div>
-
-                <!-- Services -->
-                @if (carpenter.services && carpenter.services.length > 0) {
-                  <div class="mb-3">
-                    <div class="d-flex align-items-center mb-2 small fw-semibold text-dark">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-warning ms-2" aria-hidden="true">
-                        <path d="M12 2L1 21H23L12 2ZM13 18H11V16H13V18ZM13 14H11V10H13V14Z" fill="currentColor"/>
-                      </svg>
-                      <span>الخدمات:</span>
-                    </div>
-                    <div class="d-flex flex-wrap gap-1">
-                      @for (service of carpenter.services; track service) {
-                        <span class="badge bg-light text-dark border small">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="text-warning ms-1" aria-hidden="true">
-                            <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor"/>
-                          </svg>
-                          {{ service }}
-                        </span>
-                      }
-                    </div>
-                  </div>
-                }
-
-                <!-- Rating -->
-                <div class="d-flex align-items-center pt-2 border-top">
-                  <div class="d-flex ms-2" [attr.aria-label]="'التقييم: ' + carpenter.rating + ' من 5'">
-                    @for (star of [1,2,3,4,5]; track star) {
-                      <svg 
-                        width="18" 
-                        height="18" 
-                        viewBox="0 0 24 24" 
-                        [class]="star <= carpenter.rating ? 'text-warning' : 'text-muted'"
-                        aria-hidden="true"
-                      >
-                        <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" fill="currentColor"/>
-                      </svg>
-                    }
-                  </div>
-                  <span class="fw-bold text-dark">{{ carpenter.rating }}</span>
-                  <span class="text-muted small me-auto">(من 5.0)</span>
-                </div>
-              </div>
-
-              <!-- Card Actions -->
-              <div class="card-footer bg-transparent border-top-0 pt-0">
-                <div class="d-grid gap-2">
-                  <button 
-                    type="button"
-                    class="btn btn-warning text-white fw-semibold"
-                    (click)="contactCarpenter(carpenter)"
-                    [attr.aria-label]="'تواصل مع ' + carpenter.name"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="ms-2" aria-hidden="true">
-                      <path d="M6.62 10.79C8.06 13.62 10.38 15.94 13.21 17.38L15.41 15.18C15.69 14.9 16.08 14.82 16.43 14.93C17.55 15.3 18.75 15.5 20 15.5C20.55 15.5 21 15.95 21 16.5V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z" fill="currentColor"/>
-                    </svg>
-                    تواصل الآن
-                  </button>
-                  <a 
-                    [routerLink]="['/carpenter', carpenter.id]"
-                    class="btn btn-outline-warning fw-semibold"
-                    [attr.aria-label]="'عرض تفاصيل ' + carpenter.name"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="ms-2" aria-hidden="true">
-                      <path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5C17 19.5 21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" fill="currentColor"/>
-                    </svg>
-                    عرض التفاصيل
-                  </a>
+                  <span class="email-text">{{ carpenter.email }}</span>
                 </div>
               </div>
             </div>
+
+            <!-- Card Footer with Actions -->
+            <div class="card-footer">
+              <button class="btn btn-primary" (click)="contactCarpenter(carpenter)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M6.62 10.79C8.06 13.62 10.38 15.94 13.21 17.38L15.41 15.18C15.69 14.9 16.08 14.82 16.43 14.93C17.55 15.3 18.75 15.5 20 15.5C20.55 15.5 21 15.95 21 16.5V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z" fill="currentColor"/>
+                </svg>
+                اتصل الآن
+              </button>
+              <a [routerLink]="['/carpenter', carpenter.id]" class="btn btn-secondary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5C17 19.5 21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17Z" fill="currentColor"/>
+                </svg>
+                عرض الملف
+              </a>
+            </div>
           </div>
-        </div>
-      } @empty {
-        <div class="col-12">
-          <div class="alert alert-warning text-center py-5 border-0 shadow-sm">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" class="text-warning mb-3">
-              <path d="M1 21H23L12 2L1 21ZM13 18H11V16H13V18ZM13 14H11V10H13V14Z" fill="currentColor"/>
-            </svg>
-            <h5 class="mb-2">لا توجد نتائج</h5>
-            <p class="text-muted mb-0">جرب البحث بكلمات مختلفة</p>
+        } @empty {
+          <div class="empty-state">
+            <div class="empty-illustration">
+              <svg width="120" height="120" viewBox="0 0 24 24" fill="none">
+                <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14Z" fill="currentColor" opacity="0.2"/>
+              </svg>
+            </div>
+            <h3 class="empty-title">لا توجد نتائج</h3>
+            <p class="empty-text">لم نتمكن من العثور على نجارين يطابقون بحثك</p>
+            <button class="btn btn-primary" (click)="searchQuery.set('')">
+              مسح البحث
+            </button>
           </div>
-        </div>
-      }
-    </div>
-  }
+        }
+      </div>
+    }
+  </div>
 </div>

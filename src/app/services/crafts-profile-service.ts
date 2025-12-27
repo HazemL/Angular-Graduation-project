@@ -25,7 +25,8 @@ export interface CraftsProfile {
 export class CraftsProfileService {
   
     private http = inject(HttpClient);
-  private baseUrl = `${environment.apiUrl}/crafts-profile`;
+
+  private baseUrl = `${environment.apiUrl}/api/crafts-profile`;
 
   getProfile(workerId: string): Observable<CraftsProfile> {
     return this.http.get<CraftsProfile>(`${this.baseUrl}/${workerId}`);

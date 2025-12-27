@@ -16,7 +16,10 @@ export interface job {
 })
 export class Craftsjobs {
    private http = inject(HttpClient);
-  private baseUrl = `${environment.apiUrl}/crafts-jobs`;
+
+
+  private baseUrl = `${environment.apiUrl}/api/crafts-jobs`;
+
 
   getMyWorks(): Observable<job[]> {
     return this.http.get<job[]>(`${this.baseUrl}/my`);

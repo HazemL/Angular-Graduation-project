@@ -1,5 +1,6 @@
 import { Component, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { GovernorateCitiesService } from '../../services/governorate-cities.service';
@@ -9,7 +10,7 @@ import { WorkStep } from '../../../model/work-step';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink,AsyncPipe  ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -36,8 +37,31 @@ export class Home {
   // Get data from services
   services: Service[] = this.craftsmanServicesService.getAllServices();
 
-  get governorates(): string[] {
-    return this.governorateCitiesService.getGovernorates();
+ governorates = this.governorateCitiesService.getGovernorateNames();
+
+
+  // Bindable properties for template `ngModel` to work with signals
+  get selectedServiceValue(): string {
+    return this.selectedService();
+  }
+  set selectedServiceValue(v: string) {
+    this.selectedService.set(v);
+  }
+
+  get selectedLocationValue(): string {
+    return this.selectedLocation();
+  }
+  set selectedLocationValue(v: string) {
+    this.selectedLocation.set(v);
+    // keep cities in sync when location changes via template
+    this.onGovernorateChange();
+  }
+
+  get selectedCityValue(): string {
+    return this.selectedCity();
+  }
+  set selectedCityValue(v: string) {
+    this.selectedCity.set(v);
   }
 
   workSteps: WorkStep[] = [
@@ -103,7 +127,9 @@ export class Home {
   onGovernorateChange(): void {
     const selectedGov = this.selectedLocation();
     if (selectedGov) {
-      this.filteredCities.set(this.governorateCitiesService.getCitiesByGovernorate(selectedGov));
+      this.governorateCitiesService.getCityNamesByGovernorate(selectedGov).subscribe(names => {
+        this.filteredCities.set(names);
+      });
       this.selectedCity.set('');
     } else {
       this.filteredCities.set([]);

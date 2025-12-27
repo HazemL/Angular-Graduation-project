@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { CommonModule, KeyValuePipe } from '@angular/common';
+import { CommonModule, KeyValuePipe, AsyncPipe } from '@angular/common';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CraftsmanRegistrationService } from '../../../services/craftsman-registration.service';
@@ -12,7 +12,7 @@ import { RegistrationStep } from '../../../../model/craftsman-registration.model
     styleUrl: './service-areas.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [ReactiveFormsModule, KeyValuePipe]
+    imports: [ReactiveFormsModule, KeyValuePipe, AsyncPipe]
 })
 export class ServiceAreas {
     private registrationService = inject(CraftsmanRegistrationService);
@@ -20,7 +20,7 @@ export class ServiceAreas {
     private router = inject(Router);
 
     protected readonly isSubmitting = signal(false);
-    protected readonly governorates = this.governorateCitiesService.getGovernorates();
+    protected readonly governorates = this.governorateCitiesService.getGovernorateNames();
     protected readonly availableCities = signal<string[]>([]);
 
     // Track selected cities per governorate: { 'Cairo': ['Maadi', 'Nasr City'], ... }
@@ -45,8 +45,9 @@ export class ServiceAreas {
     onGovernorateChange(): void {
         const selectedGov = this.currentGovernorate.value;
         if (selectedGov) {
-            const cities = this.governorateCitiesService.getCitiesByGovernorate(selectedGov);
-            this.availableCities.set(cities);
+            this.governorateCitiesService.getCityNamesByGovernorate(selectedGov).subscribe(names => {
+                this.availableCities.set(names);
+            });
             this.currentCity.setValue(''); // Reset city selection
         } else {
             this.availableCities.set([]);

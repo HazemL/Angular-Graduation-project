@@ -1,74 +1,63 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GovernorateCitiesService {
-  private static readonly governorateCitiesData: { [key: string]: string[] } = {
-    'القاهرة': ['القاهرة الجديدة', 'مدينة نصر', 'مصر الجديدة', 'حلوان', 'المعادي', 'المقطم', 'الزمالك', 'وسط البلد', 'شبرا', 'العباسية'],
-    'الجيزة': ['الجيزة', 'السادس من أكتوبر', 'الشيخ زايد', 'الدقي', 'المهندسين', 'الهرم', 'فيصل', 'بولاق الدكرور', 'إمبابة', 'العمرانية'],
-    'الإسكندرية': ['الإسكندرية', 'برج العرب', 'العجمي', 'العامرية', 'سموحة', 'ميامي', 'الرمل', 'سيدي بشر', 'محرم بك', 'أبو قير'],
-    'الدقهلية': ['المنصورة', 'طلخا', 'ميت غمر', 'دكرنس', 'أجا', 'منية النصر', 'السنبلاوين', 'الكردي', 'بني عبيد', 'المطرية'],
-    'البحر الأحمر': ['الغردقة', 'سفاجا', 'القصير', 'مرسى علم', 'رأس غارب', 'الشلاتين', 'حلايب'],
-    'البحيرة': ['دمنهور', 'كفر الدوار', 'رشيد', 'إدكو', 'أبو حمص', 'أبو المطامير', 'الدلنجات', 'المحمودية', 'حوش عيسى', 'كوم حمادة'],
-    'الفيوم': ['الفيوم', 'طامية', 'سنورس', 'إطسا', 'إبشواي', 'يوسف الصديق'],
-    'الغربية': ['طنطا', 'المحلة الكبرى', 'كفر الزيات', 'زفتى', 'السنطة', 'قطور', 'بسيون', 'سمنود'],
-    'الإسماعيلية': ['الإسماعيلية', 'فايد', 'القنطرة شرق', 'القنطرة غرب', 'التل الكبير', 'أبو صوير', 'القصاصين'],
-    'المنوفية': ['شبين الكوم', 'منوف', 'سرس الليان', 'أشمون', 'الباجور', 'قويسنا', 'برکة السبع', 'تلا', 'الشهداء', 'السادات'],
-    'المنيا': ['المنيا', 'ملوي', 'سمالوط', 'المنيا الجديدة', 'العدوة', 'مطاي', 'بني مزار', 'مغاغة', 'دير مواس'],
-    'القليوبية': ['بنها', 'شبرا الخيمة', 'القناطر الخيرية', 'الخانكة', 'قليوب', 'كفر شكر', 'طوخ', 'قها', 'العبور', 'الخصوص'],
-    'الوادي الجديد': ['الخارجة', 'الداخلة', 'الفرافرة', 'باريس', 'بلاط'],
-    'الشرقية': ['الزقازيق', 'العاشر من رمضان', 'بلبيس', 'مشتول السوق', 'القنايات', 'أبو حماد', 'منيا القمح', 'فاقوس', 'الحسينية', 'أبو كبير'],
-    'جنوب سيناء': ['الطور', 'شرم الشيخ', 'دهب', 'نويبع', 'طابا', 'رأس سدر', 'أبو رديس', 'سانت كاترين'],
-    'سوهاج': ['سوهاج', 'أخميم', 'طما', 'طهطا', 'جرجا', 'البلينا', 'المراغة', 'المنشأة', 'دار السلام', 'جهينة', 'ساقلتة'],
-    'السويس': ['السويس', 'عتاقة', 'الجناين', 'فيصل'],
-    'أسوان': ['أسوان', 'كوم أمبو', 'دراو', 'إدفو', 'نصر النوبة', 'أبو سمبل'],
-    'أسيوط': ['أسيوط', 'أسيوط الجديدة', 'ديروط', 'القوصية', 'منفلوط', 'أبنوب', 'الفتح', 'ساحل سليم', 'البداري', 'صدفا', 'الغنايم'],
-    'بني سويف': ['بني سويف', 'بني سويف الجديدة', 'الواسطى', 'ناصر', 'إهناسيا', 'ببا', 'الفشن', 'سمسطا'],
-    'بورسعيد': ['بورسعيد', 'بورفؤاد', 'العرب', 'الزهور', 'الضواحي', 'المناخ'],
-    'دمياط': ['دمياط', 'دمياط الجديدة', 'رأس البر', 'فارسكور', 'الزرقا', 'كفر سعد', 'عزبة البرج', 'ميت أبو غالب'],
-    'الأقصر': ['الأقصر', 'إسنا', 'أرمنت', 'الطود', 'الزينية', 'البياضية', 'القرنة'],
-    'قنا': ['قنا', 'نجع حمادي', 'دشنا', 'الوقف', 'قفط', 'نقادة', 'فرشوط', 'قوص', 'أبو تشت'],
-    'شمال سيناء': ['العريش', 'الشيخ زويد', 'نخل', 'رفح', 'بئر العبد', 'الحسنة'],
-    'كفر الشيخ': ['كفر الشيخ', 'دسوق', 'فوه', 'مطوبس', 'بيلا', 'الرياض', 'سيدي سالم', 'الحامول', 'قلين', 'البرلس'],
-    'مطروح': ['مرسى مطروح', 'الحمام', 'العلمين', 'الضبعة', 'النجيلة', 'سيدي براني', 'السلوم', 'سيوة']
-  };
+  private readonly apiBase = `${environment.apiUrl}/api`;
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  /**
-   * Get all governorate names
-   */
-  getGovernorates(): string[] {
-    return Object.keys(GovernorateCitiesService.governorateCitiesData);
+  /** Get all governorates from API */
+  getGovernorates(): Observable<{ id: number; name: string; arabicName: string }[]> {
+    return this.http.get<{ id: number; name: string; arabicName: string }[]>(`${this.apiBase}/governorates`).pipe(
+      catchError(() => of([]))
+    );
   }
 
-  /**
-   * Get cities for a specific governorate
-   */
-  getCitiesByGovernorate(governorate: string): string[] {
-    return GovernorateCitiesService.governorateCitiesData[governorate] || [];
+  /** Get only governorate names */
+  getGovernorateNames(): Observable<string[]> {
+    return this.getGovernorates().pipe(
+      map(list => list.map(g => g.name))
+    );
   }
 
-  /**
-   * Get all governorate-cities mapping
-   */
-  getAllGovernorateCities(): { [key: string]: string[] } {
-    return { ...GovernorateCitiesService.governorateCitiesData };
+  /** Get all cities from API */
+  getCities(): Observable<{ id: number; name: string; arabicName: string; governorateName: string; governorateArabicName: string }[]> {
+    return this.http.get<{ id: number; name: string; arabicName: string; governorateName: string; governorateArabicName: string }[]>(`${this.apiBase}/cities`).pipe(
+      catchError(() => of([]))
+    );
   }
 
-  /**
-   * Check if a governorate exists
-   */
-  hasGovernorate(governorate: string): boolean {
-    return governorate in GovernorateCitiesService.governorateCitiesData;
+  /** Get cities filtered by governorate name */
+  getCitiesByGovernorate(governorate: string): Observable<{ id: number; name: string; arabicName: string; governorateName: string; governorateArabicName: string }[]> {
+    return this.getCities().pipe(
+      map(cities => cities.filter(c => c.governorateName === governorate))
+    );
   }
 
-  /**
-   * Check if a city exists in a governorate
-   */
-  hasCityInGovernorate(governorate: string, city: string): boolean {
-    const cities = this.getCitiesByGovernorate(governorate);
-    return cities.includes(city);
+  /** Get only city names for a governorate */
+  getCityNamesByGovernorate(governorate: string): Observable<string[]> {
+    return this.getCitiesByGovernorate(governorate).pipe(
+      map(cities => cities.map(c => c.name))
+    );
+  }
+
+  /** Check if a governorate exists */
+  hasGovernorate(governorate: string): Observable<boolean> {
+    return this.getGovernorates().pipe(
+      map(list => list.some(g => g.name === governorate))
+    );
+  }
+
+  /** Check if a city exists in a governorate */
+  hasCityInGovernorate(governorate: string, city: string): Observable<boolean> {
+    return this.getCitiesByGovernorate(governorate).pipe(
+      map(cities => cities.some(c => c.name === city))
+    );
   }
 }

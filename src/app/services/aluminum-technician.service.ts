@@ -1,15 +1,18 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { AluminumTechnician, AluminumTechnicianRegistration } from '../../model/aluminum-technician.model';
-import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AluminumTechnicianService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/aluminum-technicians`;
+
+  private readonly apiUrl = `${environment.apiUrl}/api/aluminum-technicians`;
+
   
   readonly aluminumTechnicians = signal<AluminumTechnician[]>([]);
   readonly loading = signal<boolean>(false);

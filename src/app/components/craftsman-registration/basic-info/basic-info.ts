@@ -1,8 +1,33 @@
+
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CraftsmanRegistrationService } from '../../../services/craftsman-registration.service';
 import { RegistrationStep } from '../../../../model/craftsman-registration.model';
+
+/**
+ * Custom validator to check if password and confirmPassword match
+ */
+export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+
+    if (!password || !confirmPassword) {
+        return null;
+    }
+
+    const mismatch = password.value !== confirmPassword.value;
+    
+    if (mismatch) {
+        confirmPassword.setErrors({ ...confirmPassword.errors, passwordMismatch: true });
+    } else if (confirmPassword.hasError('passwordMismatch')) {
+        // Remove the error if it was previously set and now they match
+        const { passwordMismatch, ...remainingErrors } = confirmPassword.errors || {};
+        confirmPassword.setErrors(Object.keys(remainingErrors).length ? remainingErrors : null);
+    }
+
+    return mismatch ? { passwordMismatch: true } : null;
+};
 
 @Component({
     selector: 'app-basic-info',
@@ -63,22 +88,21 @@ export class BasicInfoComponent {
             validators: [Validators.requiredTrue]
         }),
         isCraftsman: new FormControl(true, { nonNullable: true })
-    });
+    }, { validators: passwordMatchValidator });
 
     protected readonly passwordsMatch = computed(() => {
-        const password = this.basicInfoForm.get('password')?.value;
-        const confirmPassword = this.basicInfoForm.get('confirmPassword')?.value;
-        return password === confirmPassword;
+        const confirmPassword = this.basicInfoForm.get('confirmPassword');
+        return confirmPassword?.touched && !confirmPassword.hasError('passwordMismatch') && confirmPassword.valid;
     });
 
     protected readonly isFormValid = computed(() => {
-        return this.basicInfoForm.valid && this.passwordsMatch();
+        return this.basicInfoForm.valid;
     });
 
     constructor() {
         // Monitor checkbox changes to update steps and service state
         this.basicInfoForm.controls.isCraftsman.valueChanges.subscribe(isCraftsman => {
-            this.updateSteps(isCraftsman);
+            this.updateSteps(isCraftsman ?? true);
         });
     }
 
@@ -129,7 +153,7 @@ export class BasicInfoComponent {
 
     onSubmit(): void {
         console.log('Submit button clicked');
-        if (!this.isFormValid()) {
+        if (this.basicInfoForm.invalid) {
             console.log('Form invalid', this.basicInfoForm.errors);
             this.basicInfoForm.markAllAsTouched();
             return;
