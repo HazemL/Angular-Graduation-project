@@ -1,3 +1,4 @@
+// src/components/carpenter/carpenter-list.component.ts
 import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -8,6 +9,7 @@ import { Carpenter } from '../../../model/carpenter.model';
   imports: [CommonModule, RouterLink],
   selector: 'app-carpenter-list',
   templateUrl: './carpenter-list.html',
+  styleUrls: ['./carpenter-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CarpenterList implements OnInit {
@@ -25,9 +27,16 @@ export class CarpenterList implements OnInit {
     return this.carpenters().filter(carpenter =>
       carpenter.name.toLowerCase().includes(query) ||
       carpenter.specialization.toLowerCase().includes(query) ||
-      carpenter.address.toLowerCase().includes(query)
+      carpenter.address.toLowerCase().includes(query) ||
+      carpenter.city?.toLowerCase().includes(query) ||
+      carpenter.governorate?.toLowerCase().includes(query)
     );
   });
+
+  // Computed signal for verified carpenters
+  readonly verifiedCarpenters = computed(() =>
+    this.carpenters().filter(c => c.isVerified)
+  );
 
   ngOnInit(): void {
     this.loadCarpenters();
@@ -56,6 +65,21 @@ export class CarpenterList implements OnInit {
   }
 
   contactCarpenter(carpenter: Carpenter): void {
+    // You can use the placeholder phone or implement a modal to get real contact
     window.location.href = `tel:${carpenter.phone}`;
   }
+  
+  // Optional: Add price range display helper
+  getPriceRange(carpenter: Carpenter): string {
+    if (carpenter.minPrice && carpenter.maxPrice) {
+      return `${carpenter.minPrice} - ${carpenter.maxPrice} جنيه`;
+    }
+    return 'السعر غير محدد';
+  }
+  filterVerified(): void {
+  // Implementation for filtering verified carpenters
+  const verified = this.carpenters().filter(c => c.isVerified);
+  this.carpenters.set(verified);
+}
+
 }

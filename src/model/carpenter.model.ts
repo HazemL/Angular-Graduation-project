@@ -1,3 +1,4 @@
+// src/model/carpenter.model.ts
 export interface Carpenter {
   id: number;
   name: string;
@@ -11,6 +12,14 @@ export interface Carpenter {
   imageUrl?: string;
   services?: string[];
   portfolio?: string[];
+  // New fields from API
+  governorate?: string;
+  city?: string;
+  bio?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  isVerified?: boolean;
+  verificationDate?: string | null;
 }
 
 export interface CarpenterRegistration {
