@@ -58,7 +58,12 @@ export class CraftsmanRegistrationService {
       phone: this.basicInfoData.phone,
       role: 'Craftsman',
       governorateId: governorateId,
-      cityId: cityId
+      cityId: cityId,
+      // Additional craftsman data
+      profession: this.professionData?.profession,
+      skills: this.professionData?.skills,
+      yearsOfExperience: this.professionData?.yearsOfExperience,
+      description: this.professionData?.description
     };
     
     return this.http.post<ApiResponse>(`${this.apiBase}/register`, payload);
@@ -66,52 +71,13 @@ export class CraftsmanRegistrationService {
 
   getSkillsForProfession(profession: string): Observable<ApiResponse<string[]>> {
     // Mock implementation - replace with actual API call if needed
-    const mockSkills = ['مهارة 1', 'مهارة 2', 'مهارة 3', 'مهارة 4'];
-    return new Observable(observer => {
-      observer.next({ success: true, data: mockSkills });
-      observer.complete();
-    });
+    return this.http.get<ApiResponse<string[]>>(`${this.apiBase}/skills/${profession}`);
   }
 
   uploadProfilePhoto(file: File): Observable<ApiResponse> {
     const formData = new FormData();
     formData.append('photo', file);
     return this.http.post<ApiResponse>(`${this.apiBase}/upload-photo`, formData);
-  }
-
-  uploadDocument(file: File, type: string): Observable<ApiResponse> {
-    const formData = new FormData();
-    formData.append('document', file);
-    formData.append('type', type);
-    return this.http.post<ApiResponse>(`${this.apiBase}/upload-document`, formData);
-  }
-
-  submitDocuments(data: any): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${this.apiBase}/submit-documents`, data);
-  }
-
-  submitBasicInfo(data: any): Observable<ApiResponse> {
-    // This is just for compatibility - we'll handle it differently
-    return new Observable(observer => {
-      observer.next({ success: true });
-      observer.complete();
-    });
-  }
-
-  submitProfessionSkills(data: any): Observable<ApiResponse> {
-    // This is just for compatibility - we'll handle it differently
-    return new Observable(observer => {
-      observer.next({ success: true });
-      observer.complete();
-    });
-  }
-
-  submitServiceAreas(data: any): Observable<ApiResponse> {
-    // This is just for compatibility - we'll handle it differently
-    return new Observable(observer => {
-      observer.next({ success: true });
-      observer.complete();
-    });
   }
 
   clearRegistrationData(): void {

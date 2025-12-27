@@ -46,23 +46,23 @@
             <div class="form-card p-4 p-md-5 mx-auto" style="max-width: 600px;">
                 <div class="text-center mb-4">
                     <h2 class="fs-3 fw-bold text-dark">المهنة والمهارات</h2>
-                    <p class="text-secondary">الخطوة 2 من 4: بيانات المهنة</p>
+                    <p class="text-secondary">الخطوة 2 من 3: بيانات المهنة</p>
                 </div>
 
                 <form [formGroup]="professionForm" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-4">
 
                     <!-- Profession Selection -->
                     <div class="form-floating">
-                        <select id="profession" formControlName="profession" class="form-select"
-                            (change)="onProfessionChange()"
-                            [class.is-invalid]="professionForm.controls.profession.invalid && professionForm.controls.profession.touched">
-                            <option value="" disabled selected>اختر مهنتك</option>
-                            @for (service of professions; track service.title) {
-                            <option [value]="service.title">{{ service.title }}</option>
+                        <select id="profession" formControlName="professionId" class="form-select"
+                            (change)="onProfessionChange($event)"
+                            [class.is-invalid]="professionForm.controls.professionId.invalid && professionForm.controls.professionId.touched">
+                            <option [value]="null" disabled selected>اختر مهنتك</option>
+                            @for (profession of professions(); track profession.id) {
+                                <option [value]="profession.id">{{ profession.arabicName }}</option>
                             }
                         </select>
                         <label for="profession">المهنة</label>
-                        @if (professionForm.controls.profession.invalid && professionForm.controls.profession.touched) {
+                        @if (professionForm.controls.professionId.invalid && professionForm.controls.professionId.touched) {
                         <div class="invalid-feedback">
                             يرجى اختيار المهنة
                         </div>
@@ -70,7 +70,7 @@
                     </div>
 
                     <!-- Skills Selection -->
-                    @if (professionForm.controls.profession.value) {
+                    @if (professionForm.controls.professionId.value) {
                     <div>
                         <label class="form-label fw-bold mb-3">المهارات <span class="text-danger">*</span></label>
 
@@ -91,7 +91,7 @@
                                         [for]="'skill-' + skill" style="min-height: 45px;">
                                         <span class="small">{{ skill }}</span>
                                         @if (isSkillSelected(skill)) {
-                                        <span class="material-symbols-outlined fs-6 text-primary-custom">check</span>
+                                        <i class="bi bi-check-lg text-primary-custom"></i>
                                         }
                                     </label>
                                 </div>
@@ -114,20 +114,23 @@
                     <!-- Years of Experience -->
                     <div class="form-floating">
                         <input type="number" id="experience" formControlName="yearsOfExperience" class="form-control"
-                            min="0" placeholder="سنوات الخبرة">
-                        <label for="experience">سنوات الخبرة</label>
+                            min="0" max="50" placeholder="سنوات الخبرة">
+                        <label for="experience">سنوات الخبرة (اختياري)</label>
                     </div>
 
                     <!-- Description -->
                     <div class="form-floating">
                         <textarea id="description" formControlName="description" class="form-control"
-                            style="height: 120px" placeholder="نبذة عن خبرتك"></textarea>
+                            style="height: 120px" maxlength="500" placeholder="نبذة عن خبرتك"></textarea>
                         <label for="description">نبذة عن خبرتك (اختياري)</label>
+                        <div class="form-text text-end">
+                            {{ professionForm.controls.description.value?.length || 0 }}/500
+                        </div>
                     </div>
 
                     <!-- Submit Button -->
                     <button type="submit" class="btn btn-primary-custom py-3 fs-5 fw-bold rounded-3"
-                        [disabled]="isSubmitting()">
+                        [disabled]="isSubmitting() || professionForm.invalid">
                         @if (isSubmitting()) {
                         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                         جاري الحفظ...

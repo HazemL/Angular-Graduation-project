@@ -14,14 +14,29 @@
             </div>
             <div class="d-flex align-items-center gap-2">
                 <button type="button" class="btn btn-primary-custom rounded-pill px-4 py-2 fw-bold small"
-                    (click )="navigateToLogin()">تسجيل الدخول</button>
-                <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-2 fw-bold small">English</button>
+                    (click)="navigateToLogin()">تسجيل الدخول</button>
             </div>
         </div>
     </header>
 
     <main class="flex-grow-1 py-5">
         <div class="container" style="max-width: 900px;">
+            <!-- Notifications -->
+            @if (successMessage()) {
+            <div class="alert alert-success alert-dismissible fade show mx-auto mb-4" style="max-width: 600px;" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                {{ successMessage() }}
+                <button type="button" class="btn-close" (click)="successMessage.set(null)" aria-label="إغلاق"></button>
+            </div>
+            }
+            @if (errorMessage()) {
+            <div class="alert alert-danger alert-dismissible fade show mx-auto mb-4" style="max-width: 600px;" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ errorMessage() }}
+                <button type="button" class="btn-close" (click)="errorMessage.set(null)" aria-label="إغلاق"></button>
+            </div>
+            }
+
             <!-- Progress Steps -->
             <nav class="d-flex align-items-center justify-content-between mb-5" aria-label="خطوات التسجيل">
                 @for (step of steps(); track step.stepNumber; let isLast = $last) {
@@ -47,7 +62,7 @@
             <div class="form-card p-4 p-md-5 mx-auto border-0 shadow-lg" style="max-width: 600px;">
                 <div class="text-center mb-4">
                     <h2 class="fs-3 fw-bold text-dark">إنشاء حساب جديد</h2>
-                    <p class="text-secondary">الخطوة 1 من 4: المعلومات الأساسية</p>
+                    <p class="text-secondary">{{ basicInfoForm.get('isCraftsman')?.value ? 'الخطوة 1 من 3: المعلومات الأساسية' : 'المعلومات الأساسية' }}</p>
                 </div>
 
                 <form [formGroup]="basicInfoForm" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-4">
@@ -144,29 +159,6 @@
                         }
                     </div>
 
-                    <!-- National ID -->
-                    <div>
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="nationalId" formControlName="nationalId"
-                                placeholder="الرقم القومي" maxlength="14"
-                                [class.is-invalid]="basicInfoForm.get('nationalId')?.touched && basicInfoForm.get('nationalId')?.invalid"
-                                aria-describedby="nationalIdHelp nationalIdError">
-                            <label for="nationalId">الرقم القومي</label>
-                        </div>
-                        <p id="nationalIdHelp" class="small text-secondary mt-1 pe-2">يجب أن يتكون من 14 رقمًا.</p>
-                        @if (basicInfoForm.get('nationalId')?.touched && basicInfoForm.get('nationalId')?.invalid) {
-                        <div id="nationalIdError" class="text-danger small">
-                            @if (basicInfoForm.get('nationalId')?.hasError('required')) {
-                            الرقم القومي مطلوب
-                            } @else if (basicInfoForm.get('nationalId')?.hasError('minlength') ||
-                            basicInfoForm.get('nationalId')?.hasError('maxlength') ||
-                            basicInfoForm.get('nationalId')?.hasError('pattern')) {
-                            يجب أن يتكون الرقم القومي من 14 رقمًا
-                            }
-                        </div>
-                        }
-                    </div>
-
                     <!-- Password -->
                     <div class="position-relative">
                         <div class="form-floating">
@@ -238,6 +230,14 @@
                         {
                         <div class="invalid-feedback d-block">يجب الموافقة على الشروط والأحكام</div>
                         }
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="form-check rtl-checkbox">
+                        <input class="form-check-input" type="checkbox" id="rememberMe" formControlName="rememberMe">
+                        <label class="form-check-label small" for="rememberMe">
+                            تذكرني
+                        </label>
                     </div>
 
                     <!-- Register as Craftsman -->

@@ -31,6 +31,22 @@
 
   <main class="flex-grow-1 py-5">
     <div class="container" style="max-width: 900px">
+      <!-- Notifications -->
+      @if (successMessage()) {
+      <div class="alert alert-success alert-dismissible fade show mx-auto mb-4" style="max-width: 600px;" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        {{ successMessage() }}
+        <button type="button" class="btn-close" (click)="successMessage.set(null)" aria-label="إغلاق"></button>
+      </div>
+      }
+      @if (errorMessage()) {
+      <div class="alert alert-danger alert-dismissible fade show mx-auto mb-4" style="max-width: 600px;" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ errorMessage() }}
+        <button type="button" class="btn-close" (click)="errorMessage.set(null)" aria-label="إغلاق"></button>
+      </div>
+      }
+
       <!-- Progress Steps -->
       <nav
         class="d-flex align-items-center justify-content-between mb-5"
@@ -64,13 +80,13 @@
       <div class="form-card p-4 p-md-5 mx-auto" style="max-width: 600px">
         <div class="text-center mb-4">
           <h2 class="fs-3 fw-bold text-dark">مناطق الخدمة</h2>
-          <p class="text-secondary">الخطوة 3 من 4: حدد الأماكن التي يمكنك العمل بها</p>
+          <p class="text-secondary">الخطوة 3 من 3: حدد منطقة عملك</p>
         </div>
 
         <div class="d-flex flex-column gap-4">
           <!-- Area Selection Controls -->
           <div class="row g-3">
-            <div class="col-md-6">
+            <div class="col-12">
               <div class="form-floating">
                 <select
                   id="governorate"
@@ -78,79 +94,57 @@
                   class="form-select"
                   (change)="onGovernorateChange()"
                 >
-                  <option value="" disabled selected>اختر المحافظة</option>
-                  @for (gov of (governorates | async); track gov) {
-                  <option [value]="gov">{{ gov }}</option>
+                  <option [value]="null" disabled selected>اختر المحافظة</option>
+                  @for (gov of governorates(); track gov.id) {
+                    <option [value]="gov.id">{{ gov.arabicName }}</option>
                   }
                 </select>
-                <label for="governorate">المحافظة</label>
+                <label for="governorate">المحافظة <span class="text-danger">*</span></label>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-12">
               <div class="form-floating">
                 <select
                   id="city"
                   [formControl]="currentCity"
                   class="form-select"
-                  [attr.disabled]="availableCities().length === 0 ? true : null"
+                  (change)="onCityChange()"
+                  [disabled]="availableCities().length === 0"
                 >
-                  <option value="" disabled selected>اختر المدينة / الحي</option>
-                  @for (city of availableCities(); track city) {
-                  <option [value]="city">{{ city }}</option>
+                  <option [value]="null" disabled selected>اختر المدينة / الحي</option>
+                  @for (city of availableCities(); track city.id) {
+                    <option [value]="city.id">{{ city.arabicName }}</option>
                   }
                 </select>
-                <label for="city">المدينة / الحي</label>
+                <label for="city">المدينة / الحي <span class="text-danger">*</span></label>
               </div>
-            </div>
-            <div class="col-12">
-              <button
-                type="button"
-                class="btn btn-outline-primary w-100 py-3 fw-bold"
-                (click)="addArea()"
-                [disabled]="!currentGovernorate.value || !currentCity.value"
-              >
-                <span class="material-symbols-outlined align-middle ms-1">add_location_alt</span>
-                إضافة منطقة
-              </button>
-            </div>
-          </div>
-
-          <!-- Selected Areas List -->
-          @if (totalSelectedAreas > 0) {
-          <div class="selected-areas-container bg-light rounded-3 p-3">
-            <h6 class="fw-bold mb-3 text-dark">المناطق المختارة:</h6>
-            <div class="d-flex flex-column gap-3">
-              @for (entry of selectedAreas() | keyvalue; track entry.key) {
-              <div class="governorate-group">
-                <span class="badge bg-primary-custom mb-2 fs-6">{{ entry.key }}</span>
-                <div class="d-flex flex-wrap gap-2">
-                  @for (city of entry.value; track city) {
-                  <div
-                    class="city-badge bg-white border rounded-pill px-3 py-1 d-flex align-items-center gap-2 shadow-sm"
-                  >
-                    <span class="small">{{ city }}</span>
-                    <button
-                      type="button"
-                      class="btn-close btn-close-white"
-                      style="width: 0.5em; height: 0.5em; filter: none"
-                      aria-label="Remove"
-                      (click)="removeArea(entry.key, city)"
-                    >
-                      <span class="material-symbols-outlined text-danger" style="font-size: 16px"
-                        >close</span
-                      >
-                    </button>
-                  </div>
-                  }
-                </div>
-              </div>
+              @if (availableCities().length === 0 && currentGovernorate.value) {
+              <small class="text-muted mt-1 d-block">لا توجد مدن متاحة لهذه المحافظة</small>
               }
             </div>
           </div>
-          } @else {
-          <div class="text-center py-5 border rounded-3 border-dashed bg-light">
-            <span class="material-symbols-outlined text-secondary fs-1 mb-2">map</span>
-            <p class="text-secondary mb-0">لم يتم اختيار أي مناطق بعد</p>
+
+          <!-- Selected Info Display -->
+          @if (selectedGovernorateId() && selectedCityId()) {
+          <div class="alert alert-info mb-0">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-info-circle-fill"></i>
+              <div>
+                <strong>منطقة الخدمة المختارة:</strong>
+                <div class="mt-1">
+                  @for (gov of governorates(); track gov.id) {
+                    @if (gov.id === selectedGovernorateId()) {
+                      <span class="badge bg-primary me-2">{{ gov.arabicName }}</span>
+                    }
+                  }
+                  @for (city of availableCities(); track city.id) {
+                    @if (city.id === selectedCityId()) {
+                      <span class="badge bg-secondary">{{ city.arabicName }}</span>
+                    }
+                  }
+                </div>
+              </div>
+            </div>
           </div>
           }
 
@@ -159,7 +153,7 @@
             type="button"
             class="btn btn-primary-custom py-3 fs-5 fw-bold rounded-3 mt-2"
             (click)="onSubmit()"
-            [disabled]="isSubmitting() || totalSelectedAreas === 0"
+            [disabled]="isSubmitting() || !selectedGovernorateId() || !selectedCityId()"
           >
             @if (isSubmitting()) {
             <span
@@ -167,7 +161,10 @@
               role="status"
               aria-hidden="true"
             ></span>
-            جاري الحفظ... } @else { التالي }
+            جاري التسجيل...
+            } @else {
+            إتمام التسجيل
+            }
           </button>
         </div>
       </div>

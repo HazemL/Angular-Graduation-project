@@ -1,13 +1,9 @@
-
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CraftsmanRegistrationService } from '../../../services/craftsman-registration.service';
 import { RegistrationStep } from '../../../../model/craftsman-registration.model';
 
-/**
- * Custom validator to check if password and confirmPassword match
- */
 export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
@@ -21,7 +17,6 @@ export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): V
     if (mismatch) {
         confirmPassword.setErrors({ ...confirmPassword.errors, passwordMismatch: true });
     } else if (confirmPassword.hasError('passwordMismatch')) {
-        // Remove the error if it was previously set and now they match
         const { passwordMismatch, ...remainingErrors } = confirmPassword.errors || {};
         confirmPassword.setErrors(Object.keys(remainingErrors).length ? remainingErrors : null);
     }
@@ -44,13 +39,13 @@ export class BasicInfoComponent {
     protected readonly showPassword = signal(false);
     protected readonly showConfirmPassword = signal(false);
     protected readonly profilePhotoUrl = signal<string | null>(null);
+    protected readonly errorMessage = signal<string | null>(null);
+    protected readonly successMessage = signal<string | null>(null);
 
-    // Reactive steps based on selection
     protected steps = signal<RegistrationStep[]>([
         { stepNumber: 1, label: 'المعلومات الأساسية', isActive: true, isCompleted: false },
         { stepNumber: 2, label: 'المهنة والمهارات', isActive: false, isCompleted: false },
-        { stepNumber: 3, label: 'مناطق الخدمة', isActive: false, isCompleted: false },
-        { stepNumber: 4, label: 'المستندات', isActive: false, isCompleted: false }
+        { stepNumber: 3, label: 'مناطق الخدمة', isActive: false, isCompleted: false }
     ]);
 
     protected readonly basicInfoForm = new FormGroup({
@@ -66,15 +61,6 @@ export class BasicInfoComponent {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^01[0125]\d{8}$/)]
         }),
-        nationalId: new FormControl('', {
-            nonNullable: true,
-            validators: [
-                Validators.required,
-                Validators.minLength(14),
-                Validators.maxLength(14),
-                Validators.pattern(/^\d{14}$/)
-            ]
-        }),
         password: new FormControl('', {
             nonNullable: true,
             validators: [Validators.required, Validators.minLength(8)]
@@ -87,37 +73,26 @@ export class BasicInfoComponent {
             nonNullable: true,
             validators: [Validators.requiredTrue]
         }),
+        rememberMe: new FormControl(false, { nonNullable: true }),
         isCraftsman: new FormControl(true, { nonNullable: true })
     }, { validators: passwordMatchValidator });
 
-    protected readonly passwordsMatch = computed(() => {
-        const confirmPassword = this.basicInfoForm.get('confirmPassword');
-        return confirmPassword?.touched && !confirmPassword.hasError('passwordMismatch') && confirmPassword.valid;
-    });
-
-    protected readonly isFormValid = computed(() => {
-        return this.basicInfoForm.valid;
-    });
-
     constructor() {
-        // Monitor checkbox changes to update steps and service state
         this.basicInfoForm.controls.isCraftsman.valueChanges.subscribe(isCraftsman => {
             this.updateSteps(isCraftsman ?? true);
         });
     }
 
-    private updateSteps(isCraftsman: boolean) {
+    private updateSteps(isCraftsman: boolean): void {
         if (isCraftsman) {
             this.steps.set([
                 { stepNumber: 1, label: 'المعلومات الأساسية', isActive: true, isCompleted: false },
                 { stepNumber: 2, label: 'المهنة والمهارات', isActive: false, isCompleted: false },
-                { stepNumber: 3, label: 'مناطق الخدمة', isActive: false, isCompleted: false },
-                { stepNumber: 4, label: 'المستندات', isActive: false, isCompleted: false }
+                { stepNumber: 3, label: 'مناطق الخدمة', isActive: false, isCompleted: false }
             ]);
         } else {
             this.steps.set([
-                { stepNumber: 1, label: 'المعلومات الأساسية', isActive: true, isCompleted: false },
-                { stepNumber: 2, label: 'المستندات', isActive: false, isCompleted: false }
+                { stepNumber: 1, label: 'المعلومات الأساسية', isActive: true, isCompleted: false }
             ]);
         }
     }
@@ -139,64 +114,76 @@ export class BasicInfoComponent {
                 this.profilePhotoUrl.set(reader.result as string);
             };
             reader.readAsDataURL(file);
-
-            // Upload to server
-            this.registrationService.uploadProfilePhoto(file).subscribe({
-                next: (response) => {
-                    if (response.success && response.data) {
-                        this.profilePhotoUrl.set(response.data.photoUrl);
-                    }
-                }
-            });
         }
     }
 
+    private showSuccessNotification(message: string): void {
+        this.successMessage.set(message);
+        this.errorMessage.set(null);
+        setTimeout(() => this.successMessage.set(null), 5000);
+    }
+
+    private showErrorNotification(message: string): void {
+        this.errorMessage.set(message);
+        this.successMessage.set(null);
+        setTimeout(() => this.errorMessage.set(null), 5000);
+    }
+
     onSubmit(): void {
-        console.log('Submit button clicked');
         if (this.basicInfoForm.invalid) {
-            console.log('Form invalid', this.basicInfoForm.errors);
             this.basicInfoForm.markAllAsTouched();
             return;
         }
 
         this.isSubmitting.set(true);
         const formValue = this.basicInfoForm.getRawValue();
-        console.log('Submitting form data', formValue);
-
-        this.registrationService.submitBasicInfo({
-            fullName: formValue.fullName,
-            email: formValue.email,
-            phone: formValue.phone,
-            nationalId: formValue.nationalId,
-            password: formValue.password,
-            profilePhoto: this.profilePhotoUrl() ?? undefined,
-            termsAccepted: formValue.termsAccepted,
-            isCraftsman: formValue.isCraftsman
-        }).subscribe({
-            next: (response) => {
-                console.log('API Response', response);
-                this.isSubmitting.set(false);
-                if (response.success) {
-                    console.log('Navigating to profession');
-                    // Navigate to next step
-                    this.registrationService.isCraftsman.set(formValue.isCraftsman ?? true);
-
-                    if (formValue.isCraftsman) {
-                        this.router.navigate(['/register/craftsman/profession']);
+        const isCraftsman = formValue.isCraftsman ?? true;
+        
+        if (isCraftsman) {
+            this.registrationService.setBasicInfoData({
+                fullName: formValue.fullName,
+                email: formValue.email,
+                phone: formValue.phone,
+                password: formValue.password,
+                profilePhoto: this.profilePhotoUrl() ?? undefined,
+                rememberMe: formValue.rememberMe,
+                isCraftsman: true
+            });
+            
+            this.isSubmitting.set(false);
+            this.router.navigate(['/register/craftsman/profession']);
+        } else {
+            this.registrationService.submitCustomerRegistration({
+                fullName: formValue.fullName,
+                email: formValue.email,
+                phone: formValue.phone,
+                password: formValue.password,
+                role: 'Customer',
+                rememberMe: formValue.rememberMe
+            }).subscribe({
+                next: (response: any) => {
+                    this.isSubmitting.set(false);
+                    if (response.success) {
+                        this.showSuccessNotification('تم التسجيل بنجاح! جاري تحويلك...');
+                        
+                        if (formValue.rememberMe && response.data?.token) {
+                            document.cookie = `auth_token=${response.data.token}; path=/; max-age=${60*60*24*30}`;
+                        }
+                        
+                        setTimeout(() => {
+                            this.router.navigate(['/dashboard']);
+                        }, 1500);
                     } else {
-                        this.router.navigate(['/register/craftsman/documents']);
+                        this.showErrorNotification(response.message || 'فشل التسجيل، يرجى المحاولة مرة أخرى');
                     }
-                } else {
-                    console.error('Registration failed', response.message);
-                    alert('Registration failed: ' + (response.message || 'Unknown error'));
+                },
+                error: (error: any) => {
+                    this.isSubmitting.set(false);
+                    const errorMsg = error.error?.message || error.message || 'حدث خطأ أثناء التسجيل';
+                    this.showErrorNotification(errorMsg);
                 }
-            },
-            error: (error) => {
-                console.error('API Error', error);
-                this.isSubmitting.set(false);
-                alert('An error occurred during registration. Please check console.');
-            }
-        });
+            });
+        }
     }
 
     navigateToLogin(): void {

@@ -17,6 +17,7 @@ export class MapperService {
   ): Carpenter {
     const profession = professions.find(p => p.id === craftsmanApi.professionId);
     
+    
     return {
       id: craftsmanApi.id,
       name: craftsmanApi.fullName,

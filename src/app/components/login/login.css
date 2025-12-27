@@ -1,51 +1,76 @@
-/* Component-specific styles for Login */
 
-/* Ensure all form controls have right-aligned text (including placeholders in RTL) */
-.form-control {
-    text-align: right;
-}
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap');
 
-/* Password visibility button focus state */
-.btn-link:focus {
-    box-shadow: none;
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-}
+    :root {
+        --primary: #1E88E5;
+        --primary-dark: #1565C0;
+    }
 
-/* RTL Floating Label Adjustment */
-.form-floating>label {
-    right: 0;
-    left: auto;
-    transform-origin: 100% 0;
-    text-align: right;
-}
+    body {
+        font-family: 'Cairo', sans-serif;
+    }
 
-/* Ensure the label moves to the right top corner when focused/filled */
-.form-floating>.form-control:focus~label,
-.form-floating>.form-control:not(:placeholder-shown)~label {
-    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
-}
+    .btn-primary {
+        background-color: var(--primary) !important;
+        border: none !important;
+    }
 
-/* Move validation icons to the left for RTL */
-.form-control.is-invalid,
-.form-control.is-valid {
-    background-position: left calc(0.375em + 0.1875rem) center;
-    padding-left: calc(1.5em + 0.75rem) !important;
-}
+    .btn-primary:hover {
+        background-color: var(--primary-dark) !important;
+    }
 
-/* RTL Checkbox Alignment */
-.rtl-checkbox {
-    text-align: right;
-    padding-left: 0 !important;
-    padding-right: 1.5em !important;
-}
+    .text-primary {
+        color: var(--primary) !important;
+    }
 
-.rtl-checkbox .form-check-input {
-    float: right !important;
-    margin-left: 0 !important;
-    margin-right: -1.5em !important;
-}
+    /* RTL Floating Label Fixes */
+    .form-floating > label {
+        right: 0;
+        left: auto;
+        padding-right: 1.25rem;
+        transform-origin: 100% 0;
+    }
 
-.rtl-checkbox .form-check-label {
-    margin-right: 0.5rem;
-}
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        transform: scale(0.85) translateY(-0.75rem) translateX(0.5rem);
+        color: var(--primary) !important;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 0.25rem rgba(30, 136, 229, 0.1) !important;
+    }
+
+    /* RTL Checkbox */
+    .rtl-checkbox {
+        padding-left: 0 !important;
+        padding-right: 1.5em !important;
+    }
+
+    .rtl-checkbox .form-check-input {
+        float: right !important;
+        margin-left: 0 !important;
+        margin-right: -1.5em !important;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-shake {
+        animation: shake 0.4s ease-in-out;
+    }
+

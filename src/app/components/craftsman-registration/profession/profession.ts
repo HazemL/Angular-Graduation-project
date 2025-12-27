@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CraftsmanRegistrationService } from '../../../services/craftsman-registration.service';
-import { CraftsmanServicesService } from '../../../services/craftsman-services.service';
+import { HttpClient } from '@angular/common/http';
 import { RegistrationStep } from '../../../../model/craftsman-registration.model';
+import { environment } from '../../../../environments/environment';
+
 @Component({
     selector: 'app-profession',
     templateUrl: './profession.html',
@@ -14,26 +16,26 @@ import { RegistrationStep } from '../../../../model/craftsman-registration.model
 })
 export class Profession {
     private registrationService = inject(CraftsmanRegistrationService);
-    private servicesService = inject(CraftsmanServicesService);
+    private http = inject(HttpClient);
     private router = inject(Router);
 
     protected readonly isSubmitting = signal(false);
     protected readonly availableSkills = signal<string[]>([]);
     protected readonly isLoadingSkills = signal(false);
-
-    protected readonly professions = this.servicesService.getAllServices();
+    protected readonly professions = signal<any[]>([]);
 
     protected readonly steps: RegistrationStep[] = [
         { stepNumber: 1, label: 'المعلومات الأساسية', isActive: false, isCompleted: true },
         { stepNumber: 2, label: 'المهنة والمهارات', isActive: true, isCompleted: false },
-        { stepNumber: 3, label: 'مناطق الخدمة', isActive: false, isCompleted: false },
-        { stepNumber: 4, label: 'المستندات', isActive: false, isCompleted: false }
+        { stepNumber: 3, label: 'مناطق الخدمة', isActive: false, isCompleted: false }
     ];
 
     protected readonly professionForm = new FormGroup({
-        profession: new FormControl('', {
-            nonNullable: true,
+        professionId: new FormControl<number | null>(null, {
             validators: [Validators.required]
+        }),
+        professionName: new FormControl('', {
+            nonNullable: true
         }),
         skills: new FormControl<string[]>([], {
             nonNullable: true,
@@ -47,27 +49,50 @@ export class Profession {
         })
     });
 
-    onProfessionChange(): void {
-        const profession = this.professionForm.controls.profession.value;
-        if (!profession) return;
+    constructor() {
+        this.loadProfessions();
+    }
 
-        this.isLoadingSkills.set(true);
-        this.availableSkills.set([]);
-        this.professionForm.controls.skills.setValue([]); // Reset selected skills
-
-        this.registrationService.getSkillsForProfession(profession).subscribe({
-            next: (response) => {
-                if (response.success && response.data) {
-                    this.availableSkills.set(response.data);
-                }
-                this.isLoadingSkills.set(false);
+    loadProfessions(): void {
+        this.http.get<any[]>(`${environment.apiUrl}/api/professions`).subscribe({
+            next: (professions) => {
+                console.log('Loaded professions:', professions);
+                this.professions.set(professions);
             },
-            error: () => {
-                // Fallback or error handling
-                console.error('Failed to load skills');
-                this.isLoadingSkills.set(false);
+            error: (err) => {
+                console.error('Failed to load professions', err);
+                // Fallback data in case API fails
+                this.professions.set([
+                    { id: 1, name: "Plumber", arabicName: "سباك", description: "Plumbing & pipe repair" },
+                    { id: 2, name: "Carpenter", arabicName: "نجار", description: "Wood works & furniture" },
+                    { id: 3, name: "Electrician", arabicName: "فني كهرباء", description: "Electrical installation & repair" }
+                ]);
             }
         });
+    }
+
+    onProfessionChange(event: Event): void {
+        const selectElement = event.target as HTMLSelectElement;
+        const selectedId = parseInt(selectElement.value);
+        
+        if (!selectedId) return;
+
+        const selectedProfession = this.professions().find(p => p.id === selectedId);
+        if (selectedProfession) {
+            this.professionForm.controls.professionId.setValue(selectedId);
+            this.professionForm.controls.professionName.setValue(selectedProfession.name);
+        }
+
+        this.isLoadingSkills.set(true);
+        this.professionForm.controls.skills.setValue([]);
+        
+        // Mock skills - replace with actual API if available
+        // You can create an endpoint like: /api/professions/${selectedId}/skills
+        const mockSkills = ['إصلاح الأنابيب', 'تركيب المواسير', 'صيانة السباكة', 'كشف التسريبات'];
+        setTimeout(() => {
+            this.availableSkills.set(mockSkills);
+            this.isLoadingSkills.set(false);
+        }, 500);
     }
 
     onSkillToggle(skill: string, event: Event): void {
@@ -91,28 +116,16 @@ export class Profession {
             return;
         }
 
-        this.isSubmitting.set(true);
         const formValue = this.professionForm.getRawValue();
-
-        this.registrationService.submitProfessionSkills({
-            profession: formValue.profession,
+        
+        this.registrationService.setProfessionData({
+            professionId: formValue.professionId,
+            professionName: formValue.professionName,
             skills: formValue.skills,
-            yearsOfExperience: formValue.yearsOfExperience ?? undefined,
-            description: formValue.description ?? undefined,
-            previousWork: [] // Todo implementation
-        }).subscribe({
-            next: (response) => {
-                this.isSubmitting.set(false);
-                if (response.success) {
-                    // Navigate to next step
-                    // this.router.navigate(['/register/craftsman/service-areas']);
-                    // For now, just log success or stay/notify
-                    console.log('Profession and skills saved');
-                }
-            },
-            error: () => {
-                this.isSubmitting.set(false);
-            }
+            yearsOfExperience: formValue.yearsOfExperience,
+            description: formValue.description
         });
+
+        this.router.navigate(['/register/craftsman/service-areas']);
     }
 }
