@@ -18,7 +18,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         switch (error.status) {
           case 401:
             errorMessage = 'غير مصرح لك بالوصول. يرجى تسجيل الدخول';
-            localStorage.removeItem('auth_token');
+            // remove cookie token and stored user
+            document.cookie = 'auth_token=; path=/; max-age=0; SameSite=Strict';
             localStorage.removeItem('auth_user');
             router.navigate(['/login']);
             break;

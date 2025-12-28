@@ -1,9 +1,13 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
+function getTokenFromCookie(): string | null {
+  const match = document.cookie.match('(^|;)\\s*auth_token\\s*=\\s*([^;]+)');
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('auth_token');
-  
-  // Add auth token if exists
+  const token = getTokenFromCookie();
+
   if (token) {
     req = req.clone({
       setHeaders: {
@@ -11,6 +15,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
     });
   }
-  
+
   return next(req);
 };

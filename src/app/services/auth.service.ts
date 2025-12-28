@@ -29,7 +29,9 @@ export class AuthService {
     }
 
     logout(): void {
-        localStorage.removeItem('auth_token');
+        // remove cookie token
+        document.cookie = 'auth_token=; path=/; max-age=0; SameSite=Strict';
+        // keep user info removal in localStorage
         localStorage.removeItem('auth_user');
         this.currentUser.set(null);
         this.isAuthenticated.set(false);
@@ -43,11 +45,14 @@ export class AuthService {
     }
 
     private setToken(token: string): void {
-        localStorage.setItem('auth_token', token);
+        const maxAge = 60 * 60 * 24 * 30; // 30 days
+        const secure = location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = `auth_token=${encodeURIComponent(token)}; path=/; max-age=${maxAge}; SameSite=Strict${secure}`;
     }
 
     private getToken(): string | null {
-        return localStorage.getItem('auth_token');
+        const match = document.cookie.match('(^|;)\\s*auth_token\\s*=\\s*([^;]+)');
+        return match ? decodeURIComponent(match[2]) : null;
     }
 
     private setUser(user: LoginResponse['user']): void {
