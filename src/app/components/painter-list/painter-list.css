@@ -958,3 +958,150 @@
   background: linear-gradient(135deg, #f093fb, #f5576c) !important;
 }
 
+/* painter-list.component.css */
+
+/* Painter Showcase Background */
+.painter-showcase {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  position: relative;
+}
+
+.painter-showcase::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 400px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
+  z-index: 0;
+}
+
+/* Painter Theme Colors */
+.painter-hero::before {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+}
+
+.painter-placeholder {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+}
+
+.painter-spec {
+  background: linear-gradient(135deg, rgba(240, 147, 251, 0.1), rgba(245, 87, 108, 0.1)) !important;
+  border-color: rgba(240, 147, 251, 0.2) !important;
+  color: #f5576c !important;
+}
+
+.painter-tag {
+  background: rgba(240, 147, 251, 0.1) !important;
+  color: #f5576c !important;
+  border-color: rgba(240, 147, 251, 0.2) !important;
+}
+
+.technique-tag {
+  background: rgba(245, 87, 108, 0.1) !important;
+  color: #f5576c !important;
+  border-color: rgba(245, 87, 108, 0.2) !important;
+}
+
+.projects-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(129, 199, 132, 0.1));
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #4caf50;
+  margin-bottom: 1rem;
+}
+
+.projects-counter svg {
+  color: #4caf50;
+  flex-shrink: 0;
+}
+
+.painter-btn-primary {
+  background: linear-gradient(135deg, #f093fb, #f5576c) !important;
+  box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3) !important;
+}
+
+.painter-btn-primary:hover {
+  box-shadow: 0 8px 20px rgba(245, 87, 108, 0.4) !important;
+}
+
+.painter-btn-secondary {
+  color: #f5576c !important;
+  border-color: #f5576c !important;
+}
+
+.painter-btn-secondary:hover {
+  background: #f5576c !important;
+  color: white !important;
+}
+
+.painter-error {
+  background: linear-gradient(135deg, #f093fb, #f5576c) !important;
+}
+
+.painter-btn.btn-retry {
+  background: linear-gradient(135deg, #f093fb, #f5576c) !important;
+}
+
+/* Painter showcase specific overrides */
+.painter-showcase .custom-spinner .spinner-ring {
+  border-top-color: #f093fb !important;
+}
+
+.painter-showcase .custom-spinner .spinner-ring:nth-child(2) {
+  border-top-color: #f5576c !important;
+}
+
+.painter-showcase .custom-spinner .spinner-ring:nth-child(3) {
+  border-top-color: #ff6b9d !important;
+}
+
+.painter-showcase .custom-spinner .spinner-icon {
+  color: #f5576c !important;
+}
+
+.painter-showcase .loading-text {
+  color: #f5576c !important;
+}
+
+.painter-showcase .search-input:focus {
+  border-color: #f5576c !important;
+  box-shadow: 0 0 0 4px rgba(245, 87, 108, 0.1) !important;
+}
+
+.painter-showcase .filter-chip.active {
+  background: linear-gradient(135deg, #f093fb, #f5576c) !important;
+}
+
+.painter-showcase .results-text strong {
+  color: #f5576c !important;
+}
+
+.painter-showcase .carpenter-location svg {
+  color: #f5576c !important;
+}
+
+.painter-showcase .info-item svg {
+  color: #f5576c !important;
+}
+
+.painter-showcase .contact-item svg {
+  color: #f5576c !important;
+}
+
+.painter-showcase .service-tag.more-tag {
+  background: #f5576c !important;
+}
+
+.painter-showcase .service-tag:hover {
+  border-color: #f5576c !important;
+  color: #f5576c !important;
+}

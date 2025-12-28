@@ -867,3 +867,143 @@
 .ac-btn.btn-retry {
   background: linear-gradient(135deg, #4facfe, #00f2fe) !important;
 }
+/* AC Technician Showcase Background */
+.ac-technician-showcase {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  position: relative;
+}
+
+.ac-technician-showcase::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 400px;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
+  z-index: 0;
+}
+
+/* Override hero header for AC theme */
+.ac-hero::before {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+}
+
+/* Spinner colors for AC theme */
+.ac-technician-showcase .custom-spinner .spinner-ring {
+  border-top-color: #4facfe !important;
+}
+
+.ac-technician-showcase .custom-spinner .spinner-ring:nth-child(2) {
+  border-top-color: #00f2fe !important;
+}
+
+.ac-technician-showcase .custom-spinner .spinner-ring:nth-child(3) {
+  border-top-color: #00d4ff !important;
+}
+
+.ac-technician-showcase .custom-spinner .spinner-icon {
+  color: #4facfe !important;
+}
+
+.ac-technician-showcase .loading-text {
+  color: #4facfe !important;
+}
+
+/* Search focus color for AC theme */
+.ac-technician-showcase .search-input:focus {
+  border-color: #4facfe !important;
+  box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.1) !important;
+}
+
+/* Filter chip active state for AC theme */
+.ac-technician-showcase .filter-chip.active {
+  background: linear-gradient(135deg, #4facfe, #00f2fe) !important;
+}
+
+.ac-technician-showcase .results-text strong {
+  color: #4facfe !important;
+}
+
+/* AC Theme Colors */
+.ac-placeholder {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+}
+
+.ac-spec {
+  background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(0, 242, 254, 0.1)) !important;
+  border-color: rgba(79, 172, 254, 0.2) !important;
+  color: #00b0ff !important;
+}
+
+.ac-brand-tag {
+  background: rgba(79, 172, 254, 0.1) !important;
+  color: #00b0ff !important;
+  border-color: rgba(79, 172, 254, 0.2) !important;
+}
+
+.ac-service-tag {
+  background: rgba(0, 242, 254, 0.1) !important;
+  color: #00acc1 !important;
+  border-color: rgba(0, 242, 254, 0.2) !important;
+}
+
+.badge-emergency {
+  background: rgba(244, 67, 54, 0.95) !important;
+  color: white !important;
+}
+
+.emergency-chip.active {
+  background: linear-gradient(135deg, #f44336, #e91e63) !important;
+}
+
+.ac-btn-primary {
+  background: linear-gradient(135deg, #4facfe, #00f2fe) !important;
+  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3) !important;
+}
+
+.ac-btn-primary:hover {
+  box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4) !important;
+}
+
+.ac-btn-secondary {
+  color: #00b0ff !important;
+  border-color: #00b0ff !important;
+}
+
+.ac-btn-secondary:hover {
+  background: #00b0ff !important;
+  color: white !important;
+}
+
+.ac-error {
+  background: linear-gradient(135deg, #4facfe, #00f2fe) !important;
+}
+
+.ac-btn.btn-retry {
+  background: linear-gradient(135deg, #4facfe, #00f2fe) !important;
+}
+
+/* Location icon color for AC theme */
+.ac-technician-showcase .carpenter-location svg {
+  color: #4facfe !important;
+}
+
+.ac-technician-showcase .info-item svg {
+  color: #4facfe !important;
+}
+
+.ac-technician-showcase .contact-item svg {
+  color: #4facfe !important;
+}
+
+.ac-technician-showcase .service-tag.more-tag {
+  background: #4facfe !important;
+}
+
+.ac-technician-showcase .service-tag:hover {
+  border-color: #4facfe !important;
+  color: #4facfe !important;
+}
