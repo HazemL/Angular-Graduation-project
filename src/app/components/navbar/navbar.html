@@ -15,12 +15,18 @@
       
       </nav>
       <div class="flex items-center gap-4">
+       
+       
         <button (click)="toggleDarkMode()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
           <span class="material-symbols-outlined">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</span>
         </button>
         <button (click)="onCreateAccount()" routerLink="/register/craftsman" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-colors">
           <span class="truncate">إنشاء حساب</span>
         </button>
+         <button routerLink="/login" (click)="onLogin()"
+    class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-colors">
+    <span class="truncate">تسجيل الدخول</span>
+  </button>
       </div>
     </div>
   </div>

@@ -8,6 +8,9 @@ import { environment } from '../../environments/environment';
     providedIn: 'root'
 })
 export class AuthService {
+
+
+    
     private http = inject(HttpClient);
 
     // Signal to track login state
