@@ -4,8 +4,13 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-    token: string;
-    user: User;
+  data: {
+        accessToken: string;
+        accessTokenExpiresAt: string;
+        refreshToken: string;
+        role: 'user' | 'craftsman' | 'admin';
+        fullName: string;
+    };
 }
 
 export interface User {

@@ -14,7 +14,8 @@ export class AuthService {
     private http = inject(HttpClient);
 
     // Signal to track login state
-    readonly currentUser = signal<LoginResponse['user'] | null>(this.getUserFromStorage());
+  readonly currentUser = signal<{ fullName: string; role: string } | null>(this.getUserFromStorage());
+
     readonly isAuthenticated = signal<boolean>(!!this.getToken());
 
 
@@ -37,45 +38,48 @@ export class AuthService {
         this.isAuthenticated.set(false);
     }
 
-    private handleAuthSuccess(response: LoginResponse): void {
-        this.setToken(response.token);
-        this.setUser(response.user);
-        this.currentUser.set(response.user);
-        this.isAuthenticated.set(true);
-    }
+ private handleAuthSuccess(response: LoginResponse): void {
+    const token = response.data.accessToken;
+    const user = {
+        fullName: response.data.fullName,
+        role: response.data.role
+    };
 
-    private setToken(token: string): void {
-        const maxAge = 60 * 60 * 24 * 30; // 30 days
-        const secure = location.protocol === 'https:' ? '; Secure' : '';
-        document.cookie = `auth_token=${encodeURIComponent(token)}; path=/; max-age=${maxAge}; SameSite=Strict${secure}`;
-    }
+    this.setToken(token);
+    this.setUser(user);
+    this.currentUser.set(user);
+    this.isAuthenticated.set(true);
+}
+
+
+
+
+   private setToken(token: string): void {
+    localStorage.setItem('auth_token', token);
+}
+
+
 
     private getToken(): string | null {
         const match = document.cookie.match('(^|;)\\s*auth_token\\s*=\\s*([^;]+)');
         return match ? decodeURIComponent(match[2]) : null;
     }
 
-    private setUser(user: LoginResponse['user']): void {
-        localStorage.setItem('auth_user', JSON.stringify(user));
-    }
 
-   private getUserFromStorage(): LoginResponse['user'] | null {
-  const userStr = localStorage.getItem('auth_user');
+    private setUser(user: { fullName: string; role: string }): void {
+    localStorage.setItem('auth_user', JSON.stringify(user));
+}
 
-  if (!userStr || userStr === 'undefined' || userStr === 'null') {
-    localStorage.removeItem('auth_user');
-    return null;
-  }
 
-  try {
-    return JSON.parse(userStr);
-  } catch {
-    localStorage.removeItem('auth_user');
-    return null;
-  }
+    private getUserFromStorage(): { fullName: string; role: string } | null {
+    const userStr = localStorage.getItem('auth_user');
+    return userStr ? JSON.parse(userStr) : null;
 }
 
 
 }
+
+
+
 
 
