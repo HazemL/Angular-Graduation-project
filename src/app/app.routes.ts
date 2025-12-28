@@ -7,6 +7,7 @@ import { Dashboard } from './components/dashboard/dashboard';
 import { CraftsmanDashboard } from './components/craftsman-dashboard/craftsman-dashboard';
 import { CraftsmanProfile } from './components/craftsman-profile/craftsman-profile';
 import { PlumberList } from './components/plumber-list/plumber-list';
+import { ContactUs } from './components/contact-us/contact-us';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -14,6 +15,7 @@ export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full' },
   {path: 'about',component:About},
   {path:'login',component:Login},
+   { path: 'contact', component: ContactUs },
  
   {path:'services',component:Services},
   {path: 'dashboard',component: Dashboard,

@@ -1,0 +1,81 @@
+.contact-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  padding: 40px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.contact-hero {
+  text-align: center;
+  color: #0d47a1;
+}
+
+.contact-hero h2 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.contact-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 25px;
+  align-items: start;
+}
+
+.contact-card,
+.contact-form {
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
+}
+
+.contact-card h3,
+.contact-form h3 {
+  margin-bottom: 20px;
+  color: #0d47a1;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.contact-item .icon {
+  font-size: 28px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid #b0bec5;
+  border-radius: 10px;
+  outline: none;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #0d47a1;
+}
+
+.contact-form button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: #0d47a1;
+  color: white;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.contact-form button:hover {
+  background: #1565c0;
+}
