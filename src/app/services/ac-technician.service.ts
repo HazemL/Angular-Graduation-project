@@ -62,7 +62,7 @@ export class AcTechnicianService {
       email: technician.email,
       phone: technician.phone,
       address: technician.address,
-      professionId: 5, // AC Technician profession ID
+      professionId: 4, // AC Technician profession ID
       experienceYears: technician.experience,
       bio: `${technician.specialization} - ${technician.brands?.join(', ')} - ${technician.emergencyService ? 'خدمة طوارئ 24/7' : ''}`,
       minPrice: 100,
@@ -73,7 +73,7 @@ export class AcTechnicianService {
           throw new Error(response.message || 'Failed to register AC technician');
         }
         return this.mapper.mapToAcTechnician(response.data, [
-          { id: 5, name: 'AC Technician', arabicName: 'فني تكييف', description: 'AC repair & maintenance' }
+          { id: 4, name: 'AC Technician', arabicName: 'فني تكييف', description: 'AC repair & maintenance' }
         ]);
       })
     );

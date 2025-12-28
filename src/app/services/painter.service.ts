@@ -62,7 +62,7 @@ export class PainterService {
       email: painter.email,
       phone: painter.phone,
       address: painter.address,
-      professionId: 4, // Painter profession ID
+      professionId: 5, // Painter profession ID
       experienceYears: painter.experience,
       bio: `${painter.specialization} - ${painter.paintTypes?.join(', ')} - ${painter.techniques?.join(', ')}`,
       minPrice: 100,
@@ -73,7 +73,7 @@ export class PainterService {
           throw new Error(response.message || 'Failed to register painter');
         }
         return this.mapper.mapToPainter(response.data, [
-          { id: 4, name: 'Painter', arabicName: 'دهان', description: 'Interior & exterior painting' }
+          { id: 5, name: 'Painter', arabicName: 'نقاش', description: 'Interior & exterior painting' }
         ]);
       })
     );

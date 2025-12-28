@@ -65,7 +65,7 @@ export class CarpenterService {
       email: carpenter.email,
       phone: carpenter.phone,
       address: carpenter.address,
-      professionId: 2, // Carpenter profession ID from your data
+      professionId: 3, // Carpenter profession ID from your data
       experienceYears: carpenter.experience,
       bio: `${carpenter.specialization} - ${carpenter.services?.join(', ')}`,
       minPrice: 100,
@@ -76,7 +76,7 @@ export class CarpenterService {
           throw new Error(response.message || 'Failed to register carpenter');
         }
         return this.mapper.mapToCarpenter(response.data, [
-          { id: 2, name: 'Carpenter', arabicName: 'نجار', description: 'Wood works & furniture' }
+          { id: 3, name: 'Carpenter', arabicName: 'نجار', description: 'Wood works & furniture' }
         ]);
       })
     );

@@ -4,6 +4,9 @@ import { CraftsmanApi, ProfessionApi } from '../../model/api-response.model';
 import { Carpenter } from '../../model/carpenter.model';
 import { Painter } from '../../model/painter.model';
 import { AcTechnician } from '../../model/ac-technician.model';
+import { Electrician } from '../../model/electrician.model';
+import { Plumber } from '../../model/plumber.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -84,7 +87,7 @@ export class MapperService {
    * Filter painters from craftsmen list
    */
   filterPainters(craftsmen: CraftsmanApi[], professions: ProfessionApi[]): Painter[] {
-    const painterProfession = professions.find(p => p.arabicName === 'دهان');
+    const painterProfession = professions.find(p => p.arabicName === 'نقاش');
     if (!painterProfession) return [];
     
     return craftsmen
@@ -231,5 +234,115 @@ private generateAcServices(): string[] {
   const count = Math.floor(Math.random() * 3) + 4;
   return allServices.sort(() => 0.5 - Math.random()).slice(0, count);
 }
+mapToElectrician(craftsmanApi: CraftsmanApi, professions: ProfessionApi[]): Electrician {
+  const profession = professions.find(p => p.id === craftsmanApi.professionId);
+  
+  return {
+    id: craftsmanApi.id,
+    name: craftsmanApi.fullName,
+    phone: craftsmanApi.phone,
+    email: this.generatePlaceholderEmail(craftsmanApi.userId),
+    address: `${craftsmanApi.cityName}, ${craftsmanApi.governorateName}`,
+    specialization: profession?.arabicName || 'غير محدد',
+    experience: craftsmanApi.experienceYears,
+    rating: this.generatePlaceholderRating(),
+    availability: craftsmanApi.isVerified,
+    governorate: craftsmanApi.governorateName,
+    city: craftsmanApi.cityName,
+    bio: craftsmanApi.bio,
+    minPrice: craftsmanApi.minPrice,
+    maxPrice: craftsmanApi.maxPrice,
+    isVerified: craftsmanApi.isVerified,
+    verificationDate: craftsmanApi.verificationDate,
+    certifications: this.generateElectricianCertifications(),
+    imageUrl: craftsmanApi.profileImageUrl || undefined
+  };
+}
 
+/**
+ * Filter electricians from craftsmen list
+ */
+filterElectricians(craftsmen: CraftsmanApi[], professions: ProfessionApi[]): Electrician[] {
+  const electricianProfession = professions.find(p => p.arabicName === 'كهربائي');
+  if (!electricianProfession) return [];
+  
+  return craftsmen
+    .filter(c => c.professionId === electricianProfession.id)
+    .map(c => this.mapToElectrician(c, professions));
+}
+
+// Add this private helper method
+private generateElectricianCertifications(): string[] {
+  const allCertifications = [
+    'شهادة كهربائي معتمد',
+    'ترخيص تركيبات كهربائية',
+    'شهادة سلامة كهربائية',
+    'دورة انظمة الحماية',
+    'شهادة لوحات كهربائية',
+    'ترخيص صيانة محولات',
+    'دورة انظمة الطاقة الشمسية',
+    'شهادة كهرباء صناعية'
+  ];
+  // Return random 2-4 certifications
+  const count = Math.floor(Math.random() * 3) + 2;
+  return allCertifications.sort(() => 0.5 - Math.random()).slice(0, count);
+}
+// Add these methods to your existing mapper.service.ts
+
+/**
+ * Map API craftsman data to Plumber model
+ */
+mapToPlumber(craftsmanApi: CraftsmanApi, professions: ProfessionApi[]): Plumber {
+  const profession = professions.find(p => p.id === craftsmanApi.professionId);
+  
+  return {
+    id: craftsmanApi.id,
+    name: craftsmanApi.fullName,
+    phone: craftsmanApi.phone,
+    email: this.generatePlaceholderEmail(craftsmanApi.userId),
+    address: `${craftsmanApi.cityName}, ${craftsmanApi.governorateName}`,
+    specialization: profession?.arabicName || 'غير محدد',
+    experience: craftsmanApi.experienceYears,
+    rating: this.generatePlaceholderRating(),
+    availability: craftsmanApi.isVerified,
+    governorate: craftsmanApi.governorateName,
+    city: craftsmanApi.cityName,
+    bio: craftsmanApi.bio,
+    minPrice: craftsmanApi.minPrice,
+    maxPrice: craftsmanApi.maxPrice,
+    isVerified: craftsmanApi.isVerified,
+    verificationDate: craftsmanApi.verificationDate,
+    services: this.generatePlumberServices(),
+    imageUrl: craftsmanApi.profileImageUrl || undefined
+  };
+}
+
+/**
+ * Filter plumbers from craftsmen list
+ */
+filterPlumbers(craftsmen: CraftsmanApi[], professions: ProfessionApi[]): Plumber[] {
+  const plumberProfession = professions.find(p => p.arabicName === 'سباك');
+  if (!plumberProfession) return [];
+  
+  return craftsmen
+    .filter(c => c.professionId === plumberProfession.id)
+    .map(c => this.mapToPlumber(c, professions));
+}
+
+// Add this private helper method
+private generatePlumberServices(): string[] {
+  const allServices = [
+    'إصلاح تسريبات المياه',
+    'تركيب مواسير',
+    'صيانة حمامات',
+    'تركيب سخانات',
+    'تسليك مجاري',
+    'تركيب خلاطات',
+    'صيانة خزانات',
+    'فحص شبكات المياه'
+  ];
+  // Return random 4-6 services
+  const count = Math.floor(Math.random() * 3) + 4;
+  return allServices.sort(() => 0.5 - Math.random()).slice(0, count);
+}
 }
