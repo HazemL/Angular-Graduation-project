@@ -1,3 +1,4 @@
+// src/components/gas-technician/gas-technician-list.component.ts
 import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -8,26 +9,53 @@ import { GasTechnician } from '../../../model/gas-technician.model';
   imports: [CommonModule, RouterLink],
   selector: 'app-gas-technician-list',
   templateUrl: './gas-technician-list.html',
+  styleUrls: ['./gas-technician-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GasTechnicianList implements OnInit {
   private readonly gasTechnicianService = inject(GasTechnicianService);
   
+  // All technicians from API
+  private readonly allGasTechnicians = signal<GasTechnician[]>([]);
+  
+  // Current display state
   readonly gasTechnicians = signal<GasTechnician[]>([]);
   readonly loading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
   readonly searchQuery = signal<string>('');
+  
+  // Filter state
+  readonly activeFilter = signal<'all' | 'licensed' | 'emergency' | 'top-rated'>('all');
 
+  // Filtered by search
   readonly filteredGasTechnicians = computed(() => {
     const query = this.searchQuery().toLowerCase();
-    if (!query) return this.gasTechnicians();
+    const current = this.gasTechnicians();
     
-    return this.gasTechnicians().filter(technician =>
+    if (!query) return current;
+    
+    return current.filter(technician =>
       technician.name.toLowerCase().includes(query) ||
       technician.specialization.toLowerCase().includes(query) ||
-      technician.address.toLowerCase().includes(query)
+      technician.address.toLowerCase().includes(query) ||
+      technician.city?.toLowerCase().includes(query) ||
+      technician.governorate?.toLowerCase().includes(query) ||
+      technician.bio?.toLowerCase().includes(query) ||
+      technician.services?.some(s => s.toLowerCase().includes(query)) ||
+      technician.certifications?.some(c => c.toLowerCase().includes(query)) ||
+      technician.licensedBy?.toLowerCase().includes(query)
     );
   });
+
+  // Licensed technicians count
+  readonly licensedTechnicians = computed(() =>
+    this.allGasTechnicians().filter(t => t.licensedBy)
+  );
+
+  // Emergency service technicians count
+  readonly emergencyTechnicians = computed(() =>
+    this.allGasTechnicians().filter(t => t.emergencyService)
+  );
 
   ngOnInit(): void {
     this.loadGasTechnicians();
@@ -39,6 +67,7 @@ export class GasTechnicianList implements OnInit {
 
     this.gasTechnicianService.getGasTechnicians().subscribe({
       next: (data) => {
+        this.allGasTechnicians.set(data);
         this.gasTechnicians.set(data);
         this.loading.set(false);
       },
@@ -55,7 +84,57 @@ export class GasTechnicianList implements OnInit {
     this.searchQuery.set(input.value);
   }
 
+  // Filter methods
+  showAll(): void {
+    this.activeFilter.set('all');
+    this.gasTechnicians.set(this.allGasTechnicians());
+    this.searchQuery.set('');
+  }
+
+  filterLicensed(): void {
+    this.activeFilter.set('licensed');
+    const licensed = this.allGasTechnicians().filter(t => t.licensedBy);
+    this.gasTechnicians.set(licensed);
+    this.searchQuery.set('');
+  }
+
+  filterEmergency(): void {
+    this.activeFilter.set('emergency');
+    const emergency = this.allGasTechnicians().filter(t => t.emergencyService);
+    this.gasTechnicians.set(emergency);
+    this.searchQuery.set('');
+  }
+
+  filterTopRated(): void {
+    this.activeFilter.set('top-rated');
+    const topRated = [...this.allGasTechnicians()]
+      .sort((a, b) => b.rating - a.rating)
+      .slice(0, 10);
+    this.gasTechnicians.set(topRated);
+    this.searchQuery.set('');
+  }
+
+  isFilterActive(filter: 'all' | 'licensed' | 'emergency' | 'top-rated'): boolean {
+    return this.activeFilter() === filter;
+  }
+
   contactGasTechnician(technician: GasTechnician): void {
-    window.location.href = `tel:${technician.phone}`;
+    const phone = technician.phone.replace(/\s+/g, '');
+    window.location.href = `tel:${phone}`;
+  }
+
+  getPriceRange(technician: GasTechnician): string {
+    if (technician.minPrice && technician.maxPrice) {
+      return `${technician.minPrice} - ${technician.maxPrice} جنيه`;
+    }
+    return 'السعر غير محدد';
+  }
+
+  getNameInitial(name: string): string {
+    return name.charAt(0).toUpperCase();
+  }
+
+  trackByTechnicianId(index: number, technician: GasTechnician): number {
+    return technician.id;
   }
 }

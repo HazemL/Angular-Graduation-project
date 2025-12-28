@@ -7,6 +7,8 @@ import { AcTechnician } from '../../model/ac-technician.model';
 import { Electrician } from '../../model/electrician.model';
 import { Plumber } from '../../model/plumber.model';
 import { AluminumTechnician } from '../../model/aluminum-technician.model'; 
+import { GasTechnician } from '../../model/gas-technician.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -423,4 +425,94 @@ private generateAluminumMaterials(): string[] {
   const count = Math.floor(Math.random() * 3) + 3;
   return allMaterials.sort(() => 0.5 - Math.random()).slice(0, count);
 }
+
+// Add these methods to your existing mapper.service.ts
+
+/**
+ * Map API craftsman data to GasTechnician model
+ */
+mapToGasTechnician(craftsmanApi: CraftsmanApi, professions: ProfessionApi[]): GasTechnician {
+  const profession = professions.find(p => p.id === craftsmanApi.professionId);
+  
+  return {
+    id: craftsmanApi.id,
+    name: craftsmanApi.fullName,
+    phone: craftsmanApi.phone,
+    email: this.generatePlaceholderEmail(craftsmanApi.userId),
+    address: `${craftsmanApi.cityName}, ${craftsmanApi.governorateName}`,
+    specialization: profession?.arabicName || 'غير محدد',
+    experience: craftsmanApi.experienceYears,
+    rating: this.generatePlaceholderRating(),
+    availability: craftsmanApi.isVerified,
+    governorate: craftsmanApi.governorateName,
+    city: craftsmanApi.cityName,
+    bio: craftsmanApi.bio,
+    minPrice: craftsmanApi.minPrice,
+    maxPrice: craftsmanApi.maxPrice,
+    isVerified: craftsmanApi.isVerified,
+    verificationDate: craftsmanApi.verificationDate,
+    services: this.generateGasServices(),
+    certifications: this.generateGasCertifications(),
+    emergencyService: Math.random() > 0.4, // Random for now
+    licensedBy: this.generateLicenseAuthority(),
+    imageUrl: craftsmanApi.profileImageUrl || undefined
+  };
+}
+
+/**
+ * Filter gas technicians from craftsmen list
+ */
+filterGasTechnicians(craftsmen: CraftsmanApi[], professions: ProfessionApi[]): GasTechnician[] {
+  const gasProfession = professions.find(p => p.arabicName === 'فني غاز');
+  if (!gasProfession) return [];
+  
+  return craftsmen
+    .filter(c => c.professionId === gasProfession.id)
+    .map(c => this.mapToGasTechnician(c, professions));
+}
+
+// Add these private helper methods
+private generateGasServices(): string[] {
+  const allServices = [
+    'صيانة مواقد الغاز',
+    'تركيب أنابيب غاز',
+    'فحص تسريبات الغاز',
+    'تركيب سخانات غاز',
+    'صيانة أفران غاز',
+    'تحويل من أنبوبة لغاز طبيعي',
+    'فحص دوري للسلامة',
+    'صيانة عدادات الغاز'
+  ];
+  // Return random 4-6 services
+  const count = Math.floor(Math.random() * 3) + 4;
+  return allServices.sort(() => 0.5 - Math.random()).slice(0, count);
+}
+
+private generateGasCertifications(): string[] {
+  const allCertifications = [
+    'شهادة فني غاز معتمد',
+    'ترخيص تركيب غاز طبيعي',
+    'شهادة سلامة غاز',
+    'دورة كشف التسريبات',
+    'ترخيص صيانة سخانات',
+    'شهادة تمديدات غاز',
+    'دورة السلامة المهنية'
+  ];
+  // Return random 2-4 certifications
+  const count = Math.floor(Math.random() * 3) + 2;
+  return allCertifications.sort(() => 0.5 - Math.random()).slice(0, count);
+}
+
+private generateLicenseAuthority(): string | undefined {
+  const authorities = [
+    'وزارة البترول',
+    'هيئة الطاقة',
+    'شركة الغاز الطبيعي',
+    'الهيئة القومية للسلامة',
+    null
+  ];
+  const selected = authorities[Math.floor(Math.random() * authorities.length)];
+  return selected || undefined;
+}
+
 }
