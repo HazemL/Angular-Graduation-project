@@ -20,13 +20,27 @@
         <button (click)="toggleDarkMode()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
           <span class="material-symbols-outlined">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</span>
         </button>
-        <button (click)="onCreateAccount()" routerLink="/register/craftsman" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-colors">
-          <span class="truncate">إنشاء حساب</span>
-        </button>
-         <button routerLink="/login" (click)="onLogin()"
-    class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-colors">
-    <span class="truncate">تسجيل الدخول</span>
-  </button>
+       <!-- IF NOT LOGGED IN -->
+  <ng-container *ngIf="!authService.currentUser(); else loggedIn">
+    <button routerLink="/register/craftsman"
+      class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-colors">
+      <span class="truncate">إنشاء حساب</span>
+    </button>
+
+    <button routerLink="/login" (click)="onLogin()"
+      class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-colors">
+      <span class="truncate">تسجيل الدخول</span>
+    </button>
+  </ng-container>
+
+  <!-- IF LOGGED IN -->
+  <ng-template #loggedIn>
+    <button (click)="logout()"
+      class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-red-600 text-white text-sm font-bold shadow-lg shadow-red-400/30 hover:bg-red-700 transition-colors">
+      تسجيل الخروج
+    </button>
+  </ng-template>
+
       </div>
     </div>
   </div>
