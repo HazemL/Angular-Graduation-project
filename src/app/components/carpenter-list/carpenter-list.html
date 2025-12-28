@@ -100,27 +100,39 @@
             }
           </div>
           
-          <!-- Quick Filters -->
-          <div class="quick-filters">
-            <button class="filter-chip active">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L1 21H23L12 2Z" fill="currentColor"/>
-              </svg>
-              الكل
-            </button>
-            <button class="filter-chip" (click)="filterVerified()">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor"/>
-              </svg>
-              موثق فقط
-            </button>
-            <button class="filter-chip">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" fill="currentColor"/>
-              </svg>
-              الأعلى تقييماً
-            </button>
-          </div>
+         <!-- Quick Filters -->
+<div class="quick-filters">
+  <button 
+    class="filter-chip" 
+    [class.active]="isFilterActive('all')"
+    (click)="showAll()"
+  >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2L1 21H23L12 2Z" fill="currentColor"/>
+    </svg>
+    الكل
+  </button>
+  <button 
+    class="filter-chip" 
+    [class.active]="isFilterActive('verified')"
+    (click)="filterVerified()"
+  >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor"/>
+    </svg>
+    موثق فقط
+  </button>
+  <button 
+    class="filter-chip" 
+    [class.active]="isFilterActive('top-rated')"
+    (click)="filterTopRated()"
+  >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" fill="currentColor"/>
+    </svg>
+    الأعلى تقييماً
+  </button>
+</div>
         </div>
 
         <!-- Results Count -->
@@ -133,8 +145,8 @@
 
       <!-- Carpenters Grid -->
       <div class="carpenters-grid">
-        @for (carpenter of filteredCarpenters(); track carpenter.id; let idx = $index) {
-          <div class="carpenter-card" [style.animation-delay]="idx * 0.1 + 's'">
+       @for (carpenter of filteredCarpenters(); track trackByCarpenterId($index, carpenter); let idx = $index) {
+  <div class="carpenter-card" [style.animation-delay]="idx * 0.1 + 's'">
             <!-- Card Header with Image -->
             <div class="card-header-image">
               @if (carpenter.imageUrl) {

@@ -14,15 +14,15 @@ interface ApiResponse<T = any> {
 })
 export class CraftsmanRegistrationService {
   private readonly apiBase = `${environment.apiUrl}/api/auth`;
-  
+
   // Store registration data temporarily
   private basicInfoData: any = null;
   private professionData: any = null;
   private serviceAreasData: any = null;
-  
+
   public readonly isCraftsman = signal(true);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   setBasicInfoData(data: any): void {
     this.basicInfoData = data;
@@ -43,9 +43,12 @@ export class CraftsmanRegistrationService {
       password: data.password,
       fullName: data.fullName,
       phone: data.phone,
-      role: 'Customer'
+      role: 'Customer',
+      governorateId: data.governorateId || 0,
+      cityId: data.cityId || 0
     };
-    
+
+    console.log('🔵 Customer Registration Payload:', payload);
     return this.http.post<ApiResponse>(`${this.apiBase}/register`, payload);
   }
 
@@ -58,14 +61,10 @@ export class CraftsmanRegistrationService {
       phone: this.basicInfoData.phone,
       role: 'Craftsman',
       governorateId: governorateId,
-      cityId: cityId,
-      // Additional craftsman data
-      profession: this.professionData?.profession,
-      skills: this.professionData?.skills,
-      yearsOfExperience: this.professionData?.yearsOfExperience,
-      description: this.professionData?.description
+      cityId: cityId
     };
-    
+
+    console.log('🟢 Craftsman Registration Payload:', payload);
     return this.http.post<ApiResponse>(`${this.apiBase}/register`, payload);
   }
 

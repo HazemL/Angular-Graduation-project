@@ -46,6 +46,14 @@ export class CraftsmanRegistrationService {
       role: 'Customer'
     };
     
+    // Debug: log payload so browser console shows exactly what's sent
+    try {
+      // eslint-disable-next-line no-console
+      console.log('Craftsman register payload:', JSON.parse(JSON.stringify(payload)));
+    } catch (e) {
+      // ignore
+    }
+
     return this.http.post<ApiResponse>(`${this.apiBase}/register`, payload);
   }
 
@@ -58,7 +66,14 @@ export class CraftsmanRegistrationService {
       phone: this.basicInfoData.phone,
       role: 'Craftsman',
       governorateId: governorateId,
-      cityId: cityId
+      cityId: cityId,
+      // include profession and skills collected earlier
+      profession: this.professionData?.professionName || this.professionData?.profession,
+      skills: this.professionData?.skills,
+      yearsOfExperience: this.professionData?.yearsOfExperience,
+      description: this.professionData?.description,
+      // include any service areas data if available
+      serviceAreas: this.serviceAreasData
     };
     
     return this.http.post<ApiResponse>(`${this.apiBase}/register`, payload);

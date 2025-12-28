@@ -15,27 +15,38 @@ import { Carpenter } from '../../../model/carpenter.model';
 export class CarpenterList implements OnInit {
   private readonly carpenterService = inject(CarpenterService);
   
+  // All carpenters loaded from API
+  private readonly allCarpenters = signal<Carpenter[]>([]);
+  
+  // Current display state
   readonly carpenters = signal<Carpenter[]>([]);
   readonly loading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
   readonly searchQuery = signal<string>('');
+  
+  // Filter states
+  readonly activeFilter = signal<'all' | 'verified' | 'top-rated'>('all');
 
+  // Filtered by search query
   readonly filteredCarpenters = computed(() => {
     const query = this.searchQuery().toLowerCase();
-    if (!query) return this.carpenters();
+    const current = this.carpenters();
     
-    return this.carpenters().filter(carpenter =>
+    if (!query) return current;
+    
+    return current.filter(carpenter =>
       carpenter.name.toLowerCase().includes(query) ||
       carpenter.specialization.toLowerCase().includes(query) ||
       carpenter.address.toLowerCase().includes(query) ||
       carpenter.city?.toLowerCase().includes(query) ||
-      carpenter.governorate?.toLowerCase().includes(query)
+      carpenter.governorate?.toLowerCase().includes(query) ||
+      carpenter.bio?.toLowerCase().includes(query)
     );
   });
 
-  // Computed signal for verified carpenters
+  // Computed signal for verified carpenters count
   readonly verifiedCarpenters = computed(() =>
-    this.carpenters().filter(c => c.isVerified)
+    this.allCarpenters().filter(c => c.isVerified)
   );
 
   ngOnInit(): void {
@@ -48,6 +59,7 @@ export class CarpenterList implements OnInit {
 
     this.carpenterService.getCarpenters().subscribe({
       next: (data) => {
+        this.allCarpenters.set(data);
         this.carpenters.set(data);
         this.loading.set(false);
       },
@@ -64,22 +76,52 @@ export class CarpenterList implements OnInit {
     this.searchQuery.set(input.value);
   }
 
+  // Filter methods
+  showAll(): void {
+    this.activeFilter.set('all');
+    this.carpenters.set(this.allCarpenters());
+    this.searchQuery.set('');
+  }
+
+  filterVerified(): void {
+    this.activeFilter.set('verified');
+    const verified = this.allCarpenters().filter(c => c.isVerified);
+    this.carpenters.set(verified);
+    this.searchQuery.set('');
+  }
+
+  filterTopRated(): void {
+    this.activeFilter.set('top-rated');
+    const topRated = [...this.allCarpenters()]
+      .sort((a, b) => b.rating - a.rating)
+      .slice(0, 10); // Top 10
+    this.carpenters.set(topRated);
+    this.searchQuery.set('');
+  }
+
+  // Check if filter is active
+  isFilterActive(filter: 'all' | 'verified' | 'top-rated'): boolean {
+    return this.activeFilter() === filter;
+  }
+
   contactCarpenter(carpenter: Carpenter): void {
-    // You can use the placeholder phone or implement a modal to get real contact
-    window.location.href = `tel:${carpenter.phone}`;
+    // Format phone number for tel: link
+    const phone = carpenter.phone.replace(/\s+/g, '');
+    window.location.href = `tel:${phone}`;
   }
   
-  // Optional: Add price range display helper
   getPriceRange(carpenter: Carpenter): string {
     if (carpenter.minPrice && carpenter.maxPrice) {
       return `${carpenter.minPrice} - ${carpenter.maxPrice} جنيه`;
     }
     return 'السعر غير محدد';
   }
-  filterVerified(): void {
-  // Implementation for filtering verified carpenters
-  const verified = this.carpenters().filter(c => c.isVerified);
-  this.carpenters.set(verified);
-}
 
+  // Track by function for better performance
+  trackByCarpenterId(index: number, carpenter: Carpenter): number {
+    return carpenter.id;
+  }
+  getNameInitial(name: string): string {
+  return name.charAt(0).toUpperCase();
+}
 }

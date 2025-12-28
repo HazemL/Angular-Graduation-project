@@ -1,3 +1,4 @@
+// src/model/painter.model.ts
 export interface Painter {
   id: number;
   name: string;
@@ -12,6 +13,14 @@ export interface Painter {
   paintTypes?: string[];
   projects?: string[];
   techniques?: string[];
+  // New fields from API
+  governorate?: string;
+  city?: string;
+  bio?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  isVerified?: boolean;
+  verificationDate?: string | null;
 }
 
 export interface PainterRegistration {

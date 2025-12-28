@@ -9,6 +9,8 @@ export interface CraftsmanApi {
   id: number;
   userId: number;
   fullName: string;
+  phone: string; // ✅ Now provided by API
+  profileImageUrl: string | null; // ✅ Now provided by API
   governorateName: string;
   cityName: string;
   professionId: number;

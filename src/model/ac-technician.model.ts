@@ -1,3 +1,4 @@
+// src/model/ac-technician.model.ts
 export interface AcTechnician {
   id: number;
   name: string;
@@ -12,6 +13,14 @@ export interface AcTechnician {
   brands?: string[];
   services?: string[];
   emergencyService: boolean;
+  // New fields from API
+  governorate?: string;
+  city?: string;
+  bio?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  isVerified?: boolean;
+  verificationDate?: string | null;
 }
 
 export interface AcTechnicianRegistration {

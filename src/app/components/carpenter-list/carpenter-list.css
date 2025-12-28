@@ -771,4 +771,35 @@
   .info-grid {
     grid-template-columns: 1fr;
   }
+  
+}
+.placeholder-image {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.placeholder-image .placeholder-pattern {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.05) 10px, rgba(255, 255, 255, 0.05) 20px);
+  animation: slide 20s linear infinite;
+}
+.placeholder-image svg {
+  color: white;
+  position: relative;
+  z-index: 1;
+}
+.placeholder-image::after {
+  content: attr(data-initial);
+  position: absolute;
+  font-size: 4rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
 }
