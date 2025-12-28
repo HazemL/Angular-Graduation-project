@@ -6,7 +6,7 @@ import { Painter } from '../../model/painter.model';
 import { AcTechnician } from '../../model/ac-technician.model';
 import { Electrician } from '../../model/electrician.model';
 import { Plumber } from '../../model/plumber.model';
-
+import { AluminumTechnician } from '../../model/aluminum-technician.model'; 
 @Injectable({
   providedIn: 'root'
 })
@@ -344,5 +344,83 @@ private generatePlumberServices(): string[] {
   // Return random 4-6 services
   const count = Math.floor(Math.random() * 3) + 4;
   return allServices.sort(() => 0.5 - Math.random()).slice(0, count);
+}
+
+// Add these methods to your existing mapper.service.ts
+
+/**
+ * Map API craftsman data to AluminumTechnician model
+ */
+mapToAluminumTechnician(craftsmanApi: CraftsmanApi, professions: ProfessionApi[]): AluminumTechnician {
+  const profession = professions.find(p => p.id === craftsmanApi.professionId);
+  
+  return {
+    id: craftsmanApi.id,
+    name: craftsmanApi.fullName,
+    phone: craftsmanApi.phone,
+    email: this.generatePlaceholderEmail(craftsmanApi.userId),
+    address: `${craftsmanApi.cityName}, ${craftsmanApi.governorateName}`,
+    specialization: profession?.arabicName || 'غير محدد',
+    experience: craftsmanApi.experienceYears,
+    rating: this.generatePlaceholderRating(),
+    availability: craftsmanApi.isVerified,
+    governorate: craftsmanApi.governorateName,
+    city: craftsmanApi.cityName,
+    bio: craftsmanApi.bio,
+    minPrice: craftsmanApi.minPrice,
+    maxPrice: craftsmanApi.maxPrice,
+    isVerified: craftsmanApi.isVerified,
+    verificationDate: craftsmanApi.verificationDate,
+    services: this.generateAluminumServices(),
+    materials: this.generateAluminumMaterials(),
+    projects: this.generatePlaceholderProjects(),
+    warranty: Math.random() > 0.3, // Random for now
+    imageUrl: craftsmanApi.profileImageUrl || undefined
+  };
+}
+
+/**
+ * Filter aluminum technicians from craftsmen list
+ */
+filterAluminumTechnicians(craftsmen: CraftsmanApi[], professions: ProfessionApi[]): AluminumTechnician[] {
+  const aluminumProfession = professions.find(p => p.arabicName === 'فني ألوميتال');
+  if (!aluminumProfession) return [];
+  
+  return craftsmen
+    .filter(c => c.professionId === aluminumProfession.id)
+    .map(c => this.mapToAluminumTechnician(c, professions));
+}
+
+// Add these private helper methods
+private generateAluminumServices(): string[] {
+  const allServices = [
+    'تركيب مطابخ ألوميتال',
+    'تركيب شبابيك',
+    'تركيب أبواب ألوميتال',
+    'واجهات زجاجية',
+    'بارتشن',
+    'كلادينج',
+    'شتر ألوميتال',
+    'درابزين'
+  ];
+  // Return random 4-6 services
+  const count = Math.floor(Math.random() * 3) + 4;
+  return allServices.sort(() => 0.5 - Math.random()).slice(0, count);
+}
+
+private generateAluminumMaterials(): string[] {
+  const allMaterials = [
+    'ألوميتال محلي',
+    'ألوميتال مستورد',
+    'ألوميتال سعودي',
+    'ألوميتال تركي',
+    'زجاج سيكوريت',
+    'زجاج عادي',
+    'إكسسوارات ألمانية',
+    'إكسسوارات إيطالية'
+  ];
+  // Return random 3-5 materials
+  const count = Math.floor(Math.random() * 3) + 3;
+  return allMaterials.sort(() => 0.5 - Math.random()).slice(0, count);
 }
 }

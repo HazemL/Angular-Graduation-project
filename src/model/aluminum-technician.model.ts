@@ -1,3 +1,4 @@
+// src/model/aluminum-technician.model.ts
 export interface AluminumTechnician {
   id: number;
   name: string;
@@ -13,6 +14,14 @@ export interface AluminumTechnician {
   materials?: string[];
   projects?: string[];
   warranty: boolean;
+  // New fields from API
+  governorate?: string;
+  city?: string;
+  bio?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  isVerified?: boolean;
+  verificationDate?: string | null;
 }
 
 export interface AluminumTechnicianRegistration {
