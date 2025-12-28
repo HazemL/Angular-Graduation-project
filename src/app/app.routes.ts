@@ -8,6 +8,9 @@ import { CraftsmanDashboard } from './components/craftsman-dashboard/craftsman-d
 import { CraftsmanProfile } from './components/craftsman-profile/craftsman-profile';
 import { PlumberList } from './components/plumber-list/plumber-list';
 import { ContactUs } from './components/contact-us/contact-us';
+import { Faq } from './components/faq/faq';
+import { Privacy } from './components/privacy/privacy';
+import { Terms } from './components/terms/terms';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -16,7 +19,9 @@ export const routes: Routes = [
   {path: 'about',component:About},
   {path:'login',component:Login},
    { path: 'contact', component: ContactUs },
- 
+ { path: 'faq', component: Faq },
+{ path: 'privacy', component: Privacy },
+{ path: 'terms', component: Terms },
   {path:'services',component:Services},
   {path: 'dashboard',component: Dashboard,
     children: [
