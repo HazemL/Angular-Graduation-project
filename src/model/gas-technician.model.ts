@@ -1,3 +1,4 @@
+// src/model/gas-technician.model.ts
 export interface GasTechnician {
   id: number;
   name: string;
@@ -13,6 +14,14 @@ export interface GasTechnician {
   certifications?: string[];
   emergencyService: boolean;
   licensedBy?: string;
+  // New fields from API
+  governorate?: string;
+  city?: string;
+  bio?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  isVerified?: boolean;
+  verificationDate?: string | null;
 }
 
 export interface GasTechnicianRegistration {

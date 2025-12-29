@@ -128,7 +128,7 @@ title: 'فني غاز - صيانة وتركيب'
 },
 {
 path: 'device-repair',
-loadComponent: () => import('./components/device-repair-list/device-repair-list').then(m => m.DeviceRepairList),
+loadComponent: () => import('./components/device-repair-list/device-repair-list').then(m => m.DeviceRepairListComponent),
 title: 'إصلاح أجهزة - غسالات وثلاجات'
 },
  {
