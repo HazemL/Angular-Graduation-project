@@ -21,7 +21,7 @@
     <div>
       <div class="d-flex align-items-center mb-4 text-white">
         <span class="material-symbols-outlined fs-3 me-2">build_circle</span>
-        <h5 class="mb-0 fw-bold">صنايعي مصر</h5>
+       <a [routerLink]="['/home']"> <h5 class="mb-0 fw-bold">صنايعي مصر</h5></a>
       </div>
 
       <nav class="nav flex-column gap-1">
@@ -29,7 +29,7 @@
         <a class="nav-link rounded px-3 py-2" [routerLink]="['users']" routerLinkActive="active">المستخدمين <span class="badge bg-secondary ms-2">{{usersCount}}</span></a>
         <a class="nav-link rounded px-3 py-2" [routerLink]="['dashCraft']" routerLinkActive="active">الصنايعية <span class="badge bg-secondary ms-2">{{craftsCount}}</span></a>
         <a class="nav-link rounded px-3 py-2" [routerLink]="['reports']" routerLinkActive="active">البلاغات <span class="badge bg-danger ms-2">{{reportsCount}}</span></a>
-        <a class="nav-link rounded px-3 py-2" href="#">الإعدادات</a>
+       
       
       </nav>
     </div>
