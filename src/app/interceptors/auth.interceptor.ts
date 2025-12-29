@@ -1,12 +1,12 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
-function getTokenFromCookie(): string | null {
-  const match = document.cookie.match('(^|;)\\s*auth_token\\s*=\\s*([^;]+)');
-  return match ? decodeURIComponent(match[2]) : null;
+function getToken(): string | null {
+  return localStorage.getItem('auth_token');
 }
 
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = getTokenFromCookie();
+  const token = localStorage.getItem('auth_token'); // استخدم localStorage
 
   if (token) {
     req = req.clone({
@@ -18,3 +18,4 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req);
 };
+

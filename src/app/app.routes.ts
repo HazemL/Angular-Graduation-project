@@ -11,6 +11,9 @@ import { ContactUs } from './components/contact-us/contact-us';
 import { Faq } from './components/faq/faq';
 import { Privacy } from './components/privacy/privacy';
 import { Terms } from './components/terms/terms';
+import { authGuard } from './guards/guardsauth-guard';
+import { CanActivate } from '@angular/router';
+
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -36,7 +39,14 @@ export const routes: Routes = [
       {
         path:'reports',
         loadComponent:() => import('./components/dashboard/dashreports/dashreports').then(m=>m.Dashreports) 
-      }
+      },
+      {
+    path: 'dashboard',
+    component: Dashboard,
+    canActivate: [authGuard],
+    data: { role: 'Admin' },
+  }
+ 
       
     ]
   },
@@ -121,6 +131,12 @@ path: 'device-repair',
 loadComponent: () => import('./components/device-repair-list/device-repair-list').then(m => m.DeviceRepairList),
 title: 'إصلاح أجهزة - غسالات وثلاجات'
 },
+ {
+    path: 'craftsman-dashboard/:id',
+    component: CraftsmanDashboard,
+    canActivate: [authGuard],
+    data: { role: 'Craftsman' },
+  }
   // { path: '**', redirectTo: '' },
 
 ];

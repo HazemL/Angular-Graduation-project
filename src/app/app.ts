@@ -4,6 +4,7 @@ import { Footer } from './components/footer/footer';
 import { Navbar } from './components/navbar/navbar';
 import { filter } from 'rxjs';
 import { Login } from "./components/login/login";
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,11 @@ export class App implements OnInit {
   protected readonly title = signal('test-Project');
   protected readonly showMainNavbar = signal(true);
   protected readonly showFooter = signal(true);
-
+constructor(private authService: AuthService) {
+    if (localStorage.getItem('auth_token')) {
+      this.authService.loadCurrentUser().subscribe();
+    }
+  }
   ngOnInit() {
     // Check initial route
     this.checkRoute(this.router.url);
@@ -28,6 +33,7 @@ export class App implements OnInit {
         this.checkRoute(event.url);
       });
   }
+  
 
   private checkRoute(url: string): void {
     const hideNavbarRoutes = ['/register/craftsman', '/report', '/dashboard', '/craftsman-dashboard', '/craftsman-profile'];

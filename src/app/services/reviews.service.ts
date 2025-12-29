@@ -19,8 +19,8 @@ export class ReviewsService {
         return this.http.get<ApiResponse<{ reviews: Review[]; totalPages: number }>>(this.baseUrl, { params });
     }
 
-    getRatingSummary(): Observable<ApiResponse<RatingSummary>> {
-        return this.http.get<ApiResponse<RatingSummary>>(`${this.baseUrl}/summary`);
+    getRatingSummary(craftsmanId: string): Observable<ApiResponse<RatingSummary>> {
+        return this.http.get<ApiResponse<RatingSummary>>(`${this.baseUrl}/${craftsmanId}/summary`);
     }
 
     getResponsePerformance(): Observable<ApiResponse<ResponsePerformance>> {

@@ -35,24 +35,20 @@ export class Login {
   }
 
   onSubmit(): void {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
+  if (this.loginForm.invalid) return;
 
-    this.isSubmitting.set(true);
-    this.errorMessage.set(null);
+  const { email, password } = this.loginForm.getRawValue();
 
-    const { email, password } = this.loginForm.getRawValue();
-
-    this.authService.login({ email, password }).subscribe({
+  this.authService.login({ email, password }).subscribe({
+    next: () => {
+    this.authService.loadCurrentUser().subscribe({
       next: () => {
-        this.router.navigate(['/']); // Navigate to home/dashboard on success
-      },
-      error: (error) => {
-        this.errorMessage.set(error.message || 'حدث خطأ أثناء تسجيل الدخول');
-        this.isSubmitting.set(false);
+        this.router.navigate(['/home']); // أو '/'
       }
     });
-  }
+    },
+    error: () => this.errorMessage.set('فشل تسجيل الدخول')
+  });
+}
+
 }

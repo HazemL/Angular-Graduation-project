@@ -1,85 +1,83 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, inject } from '@angular/core';
-import { Observable, tap, of, throwError } from 'rxjs';
-import { LoginRequest, LoginResponse } from '../../model/auth.model';
+import { Observable, tap, firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { map } from 'rxjs/operators';
+
+
+export interface User {
+ userId: number;
+  fullName: string;
+  role: 'Admin' | 'Craftsman' | 'User';
+  profileImageUrl?: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  data: {
+    accessToken: string;
+    refreshToken?: string;
+    userId?: number;
+    fullName: string;
+    role: 'user' | 'craftsman' | 'admin';
+    profileImageUrl?: string;
+  };
+}
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class AuthService {
+  private http = inject(HttpClient);
 
+  // Signal لمتابعة حالة تسجيل الدخول
+  readonly currentUser = signal<User | null>(this.getUserFromStorage());
+  readonly isAuthenticated = signal<boolean>(!!this.getToken());
 
-    
-    private http = inject(HttpClient);
+  private readonly API_URL = `${environment.apiUrl}/api`;
 
-    // Signal to track login state
-  readonly currentUser = signal<{ fullName: string; role: string } | null>(this.getUserFromStorage());
+  // تسجيل الدخول
+  login(credentials: LoginRequest) {
+    return this.http.post(`${this.API_URL}/auth/login`, credentials).pipe(
+      tap((res: any) => {
+        localStorage.setItem('auth_token', res.data.accessToken);
+      })
+    );
+  }
 
-    readonly isAuthenticated = signal<boolean>(!!this.getToken());
+  loadCurrentUser() {
+    return this.http
+      .get<{ success: boolean; data: User }>(`${this.API_URL}/auth/me`)
+      .pipe(
+        tap(res => {
+          this.setUser(res.data);
+          this.currentUser.set(res.data);
+          this.isAuthenticated.set(true);
+        }),
+        map(res => res.data)
+      );
+  }
 
+  logout() {
+    localStorage.clear();
+    this.currentUser.set(null);
+    this.isAuthenticated.set(false);
+  }
 
-
-    private readonly API_URL = `${environment.apiUrl}/api`;
-
-
-    login(credentials: LoginRequest): Observable<LoginResponse> {
-        return this.http.post<LoginResponse>(`${this.API_URL}/auth/login`, credentials).pipe(
-            tap(response => this.handleAuthSuccess(response))
-        );
-    }
-
-    logout(): void {
-        // remove cookie token
-        document.cookie = 'auth_token=; path=/; max-age=0; SameSite=Strict';
-        // keep user info removal in localStorage
-        localStorage.removeItem('auth_user');
-        this.currentUser.set(null);
-        this.isAuthenticated.set(false);
-    }
-
- private handleAuthSuccess(response: LoginResponse): void {
-    const token = response.data.accessToken;
-    const user = {
-        fullName: response.data.fullName,
-        role: response.data.role
-    };
-
-    this.setToken(token);
-    this.setUser(user);
-    this.currentUser.set(user);
-    this.isAuthenticated.set(true);
-}
-
-
-
-
-   private setToken(token: string): void {
-    localStorage.setItem('auth_token', token);
-}
-
-
-
-    private getToken(): string | null {
-        const match = document.cookie.match('(^|;)\\s*auth_token\\s*=\\s*([^;]+)');
-        return match ? decodeURIComponent(match[2]) : null;
-    }
-
-
-    private setUser(user: { fullName: string; role: string }): void {
+  private setUser(user: User) {
     localStorage.setItem('auth_user', JSON.stringify(user));
+  }
+
+  private getUserFromStorage(): User | null {
+    const u = localStorage.getItem('auth_user');
+    return u ? JSON.parse(u) : null;
+  }
+
+  private getToken() {
+    return localStorage.getItem('auth_token');
+  }
 }
-
-
-    private getUserFromStorage(): { fullName: string; role: string } | null {
-    const userStr = localStorage.getItem('auth_user');
-    return userStr ? JSON.parse(userStr) : null;
-}
-
-
-}
-
-
-
-
-

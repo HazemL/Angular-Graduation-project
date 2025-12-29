@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReviewsService } from '../../../services/reviews.service';
 import { RatingDistribution, Review } from '../../../../model/review.model';
 
+
 @Component({
     selector: 'app-reviews-page',
     standalone: true,
@@ -14,6 +15,7 @@ import { RatingDistribution, Review } from '../../../../model/review.model';
 })
 export class ReviewsPageComponent implements OnInit {
     private readonly reviewsService = inject(ReviewsService);
+  
 
     protected readonly isLoading = signal(false);
     protected readonly currentPage = signal(1);
@@ -45,23 +47,24 @@ export class ReviewsPageComponent implements OnInit {
     ];
 
     ngOnInit(): void {
-        this.loadRatingSummary();
+   
+       // this.loadRatingSummary();
         this.loadResponsePerformance();
         this.loadReviews();
     }
 
-    loadRatingSummary(): void {
-        this.reviewsService.getRatingSummary().subscribe({
-            next: (response) => {
-                if (response.success && response.data) {
-                    this.averageRating.set(response.data.averageRating);
-                    this.totalReviews.set(response.data.totalReviews);
-                    this.ratingDistribution.set(response.data.distribution);
-                }
-            },
-            error: (error) => console.error('Error loading rating summary:', error)
-        });
-    }
+    // loadRatingSummary(): void {
+    //     this.reviewsService.getRatingSummary().subscribe({
+    //         next: (response) => {
+    //             if (response.success && response.data) {
+    //                 this.averageRating.set(response.data.averageRating);
+    //                 this.totalReviews.set(response.data.totalReviews);
+    //                 this.ratingDistribution.set(response.data.distribution);
+    //             }
+    //         },
+    //         error: (error) => console.error('Error loading rating summary:', error)
+    //     });
+    // }
 
     loadResponsePerformance(): void {
         this.reviewsService.getResponsePerformance().subscribe({

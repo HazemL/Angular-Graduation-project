@@ -1,51 +1,48 @@
-<!-- TopNavBar -->
 <header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800">
   <div class="container mx-auto px-4">
     <div class="flex h-16 items-center justify-between">
-      <div class="flex items-center gap-4 text-primary cursor-pointer">
+      <!-- Logo -->
+      <div class="flex items-center gap-4 text-primary cursor-pointer" routerLink="/home">
         <span class="material-symbols-outlined text-3xl">build</span>
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white" routerLink="/home">صنايعية مصر</h2>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white">صنايعية مصر</h2>
       </div>
+
+      <!-- Nav Links -->
       <nav class="hidden md:flex items-center gap-8">
-
-      <a
-  routerLink="/services"
-  class="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold shadow hover:bg-blue-700 hover:shadow-lg transition-all duration-300"
->خدماتنا</a>
-
-<a
-  routerLink="/about"
-  class="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold shadow hover:bg-blue-700 hover:shadow-lg transition-all duration-300"
->عنا</a>
-      
+        <a routerLink="/services" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold shadow hover:bg-blue-700 hover:shadow-lg transition-all duration-300">خدماتنا</a>
+        <a routerLink="/about" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold shadow hover:bg-blue-700 hover:shadow-lg transition-all duration-300">عنا</a>
       </nav>
+
+      <!-- User Actions -->
       <div class="flex items-center gap-4">
-       
-       
+        <!-- Dark Mode -->
         <button (click)="toggleDarkMode()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
           <span class="material-symbols-outlined">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</span>
         </button>
-       <!-- IF NOT LOGGED IN -->
-  <ng-container *ngIf="!authService.currentUser(); else loggedIn">
-    <button routerLink="/register/craftsman"
-      class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-colors">
-      <span class="truncate">إنشاء حساب</span>
-    </button>
 
-    <button routerLink="/login" (click)="onLogin()"
-      class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-colors">
-      <span class="truncate">تسجيل الدخول</span>
-    </button>
-  </ng-container>
+        <!-- If Not Logged In -->
+        <ng-container *ngIf="!authService.currentUser(); else loggedIn">
+          <button (click)="onCreateAccount()" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-colors">
+            إنشاء حساب
+          </button>
 
-  <!-- IF LOGGED IN -->
-  <ng-template #loggedIn>
-    <button (click)="logout()"
-      class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-red-600 text-white text-sm font-bold shadow-lg shadow-red-400/30 hover:bg-red-700 transition-colors">
-      تسجيل الخروج
-    </button>
-  </ng-template>
+          <button (click)="onLogin()" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-colors">
+            تسجيل الدخول
+          </button>
+        </ng-container>
 
+        <!-- If Logged In -->
+        <ng-template #loggedIn>
+          <i 
+  class="bi bi-person-circle text-3xl cursor-pointer text-gray600 hover:text-gray-200"
+  (click)="goToDashboard()"
+  title="لوحة التحكم">
+</i>
+
+          <button (click)="logout()" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-red-600 text-white text-sm font-bold shadow-lg shadow-red-400/30 hover:bg-red-700 transition-colors">
+            تسجيل الخروج
+          </button>
+        </ng-template>
       </div>
     </div>
   </div>
