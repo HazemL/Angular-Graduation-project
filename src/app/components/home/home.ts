@@ -137,20 +137,20 @@ export class Home {
     }
   }
 
-  onSearch(): void {
-    console.log('Searching for:', {
-      service: this.selectedService(),
-      governorate: this.selectedLocation(),
-      city: this.selectedCity()
-    });
-    const location = this.selectedCity() || this.selectedLocation() || 'جميع المناطق';
+  // onSearch(): void {
+  //   console.log('Searching for:', {
+  //     service: this.selectedService(),
+  //     governorate: this.selectedLocation(),
+  //     city: this.selectedCity()
+  //   });
+  //   const location = this.selectedCity() || this.selectedLocation() || 'جميع المناطق';
     
-    // Navigate to the service page
-    const route = this.serviceRoutes[this.selectedService()];
-    if (route) {
-      this.router.navigate([route]);
-    }
-  }
+  //   // Navigate to the service page
+  //   const route = this.serviceRoutes[this.selectedService()];
+  //   if (route) {
+  //     this.router.navigate([route]);
+  //   }
+  // }
 
   onServiceClick(service: Service): void {
     console.log('Service clicked:', service.title);
@@ -195,4 +195,53 @@ export class Home {
   hasHalfStar(rating: number, index: number): boolean {
     return index === Math.floor(rating) && rating % 1 !== 0;
   }
+
+
+
+
+
+
+
+
+
+
+  //////////////////
+  // Add these methods to home.component.ts
+
+onSearch(): void {
+  const selectedGov = this.selectedLocation();
+  const selectedCityName = this.selectedCity();
+  
+  console.log('Searching for:', {
+    service: this.selectedService(),
+    governorate: selectedGov,
+    city: selectedCityName
+  });
+
+  // Get IDs from names
+  this.governorateCitiesService.getGovernorateIdByName(selectedGov).subscribe(govId => {
+    let cityId: number | undefined;
+    
+    if (selectedCityName) {
+      this.governorateCitiesService.getCityIdByName(selectedCityName, selectedGov).subscribe(cId => {
+        cityId = cId;
+        this.navigateToService(govId, cityId);
+      });
+    } else {
+      this.navigateToService(govId, undefined);
+    }
+  });
+}
+
+private navigateToService(governorateId?: number, cityId?: number): void {
+  const route = this.serviceRoutes[this.selectedService()];
+  if (route) {
+    this.router.navigate([route], {
+      queryParams: {
+        governorateId: governorateId,
+        cityId: cityId
+      }
+    });
+  }
+}
 }

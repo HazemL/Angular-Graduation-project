@@ -60,4 +60,39 @@ export class GovernorateCitiesService {
       map(cities => cities.some(c => c.name === city))
     );
   }
+
+
+
+
+
+
+
+
+
+  // Add to governorate-cities.service.ts
+
+getGovernorateIdByName(name: string): Observable<number | undefined> {
+  return this.http.get<any[]>(`${this.apiBase}/governorates`).pipe(
+    map(governorates => {
+      const gov = governorates.find(g => g.arabicName === name || g.name === name);
+      return gov?.id;
+    })
+  );
+}
+
+getCityIdByName(cityName: string, governorateName: string): Observable<number | undefined> {
+  return this.http.get<any[]>(`${this.apiBase}/cities`).pipe(
+    map(cities => {
+      const city = cities.find(c => 
+        (c.arabicName === cityName || c.name === cityName) &&
+        (c.governorateArabicName === governorateName || c.governorateName === governorateName)
+      );
+      return city?.id;
+    })
+  );
+}
+
+
+
+
 }

@@ -1,7 +1,7 @@
 // src/components/painter/painter-list.component.ts
 import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PainterService } from '../../services/painter.service';
 import { Painter } from '../../../model/painter.model';
 
@@ -14,6 +14,7 @@ import { Painter } from '../../../model/painter.model';
 })
 export class PainterList implements OnInit {
   private readonly painterService = inject(PainterService);
+  private readonly route = inject(ActivatedRoute);
   
   // All painters from API
   private readonly allPainters = signal<Painter[]>([]);
@@ -26,6 +27,10 @@ export class PainterList implements OnInit {
   
   // Filter state
   readonly activeFilter = signal<'all' | 'verified' | 'top-rated'>('all');
+
+  // Store current filter params
+  private currentGovernorateId = signal<number | undefined>(undefined);
+  private currentCityId = signal<number | undefined>(undefined);
 
   // Filtered by search
   readonly filteredPainters = computed(() => {
@@ -52,14 +57,28 @@ export class PainterList implements OnInit {
   );
 
   ngOnInit(): void {
-    this.loadPainters();
+    // Read query params and load painters with filters
+    this.route.queryParams.subscribe(params => {
+      const governorateId = params['governorateId'] ? +params['governorateId'] : undefined;
+      const cityId = params['cityId'] ? +params['cityId'] : undefined;
+      
+      this.currentGovernorateId.set(governorateId);
+      this.currentCityId.set(cityId);
+      
+      this.loadPainters(governorateId, cityId);
+    });
   }
 
-  loadPainters(): void {
+  loadPainters(governorateId?: number, cityId?: number): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.painterService.getPainters().subscribe({
+    // Use search endpoint if filters are provided, otherwise get all
+    const request = (governorateId || cityId)
+      ? this.painterService.searchPaintersWithFilters(governorateId, cityId)
+      : this.painterService.getPainters();
+
+    request.subscribe({
       next: (data) => {
         this.allPainters.set(data);
         this.painters.set(data);
@@ -78,7 +97,7 @@ export class PainterList implements OnInit {
     this.searchQuery.set(input.value);
   }
 
-  // Filter methods
+  // Filter methods - maintain location filters
   showAll(): void {
     this.activeFilter.set('all');
     this.painters.set(this.allPainters());

@@ -1,12 +1,11 @@
 // src/services/carpenter.service.ts
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, forkJoin, map } from 'rxjs';
 import { Carpenter, CarpenterRegistration } from '../../model/carpenter.model';
 import { ApiResponse, CraftsmanApi, ProfessionApi } from '../../model/api-response.model';
 import { MapperService } from './mapper.service';
-
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,6 @@ export class CarpenterService {
   private readonly mapper = inject(MapperService);
   private readonly apiUrl = `${environment.apiUrl}/api`;
 
-  
   readonly carpenters = signal<Carpenter[]>([]);
   readonly loading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
@@ -27,6 +25,45 @@ export class CarpenterService {
   getCarpenters(): Observable<Carpenter[]> {
     return forkJoin({
       craftsmen: this.http.get<ApiResponse<CraftsmanApi[]>>(`${this.apiUrl}/craftsmen`),
+      professions: this.http.get<ProfessionApi[]>(`${this.apiUrl}/professions`)
+    }).pipe(
+      map(({ craftsmen, professions }) => {
+        if (!craftsmen.success) {
+          throw new Error(craftsmen.message || 'Failed to fetch craftsmen');
+        }
+        return this.mapper.filterCarpenters(craftsmen.data, professions);
+      })
+    );
+  }
+
+  /**
+   * Search carpenters with filters (governorate, city, profession)
+   * NEW METHOD - Use this for filtered searches
+   */
+  searchCarpentersWithFilters(
+    governorateId?: number,
+    cityId?: number,
+    name?: string
+  ): Observable<Carpenter[]> {
+    let params = new HttpParams();
+    
+    if (governorateId) {
+      params = params.set('governorateId', governorateId.toString());
+    }
+    if (cityId) {
+      params = params.set('cityId', cityId.toString());
+    }
+    if (name) {
+      params = params.set('name', name);
+    }
+    // Add profession filter for carpenters (professionId = 3)
+    params = params.set('professionId', '3');
+
+    return forkJoin({
+      craftsmen: this.http.get<ApiResponse<CraftsmanApi[]>>(
+        `${this.apiUrl}/craftsmen/search`,
+        { params }
+      ),
       professions: this.http.get<ProfessionApi[]>(`${this.apiUrl}/professions`)
     }).pipe(
       map(({ craftsmen, professions }) => {
@@ -59,13 +96,12 @@ export class CarpenterService {
    * Register new carpenter
    */
   registerCarpenter(carpenter: CarpenterRegistration): Observable<Carpenter> {
-    // You'll need to adapt this based on your actual registration API endpoint
     return this.http.post<ApiResponse<CraftsmanApi>>(`${this.apiUrl}/craftsmen`, {
       fullName: carpenter.name,
       email: carpenter.email,
       phone: carpenter.phone,
       address: carpenter.address,
-      professionId: 3, // Carpenter profession ID from your data
+      professionId: 3, // Carpenter profession ID
       experienceYears: carpenter.experience,
       bio: `${carpenter.specialization} - ${carpenter.services?.join(', ')}`,
       minPrice: 100,
@@ -83,7 +119,7 @@ export class CarpenterService {
   }
 
   /**
-   * Search carpenters by query
+   * Search carpenters by query (text search only)
    */
   searchCarpenters(query: string): Observable<Carpenter[]> {
     return this.getCarpenters().pipe(

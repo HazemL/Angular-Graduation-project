@@ -1,7 +1,7 @@
 // src/components/carpenter/carpenter-list.component.ts
 import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CarpenterService } from '../../services/carpenter.service';
 import { Carpenter } from '../../../model/carpenter.model';
 
@@ -14,6 +14,7 @@ import { Carpenter } from '../../../model/carpenter.model';
 })
 export class CarpenterList implements OnInit {
   private readonly carpenterService = inject(CarpenterService);
+  private readonly route = inject(ActivatedRoute);
   
   // All carpenters loaded from API
   private readonly allCarpenters = signal<Carpenter[]>([]);
@@ -26,6 +27,10 @@ export class CarpenterList implements OnInit {
   
   // Filter states
   readonly activeFilter = signal<'all' | 'verified' | 'top-rated'>('all');
+
+  // Store current filter params
+  private currentGovernorateId = signal<number | undefined>(undefined);
+  private currentCityId = signal<number | undefined>(undefined);
 
   // Filtered by search query
   readonly filteredCarpenters = computed(() => {
@@ -50,14 +55,28 @@ export class CarpenterList implements OnInit {
   );
 
   ngOnInit(): void {
-    this.loadCarpenters();
+    // Read query params and load carpenters with filters
+    this.route.queryParams.subscribe(params => {
+      const governorateId = params['governorateId'] ? +params['governorateId'] : undefined;
+      const cityId = params['cityId'] ? +params['cityId'] : undefined;
+      
+      this.currentGovernorateId.set(governorateId);
+      this.currentCityId.set(cityId);
+      
+      this.loadCarpenters(governorateId, cityId);
+    });
   }
 
-  loadCarpenters(): void {
+  loadCarpenters(governorateId?: number, cityId?: number): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.carpenterService.getCarpenters().subscribe({
+    // Use search endpoint if filters are provided, otherwise get all
+    const request = (governorateId || cityId)
+      ? this.carpenterService.searchCarpentersWithFilters(governorateId, cityId)
+      : this.carpenterService.getCarpenters();
+
+    request.subscribe({
       next: (data) => {
         this.allCarpenters.set(data);
         this.carpenters.set(data);
@@ -76,7 +95,7 @@ export class CarpenterList implements OnInit {
     this.searchQuery.set(input.value);
   }
 
-  // Filter methods
+  // Filter methods - maintain location filters
   showAll(): void {
     this.activeFilter.set('all');
     this.carpenters.set(this.allCarpenters());
@@ -121,7 +140,8 @@ export class CarpenterList implements OnInit {
   trackByCarpenterId(index: number, carpenter: Carpenter): number {
     return carpenter.id;
   }
+
   getNameInitial(name: string): string {
-  return name.charAt(0).toUpperCase();
-}
+    return name.charAt(0).toUpperCase();
+  }
 }
