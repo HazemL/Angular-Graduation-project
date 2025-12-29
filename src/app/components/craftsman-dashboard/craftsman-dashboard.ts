@@ -18,6 +18,8 @@ export class CraftsmanDashboard implements OnInit {
   craftsmanName = signal('الصنايعي');
   craftsmanAvatar = signal('https://via.placeholder.com/40');
   craftsmanId: string | null = null;
+  
+  
 
   constructor(
     private router: Router,
@@ -30,35 +32,24 @@ export class CraftsmanDashboard implements OnInit {
     // جلب الـ craftsmanId من المستخدم المسجل الدخول
     const currentUser = this.authService.currentUser();
     if (currentUser && currentUser.role === 'Craftsman') {
-      this.craftsmanId = currentUser.userId?.toString() || null;
+      const fetchId=currentUser.userId -1;
+      this.craftsmanId = fetchId.toString();
       this.loadCraftsmanProfile();
-      this.loadReviewsCount();
+      
     } else {
       console.error('No logged-in craftsman found');
       // يمكن إعادة التوجيه أو عرض رسالة خطأ
     }
   }
 
-  loadReviewsCount(): void {
-    if (!this.craftsmanId) return;
-
-    this.reviewsService.getRatingSummary(this.craftsmanId).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.totalReviews.set(response.data.totalReviews);
-        }
-      },
-      error: (error) => console.error('Error loading reviews count:', error)
-    });
-  }
-
+  
   loadCraftsmanProfile(): void {
     if (!this.craftsmanId) return;
 
-    this.craftsProfileService.getProfile(this.craftsmanId).subscribe({
+    this.craftsProfileService.getCraftsmanProfile(Number(this.craftsmanId)).subscribe({
       next: (profile) => {
-        this.craftsmanName.set(profile.name);
-        this.craftsmanAvatar.set(profile.avatarUrl || 'https://via.placeholder.com/40');
+        this.craftsmanName.set(profile.data.fullName);
+        this.craftsmanAvatar.set(profile.data.profileImageUrl || 'https://via.placeholder.com/40');
       },
       error: (error) => console.error('Error loading craftsman profile:', error)
     });
@@ -66,5 +57,10 @@ export class CraftsmanDashboard implements OnInit {
 
   isMainDashboard(): boolean {
     return this.router.url === `/craftsman-dashboard/${this.craftsmanId}`;
+  }
+
+  public logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

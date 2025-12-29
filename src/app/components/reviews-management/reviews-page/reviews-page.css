@@ -40,6 +40,54 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+.reviews-main-content {
+    max-width: 900px;
+    margin: auto;
+}
+@media (max-width: 900px) {
+    .review-card {
+        margin-bottom: 1rem;
+        padding: 1rem;
+    }
+    .reviews-main-content {
+        padding: 0.5rem;
+    }
+}
+@media (max-width: 600px) {
+    .review-card {
+        padding: 0.5rem;
+        font-size: 0.95rem;
+        margin-bottom: 0.7rem;
+    }
+    .reviews-main-content {
+        padding: 0.2rem;
+    }
+    .d-flex {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .review-card {
+        margin-bottom: 1rem;
+        padding: 1rem;
+    }
+    .reviews-main-content {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .review-card {
+        padding: 0.5rem;
+        font-size: 0.95rem;
+    }
+    .reviews-main-content {
+        padding: 0.2rem;
+    }
+}
+
 /* Reply Box */
 .reply-box {
     background-color: var(--bg-light);

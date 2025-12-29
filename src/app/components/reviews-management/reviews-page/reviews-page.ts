@@ -2,7 +2,10 @@ import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@ang
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReviewsService } from '../../../services/reviews.service';
-import { RatingDistribution, Review } from '../../../../model/review.model';
+import { RatingDistribution } from '../../../../model/review.model';
+import { Review } from '../../../services/reviews.service'
+import { AuthService } from '../../../services/auth.service';
+import { CraftsProfileService } from '../../../services/crafts-profile-service';
 
 
 @Component({
@@ -14,9 +17,11 @@ import { RatingDistribution, Review } from '../../../../model/review.model';
     imports: [FormsModule, CommonModule]
 })
 export class ReviewsPageComponent implements OnInit {
+    review = signal<Review[]>([]);
+    loading = signal<boolean>(true);
     private readonly reviewsService = inject(ReviewsService);
-  
-
+    private readonly authService = inject(AuthService);
+    private readonly craftsProfileService = inject(CraftsProfileService);
     protected readonly isLoading = signal(false);
     protected readonly currentPage = signal(1);
     protected readonly totalPages = signal(1);
@@ -47,36 +52,40 @@ export class ReviewsPageComponent implements OnInit {
     ];
 
     ngOnInit(): void {
-   
-       // this.loadRatingSummary();
-        this.loadResponsePerformance();
-        this.loadReviews();
+    const userId = this.authService.getCraftsmanId();
+    if (!userId) {
+      console.error('No logged-in craftsman found');
+      this.loading.set(false);
+      return;
     }
-
-    // loadRatingSummary(): void {
-    //     this.reviewsService.getRatingSummary().subscribe({
-    //         next: (response) => {
-    //             if (response.success && response.data) {
-    //                 this.averageRating.set(response.data.averageRating);
-    //                 this.totalReviews.set(response.data.totalReviews);
-    //                 this.ratingDistribution.set(response.data.distribution);
-    //             }
-    //         },
-    //         error: (error) => console.error('Error loading rating summary:', error)
-    //     });
-    // }
-
-    loadResponsePerformance(): void {
-        this.reviewsService.getResponsePerformance().subscribe({
-            next: (response) => {
-                if (response.success && response.data) {
-                    this.responseRate.set(response.data.responseRate);
-                    this.avgResponseTime.set(response.data.averageResponseTime);
-                }
-            },
-            error: (error) => console.error('Error loading response performance:', error)
+    
+    // استخدام userId للحصول على craftsmanId الحقيقي
+    this.craftsProfileService.getCraftsmanId(userId-1).subscribe({
+      next: (craftsmanId) => {
+        console.log('Craftsman ID:', craftsmanId);
+        
+        // جلب التقييمات باستخدام craftsmanId الحقيقي
+        this.reviewsService.getReviewss(craftsmanId).subscribe({
+          next: (res) => {
+            console.log('Reviews received:', res);
+            this.review.set(res);
+            this.loading.set(false);
+          },
+          error: (err) => {
+            console.error('Error fetching reviews:', err);
+            this.loading.set(false);
+          }
         });
+      },
+      error: (err) => {
+        console.error('Error fetching craftsman ID:', err);
+        this.loading.set(false);
+      }
+    });
     }
+
+   
+
 
     getStars(rating: number): string {
         const full = '★'.repeat(rating);
@@ -84,10 +93,7 @@ export class ReviewsPageComponent implements OnInit {
         return full + (empty ? `<span class="text-secondary">${empty}</span>` : '');
     }
 
-    setActiveTab(tabId: string): void {
-        this.activeTab.set(tabId);
-        this.loadReviews();
-    }
+    
 
     startReply(reviewId: string): void {
         this.replyingToId.set(reviewId);
@@ -99,39 +105,9 @@ export class ReviewsPageComponent implements OnInit {
         this.replyContent.set('');
     }
 
-    submitReply(reviewId: string): void {
-        if (!this.replyContent().trim()) return;
+   
 
-        this.reviewsService.submitReply(reviewId, this.replyContent()).subscribe({
-            next: () => {
-                this.replyingToId.set(null);
-                this.replyContent.set('');
-                this.loadReviews();
-            }
-        });
-    }
-
-    loadReviews(): void {
-        this.isLoading.set(true);
-        this.reviewsService.getReviews(this.activeTab(), this.currentPage()).subscribe({
-            next: (response) => {
-                this.isLoading.set(false);
-                if (response.success && response.data) {
-                    this.reviews.set(response.data.reviews);
-                    this.totalPages.set(response.data.totalPages);
-                }
-            },
-            error: (error) => {
-                console.error('Error loading reviews:', error);
-                this.isLoading.set(false);
-            }
-        });
-    }
-
-    goToPage(page: number): void {
-        if (page >= 1 && page <= this.totalPages()) {
-            this.currentPage.set(page);
-            this.loadReviews();
-        }
-    }
+    
+        
+    
 }

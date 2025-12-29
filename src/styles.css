@@ -20,6 +20,26 @@ body {
   background-color: var(--bg-light);
 }
 
+@media (max-width: 768px) {
+  body {
+    font-size: 1rem;
+  }
+  .container, .form-card, .content-card {
+    padding: 0.5rem !important;
+    margin: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 0.95rem;
+  }
+  .container, .form-card, .content-card {
+    padding: 0.2rem !important;
+    margin: 0 !important;
+  }
+}
+
 /* Primary Color Utilities */
 .text-primary-custom {
   color: var(--primary) !important;

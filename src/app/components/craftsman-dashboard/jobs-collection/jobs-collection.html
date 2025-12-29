@@ -1,32 +1,26 @@
-<div class="container" *ngIf="!loading">
-  <h3 class="mb-4">معرض الأعمال</h3>
+<div class="jobs-collection p-4">
+  <h2 class="fw-bold mb-4">معرض الأعمال</h2>
 
-  <div class="row g-4">
-    <div class="col-md-4" *ngFor="let job of jobs">
-      <div class="card h-100 shadow-sm">
-        <img
-          [src]="job.imageUrl"
-          class="card-img-top"
-          alt="work image"
-        />
+  <div *ngIf="loadingState()" class="text-center">
+    <p>جارٍ التحميل...</p>
+  </div>
 
+  <div class="row g-3" *ngIf="!loadingState() && gallery().length > 0">
+    <div class="col-md-4" *ngFor="let item of gallery()">
+      <div class="card h-100">
+        <img 
+          *ngIf="item.mediaType === 'Image'" 
+          [src]="item.mediaUrl" 
+          class="card-img-top" 
+          [alt]="item.title">
         <div class="card-body">
-          <h5 class="card-title">{{ job.title }}</h5>
-          <p class="card-text text-muted">
-            {{ job.description }}
-          </p>
-        </div>
-
-        <div class="card-footer text-muted small">
-          {{ job.createdAt | date:'mediumDate' }}
+          <h5 class="card-title">{{ item.title }}</h5>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div *ngIf="loading">جاري التحميل...</div>
-
-<div *ngIf="!loading && jobs.length === 0" class="text-center text-muted">
-  لا يوجد أعمال بعد
+  <div *ngIf="!loadingState() && gallery().length === 0" class="text-center text-muted">
+    <p>لا توجد أعمال لعرضها بعد.</p>
+  </div>
 </div>

@@ -50,9 +50,9 @@ export const routes: Routes = [
       
     ]
   },
-  {path:'craftsman-dashboard',component:CraftsmanDashboard,
+  {path:'craftsman-dashboard/:id',component:CraftsmanDashboard,
     children: [
-      {path:'profile', loadComponent: () => import('./components/craftsman-dashboard/dashprofile/dashprofile').then(m => m.Dashprofile)},
+      {path:'profile/:id', loadComponent: () => import('./components/craftsman-dashboard/dashprofile/dashprofile').then(m => m.Dashprofile)},
       {path:'jobs-collection', loadComponent: () => import('./components/craftsman-dashboard/jobs-collection/jobs-collection').then(m => m.JobsCollection)},
       {path:'reviews', loadComponent: () => import('./components/reviews-management/reviews-page/reviews-page').then(m => m.ReviewsPageComponent)}
     ]
@@ -137,6 +137,7 @@ title: 'إصلاح أجهزة - غسالات وثلاجات'
     canActivate: [authGuard],
     data: { role: 'Craftsman' },
   }
+  
   // { path: '**', redirectTo: '' },
 
 ];

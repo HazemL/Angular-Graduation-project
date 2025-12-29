@@ -60,7 +60,7 @@ goToDashboard() {
       console.error('Craftsman has no userId', user);
       return;
     }
-    this.router.navigate(['/craftsman-dashboard', user.userId]);
+    this.router.navigate(['/craftsman-dashboard', user.userId - 1]);
   }
 }
 

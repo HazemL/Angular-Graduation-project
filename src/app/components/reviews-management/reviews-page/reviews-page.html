@@ -1,184 +1,39 @@
 <div class="reviews-main-content p-4">
-        <div class="row g-4">
-            <!-- Reviews Section -->
-            <div class="col-lg-8">
-                <h1 class="fs-2 fw-bold text-dark mb-4">التقييمات والمراجعات</h1>
 
-                <!-- Rating Summary -->
-                <div class="content-card p-4 mb-4">
-                    <div class="row align-items-center">
-                        <div class="col-auto text-center">
-                            <p class="display-4 fw-bold text-primary-custom mb-1">{{ averageRating() | number:'1.1-1' }}</p>
-                            <div class="text-warning mb-1">★★★★½</div>
-                            <p class="small text-secondary mb-0">من أصل {{ totalReviews() }} تقييم</p>
-                        </div>
-                        <div class="col">
-                            <div class="d-flex flex-column gap-2">
-                                @for (dist of ratingDistribution(); track dist.stars) {
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="small fw-medium" style="width: 50px;">{{ dist.stars }} ★</span>
-                                    <div class="rating-bar flex-grow-1">
-                                        <div class="h-100" [class]="dist.color" [style.width.%]="dist.percentage"></div>
-                                    </div>
-                                    <span class="small text-secondary" style="width: 40px;">{{ dist.percentage
-                                        }}%</span>
-                                </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <!-- Loading -->
+  <div *ngIf="loading()" class="text-center py-5">
+    <p>جاري تحميل التقييمات...</p>
+  </div>
 
-                <!-- Tabs -->
-                <ul class="nav nav-tabs-custom border-bottom mb-4" role="tablist">
-                    @for (tab of tabs; track tab.id) {
-                    <li class="nav-item" role="presentation">
-                        <button type="button" class="nav-link" [class.active]="activeTab() === tab.id"
-                            (click)="setActiveTab(tab.id)" [attr.aria-selected]="activeTab() === tab.id" role="tab">
-                            {{ tab.label }}
-                        </button>
-                    </li>
-                    }
-                </ul>
+  <!-- No Reviews -->
+  <div *ngIf="!loading() && review().length === 0" class="text-center py-5">
+    <p class="text-muted">لا توجد تقييمات حتى الآن</p>
+  </div>
 
-                <!-- Reviews List -->
-                <div class="d-flex flex-column gap-4">
-                    @for (review of reviews(); track review.id) {
-                    <article class="review-card p-4">
-                        <div class="d-flex gap-3">
-                            <div class="rounded-circle flex-shrink-0"
-                                [style.background-image]="'url(' + review.customerImage + ')'"
-                                style="width: 48px; height: 48px; background-size: cover; background-position: center;"
-                                role="img" [attr.aria-label]="'صورة ' + review.customerName">
-                            </div>
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <div>
-                                        <p class="fw-bold text-dark mb-0">{{ review.customerName }}</p>
-                                        <p class="small text-secondary mb-0">{{ review.createdAt }}</p>
-                                    </div>
-                                    <div class="text-warning" aria-label="تقييم {{ review.rating }} من 5">
-                                        @for (star of [1,2,3,4,5]; track star) {
-                                        <span [class.text-secondary]="star > review.rating">★</span>
-                                        }
-                                    </div>
-                                </div>
-                                <p class="text-dark small mb-3">{{ review.comment }}</p>
+  <!-- Reviews List -->
+  <div *ngIf="!loading() && review().length > 0" class="d-flex flex-column gap-3">
 
-                                <!-- Review Images -->
-                                @if (review.images && review.images.length > 0) {
-                                <div class="d-flex gap-2 mb-3">
-                                    @for (image of review.images; track image) {
-                                    <div class="rounded-3" [style.background-image]="'url(' + image + ')'"
-                                        style="width: 96px; height: 96px; background-size: cover; background-position: center;">
-                                    </div>
-                                    }
-                                </div>
-                                }
+    <h2 class="mb-3 fw-bold">التقييمات</h2>
 
-                                <!-- Existing Reply -->
-                                @if (review.reply) {
-                                <div class="reply-box p-3">
-                                    <p class="fw-bold text-dark small mb-0">ردك</p>
-                                    <p class="small text-secondary mb-1">{{ review.reply.createdAt }}</p>
-                                    <p class="text-dark small mb-0">{{ review.reply.content }}</p>
-                                </div>
-                                } @else if (replyingToId() === review.id) {
-                                <!-- Reply Form -->
-                                <div>
-                                    <textarea class="form-control mb-2" rows="3" placeholder="اكتب ردك هنا..."
-                                        [ngModel]="replyContent()" (ngModelChange)="replyContent.set($event)"
-                                        aria-label="كتابة الرد"></textarea>
-                                    <div class="d-flex gap-2">
-                                        <button type="button" class="btn btn-primary-custom btn-sm fw-bold"
-                                            (click)="submitReply(review.id)" [disabled]="!replyContent().trim()">
-                                            إرسال الرد
-                                        </button>
-                                        <button type="button" class="btn btn-light btn-sm fw-medium"
-                                            (click)="cancelReply()">
-                                            إلغاء
-                                        </button>
-                                    </div>
-                                </div>
-                                } @else {
-                                <!-- Add Reply Button -->
-                                <button type="button"
-                                    class="btn btn-sm fw-bold d-flex align-items-center gap-2 btn-reply"
-                                    (click)="startReply(review.id)">
-                                    <span class="material-symbols-outlined" style="font-size: 20px;">reply</span>
-                                    أضف ردك
-                                </button>
-                                }
-                            </div>
-                        </div>
-                    </article>
-                    }
-                </div>
+    <div *ngFor="let r of review()" class="review-card p-3 border rounded">
 
-                <!-- Pagination -->
-                <nav class="d-flex justify-content-center mt-4 pt-4 border-top" aria-label="صفحات التقييمات">
-                    <ul class="pagination mb-0">
-                        <li class="page-item" [class.disabled]="currentPage() === 1">
-                            <button type="button" class="page-link" (click)="goToPage(currentPage() - 1)"
-                                aria-label="الصفحة السابقة">
-                                <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
-                            </button>
-                        </li>
-                        @for (page of [1, 2, 3]; track page) {
-                        <li class="page-item" [class.active]="page === currentPage()">
-                            <button type="button" class="page-link" [class.bg-primary-custom]="page === currentPage()"
-                                [class.border-0]="page === currentPage()" (click)="goToPage(page)">
-                                {{ page }}
-                            </button>
-                        </li>
-                        }
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                        <li class="page-item">
-                            <button type="button" class="page-link" (click)="goToPage(totalPages())">{{ totalPages()
-                                }}</button>
-                        </li>
-                        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
-                            <button type="button" class="page-link" (click)="goToPage(currentPage() + 1)"
-                                aria-label="الصفحة التالية">
-                                <span class="material-symbols-outlined" style="font-size: 20px;">chevron_left</span>
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <!-- Right Sidebar -->
-            <div class="col-lg-4 d-none d-lg-block">
-                <div class="position-sticky d-flex flex-column gap-4" style="top: 32px;">
-                    <!-- Response Performance -->
-                    <div class="content-card p-4">
-                        <h3 class="fs-5 fw-bold text-dark mb-3">أداء الردود</h3>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="small text-secondary">معدل الرد</span>
-                            <span class="fs-5 fw-bold text-success">{{ responseRate() }}%</span>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <span class="small text-secondary">متوسط وقت الرد</span>
-                            <span class="fs-5 fw-bold text-dark">{{ avgResponseTime() }}</span>
-                        </div>
-                    </div>
-
-                    <!-- Tips Card -->
-                    <div class="content-card p-4">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                style="width: 40px; height: 40px; background-color: rgba(31, 137, 229, 0.1);">
-                                <span class="material-symbols-outlined text-primary-custom">lightbulb</span>
-                            </div>
-                            <h3 class="fs-5 fw-bold text-dark mb-0">نصائح للرد على التقييمات</h3>
-                        </div>
-                        <ul class="pe-4 mb-0 small text-secondary">
-                            @for (tip of tips; track tip; let isLast = $last) {
-                            <li [class.mb-2]="!isLast">{{ tip }}</li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-            </div>
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div>
+          <p class="fw-bold mb-0">{{ r.reviewerName }}</p>
+          <small *ngIf="r.isVerified" class="text-success">✔ تقييم موثّق</small>
         </div>
+
+        <!-- Stars -->
+        <div class="text-warning" [innerHTML]="getStars(r.stars)"></div>
+      </div>
+
+      <!-- Comment -->
+      <p class="mb-0 text-secondary">
+        {{ r.comment }}
+      </p>
+
+    </div>
+  </div>
+
 </div>

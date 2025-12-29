@@ -65,12 +65,12 @@
     </div>
 
     <nav class="d-flex flex-column gap-2">
-      <a class="d-flex align-items-center gap-2 px-3 py-2" [routerLink]="['/craftsman-dashboard']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <a class="d-flex align-items-center gap-2 px-3 py-2" [routerLink]="['/craftsman-dashboard', craftsmanId]" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
         <span class="material-symbols-outlined">dashboard</span> لوحة التحكم
       </a>
-      <a class="d-flex align-items-center gap-2 px-3 py-2" [routerLink]="['profile']" routerLinkActive="active">
+      <a class="d-flex align-items-center gap-2 px-3 py-2" [routerLink]="['profile', craftsmanId]" routerLinkActive="active">
         <span class="material-symbols-outlined" >person</span> الملف الشخصي
-      </a>
+      </a> 
       <a class="d-flex align-items-center gap-2 px-3 py-2" [routerLink]="['jobs-collection']" routerLinkActive="active">
         <span class="material-symbols-outlined">collections</span> معرض الأعمال
       </a>
@@ -80,16 +80,12 @@
         </div>
         <span class="badge bg-primary rounded-circle" *ngIf="totalReviews() > 0">{{ totalReviews() }}</span>
       </a>
-      <a class="d-flex align-items-center gap-2 px-3 py-2" href="#">
-        <span class="material-symbols-outlined">credit_card</span> الاشتراك
-      </a>
-      <a class="d-flex align-items-center gap-2 px-3 py-2" href="#">
-        <span class="material-symbols-outlined">settings</span> الإعدادات
-      </a>
+      
+      
     </nav>
   </div>
 
-  <a class="d-flex align-items-center gap-2 px-3 py-2 text-danger" href="#">
+  <a class="d-flex align-items-center gap-2 px-3 py-2 text-danger" href="#" (click)="logout()">
     <span class="material-symbols-outlined">logout</span> تسجيل الخروج
   </a>
 </aside>

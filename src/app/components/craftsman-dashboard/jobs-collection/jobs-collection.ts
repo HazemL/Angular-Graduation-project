@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Craftsjobs,job } from '../../../services/craftsjobs';
+import { Craftsjobs,GalleryItem } from '../../../services/craftsjobs';
 import { OnInit } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
+import { signal } from '@angular/core';
 
 
 @Component({
@@ -11,19 +13,32 @@ import { OnInit } from '@angular/core';
   styleUrl: './jobs-collection.css',
 })
 export class JobsCollection implements OnInit {
-jobs: job[] = [];
-loading: boolean = true;
-constructor(private craftsjobsService: Craftsjobs) {}
+jobs = signal<GalleryItem[]>([]);
+loading = signal<boolean>(true);
+constructor(private craftsjobsService: Craftsjobs,private authService: AuthService) {}
+craftsmanId: number | null = null;
 ngOnInit(): void {
-    this.craftsjobsService.getMyWorks().subscribe({
+  this.craftsmanId = this.authService.getCraftsmanId();
+  if (!this.craftsmanId) {
+      console.error('No logged-in craftsman found');
+      this.loading.set(false);
+      return;
+    }
+    this.craftsjobsService.getMyWorks(this.craftsmanId).subscribe({
       next: data => {
-        this.jobs = data;
-        this.loading = false;
+        this.jobs.set(data);
+        this.loading.set(false);
       },
       error: err => {
         console.error(err);
-        this.loading = false;
+        this.loading.set(false);
       }
     });
+  }
+  get gallery() {
+    return this.jobs;
+  }
+  get loadingState() {
+    return this.loading;
   }
 }

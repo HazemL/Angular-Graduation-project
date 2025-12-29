@@ -15,6 +15,42 @@ body {
   z-index: 1000;
 }
 
+@media (max-width: 900px) {
+  .sidebar {
+    width: 180px;
+  }
+  .main-content {
+    margin-right: 180px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    border-left: none;
+    border-bottom: 1px solid #dee2e6;
+    flex-direction: row;
+    padding: 0.5rem;
+    z-index: 1000;
+  }
+  .main-content {
+    margin-right: 0;
+    padding: 0.5rem;
+  }
+  .sidebar nav {
+    flex-direction: row !important;
+    gap: 0.5rem !important;
+    overflow-x: auto;
+  }
+  .sidebar a {
+    font-size: 0.95rem;
+    padding: 0.3rem 0.7rem;
+    white-space: nowrap;
+  }
+}
+
 .sidebar a {
   text-decoration: none;
   color: #333;

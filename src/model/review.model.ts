@@ -1,14 +1,4 @@
-export interface Review {
-    id: string;
-    customerName: string;
-    customerImage: string;
-    rating: number;
-    comment: string;
-    images?: string[];
-    createdAt: string;
-    reply?: ReviewReply;
-    isReplying?: boolean;
-}
+
 
 export interface ReviewReply {
     content: string;

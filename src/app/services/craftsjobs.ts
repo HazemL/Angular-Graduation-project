@@ -3,12 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { inject } from '@angular/core';
 import { environment } from '../../environments/environment';
-export interface job {
-  id: string;
+export interface GalleryItem {
+  id: number;
+  mediaUrl: string;
+  mediaType: 'Image' | 'Video';
   title: string;
-  description: string;
-  imageUrl: string;
-  createdAt: string;
 }
 
 @Injectable({
@@ -18,11 +17,11 @@ export class Craftsjobs {
    private http = inject(HttpClient);
 
 
-  private baseUrl = `${environment.apiUrl}/api/crafts-jobs`;
+  private baseUrl = `${environment.apiUrl}/api/craftsmen`;
 
 
-  getMyWorks(): Observable<job[]> {
-    return this.http.get<job[]>(`${this.baseUrl}/my`);
+  getMyWorks(id:number): Observable<GalleryItem[]> {
+    return this.http.get<GalleryItem[]>(`${this.baseUrl}/${id}/gallery`);
   
 }
 }

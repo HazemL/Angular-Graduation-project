@@ -61,6 +61,15 @@ export class AuthService {
         map(res => res.data)
       );
   }
+   getCraftsmanId(): number | null {
+   
+    if (!this.currentUser()) return null;
+
+    
+    return this.currentUser()?.role === 'Craftsman'
+      ? this.currentUser()?.userId || null
+      : null;
+  }
 
   logout() {
     localStorage.clear();

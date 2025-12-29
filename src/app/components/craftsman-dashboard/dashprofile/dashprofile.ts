@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CraftsProfileService, CraftsProfile } from '../../../services/crafts-profile-service';
+import { CraftsProfileService, CraftsProfile,Profession } from '../../../services/crafts-profile-service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-dashprofile',
@@ -12,13 +13,18 @@ import { CraftsProfileService, CraftsProfile } from '../../../services/crafts-pr
 export class Dashprofile implements OnInit {
   profile:CraftsProfile | null = null;
   loading: boolean = true;
-  craftsId='123';
-  constructor(private craftsProfileService: CraftsProfileService) {}
+  
+  profession: Profession | null = null;
+  professionName: string = '';
+  
+  constructor(private craftsProfileService: CraftsProfileService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.craftsProfileService.getProfile(this.craftsId).subscribe({
-      next: (data) => {
-        this.profile = data;
+     const craftsId = this.route.snapshot.paramMap.get('id') || '';
+    this.craftsProfileService.getCraftsmanProfile(Number(craftsId)).subscribe({
+      next: (res) => {
+        this.profile = res.data;
+       
         this.loading = false;
       },
       error: (err) => {
@@ -27,5 +33,15 @@ export class Dashprofile implements OnInit {
       }
     });
   }
+  loadProfessionName(professionId: number): void {
+  this.craftsProfileService.getProfessionById(professionId).subscribe({
+    next: (profession) => {
+      this.professionName = profession.arabicName; // الاسم العربي مباشرة
+    },
+    error: (err) => {
+      console.error('Error fetching profession', err);
+    }
+  });
+}
 
 }
