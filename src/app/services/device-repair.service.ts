@@ -1,6 +1,6 @@
 // src/services/device-repair.service.ts
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, forkJoin, map } from 'rxjs';
 import { DeviceRepair, DeviceRepairRegistration } from '../../model/device-repair.model';
@@ -25,6 +25,45 @@ export class DeviceRepairService {
   getDeviceRepairs(): Observable<DeviceRepair[]> {
     return forkJoin({
       craftsmen: this.http.get<ApiResponse<CraftsmanApi[]>>(`${this.apiUrl}/craftsmen`),
+      professions: this.http.get<ProfessionApi[]>(`${this.apiUrl}/professions`)
+    }).pipe(
+      map(({ craftsmen, professions }) => {
+        if (!craftsmen.success) {
+          throw new Error(craftsmen.message || 'Failed to fetch craftsmen');
+        }
+        return this.mapper.filterDeviceRepairs(craftsmen.data, professions);
+      })
+    );
+  }
+
+  /**
+   * Search device repair technicians with filters (governorate, city, profession)
+   * NEW METHOD - Use this for filtered searches
+   */
+  searchDeviceRepairsWithFilters(
+    governorateId?: number,
+    cityId?: number,
+    name?: string
+  ): Observable<DeviceRepair[]> {
+    let params = new HttpParams();
+    
+    if (governorateId) {
+      params = params.set('governorateId', governorateId.toString());
+    }
+    if (cityId) {
+      params = params.set('cityId', cityId.toString());
+    }
+    if (name) {
+      params = params.set('name', name);
+    }
+    // Add profession filter for device repair (professionId = 8)
+    params = params.set('professionId', '8');
+
+    return forkJoin({
+      craftsmen: this.http.get<ApiResponse<CraftsmanApi[]>>(
+        `${this.apiUrl}/craftsmen/search`,
+        { params }
+      ),
       professions: this.http.get<ProfessionApi[]>(`${this.apiUrl}/professions`)
     }).pipe(
       map(({ craftsmen, professions }) => {
@@ -80,7 +119,7 @@ export class DeviceRepairService {
   }
 
   /**
-   * Search device repair technicians by query
+   * Search device repair technicians by query (text search only)
    */
   searchDeviceRepairs(query: string): Observable<DeviceRepair[]> {
     return this.getDeviceRepairs().pipe(
@@ -93,6 +132,15 @@ export class DeviceRepairService {
         repair.brands?.some(b => b.toLowerCase().includes(query.toLowerCase())) ||
         repair.services?.some(s => s.toLowerCase().includes(query.toLowerCase()))
       ))
+    );
+  }
+
+  /**
+   * Get only verified device repair technicians
+   */
+  getVerifiedDeviceRepairs(): Observable<DeviceRepair[]> {
+    return this.getDeviceRepairs().pipe(
+      map(repairs => repairs.filter(r => r.isVerified))
     );
   }
 
@@ -112,6 +160,17 @@ export class DeviceRepairService {
     return this.getDeviceRepairs().pipe(
       map(repairs => repairs.filter(r => 
         r.deviceTypes?.some(d => d.toLowerCase().includes(deviceType.toLowerCase()))
+      ))
+    );
+  }
+
+  /**
+   * Filter by governorate
+   */
+  filterByGovernorate(governorate: string): Observable<DeviceRepair[]> {
+    return this.getDeviceRepairs().pipe(
+      map(repairs => repairs.filter(r => 
+        r.governorate?.toLowerCase() === governorate.toLowerCase()
       ))
     );
   }

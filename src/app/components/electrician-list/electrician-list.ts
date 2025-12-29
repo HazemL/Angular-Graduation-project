@@ -1,7 +1,7 @@
 // src/components/electrician/electrician-list.component.ts
 import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ElectricianService } from '../../services/electrician.service';
 import { Electrician } from '../../../model/electrician.model';
 
@@ -14,6 +14,7 @@ import { Electrician } from '../../../model/electrician.model';
 })
 export class ElectricianList implements OnInit {
   private readonly electricianService = inject(ElectricianService);
+  private readonly route = inject(ActivatedRoute);
   
   // All electricians from API
   private readonly allElectricians = signal<Electrician[]>([]);
@@ -26,6 +27,10 @@ export class ElectricianList implements OnInit {
   
   // Filter state
   readonly activeFilter = signal<'all' | 'verified' | 'top-rated'>('all');
+
+  // Store current filter params
+  private currentGovernorateId = signal<number | undefined>(undefined);
+  private currentCityId = signal<number | undefined>(undefined);
 
   // Filtered by search
   readonly filteredElectricians = computed(() => {
@@ -51,14 +56,28 @@ export class ElectricianList implements OnInit {
   );
 
   ngOnInit(): void {
-    this.loadElectricians();
+    // Read query params and load electricians with filters
+    this.route.queryParams.subscribe(params => {
+      const governorateId = params['governorateId'] ? +params['governorateId'] : undefined;
+      const cityId = params['cityId'] ? +params['cityId'] : undefined;
+      
+      this.currentGovernorateId.set(governorateId);
+      this.currentCityId.set(cityId);
+      
+      this.loadElectricians(governorateId, cityId);
+    });
   }
 
-  loadElectricians(): void {
+  loadElectricians(governorateId?: number, cityId?: number): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.electricianService.getElectricians().subscribe({
+    // Use search endpoint if filters are provided, otherwise get all
+    const request = (governorateId || cityId)
+      ? this.electricianService.searchElectriciansWithFilters(governorateId, cityId)
+      : this.electricianService.getElectricians();
+
+    request.subscribe({
       next: (data) => {
         this.allElectricians.set(data);
         this.electricians.set(data);
@@ -77,7 +96,7 @@ export class ElectricianList implements OnInit {
     this.searchQuery.set(input.value);
   }
 
-  // Filter methods
+  // Filter methods - maintain location filters
   showAll(): void {
     this.activeFilter.set('all');
     this.electricians.set(this.allElectricians());

@@ -1,7 +1,7 @@
 // src/components/gas-technician/gas-technician-list.component.ts
 import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { GasTechnicianService } from '../../services/gas-technician.service';
 import { GasTechnician } from '../../../model/gas-technician.model';
 
@@ -14,6 +14,7 @@ import { GasTechnician } from '../../../model/gas-technician.model';
 })
 export class GasTechnicianList implements OnInit {
   private readonly gasTechnicianService = inject(GasTechnicianService);
+  private readonly route = inject(ActivatedRoute);
   
   // All technicians from API
   private readonly allGasTechnicians = signal<GasTechnician[]>([]);
@@ -26,6 +27,10 @@ export class GasTechnicianList implements OnInit {
   
   // Filter state
   readonly activeFilter = signal<'all' | 'licensed' | 'emergency' | 'top-rated'>('all');
+
+  // Store current filter params
+  private currentGovernorateId = signal<number | undefined>(undefined);
+  private currentCityId = signal<number | undefined>(undefined);
 
   // Filtered by search
   readonly filteredGasTechnicians = computed(() => {
@@ -58,14 +63,28 @@ export class GasTechnicianList implements OnInit {
   );
 
   ngOnInit(): void {
-    this.loadGasTechnicians();
+    // Read query params and load gas technicians with filters
+    this.route.queryParams.subscribe(params => {
+      const governorateId = params['governorateId'] ? +params['governorateId'] : undefined;
+      const cityId = params['cityId'] ? +params['cityId'] : undefined;
+      
+      this.currentGovernorateId.set(governorateId);
+      this.currentCityId.set(cityId);
+      
+      this.loadGasTechnicians(governorateId, cityId);
+    });
   }
 
-  loadGasTechnicians(): void {
+  loadGasTechnicians(governorateId?: number, cityId?: number): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.gasTechnicianService.getGasTechnicians().subscribe({
+    // Use search endpoint if filters are provided, otherwise get all
+    const request = (governorateId || cityId)
+      ? this.gasTechnicianService.searchGasTechniciansWithFilters(governorateId, cityId)
+      : this.gasTechnicianService.getGasTechnicians();
+
+    request.subscribe({
       next: (data) => {
         this.allGasTechnicians.set(data);
         this.gasTechnicians.set(data);
@@ -84,7 +103,7 @@ export class GasTechnicianList implements OnInit {
     this.searchQuery.set(input.value);
   }
 
-  // Filter methods
+  // Filter methods - maintain location filters
   showAll(): void {
     this.activeFilter.set('all');
     this.gasTechnicians.set(this.allGasTechnicians());

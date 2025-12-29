@@ -1,6 +1,6 @@
 // src/services/gas-technician.service.ts
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, forkJoin, map } from 'rxjs';
 import { GasTechnician, GasTechnicianRegistration } from '../../model/gas-technician.model';
@@ -25,6 +25,45 @@ export class GasTechnicianService {
   getGasTechnicians(): Observable<GasTechnician[]> {
     return forkJoin({
       craftsmen: this.http.get<ApiResponse<CraftsmanApi[]>>(`${this.apiUrl}/craftsmen`),
+      professions: this.http.get<ProfessionApi[]>(`${this.apiUrl}/professions`)
+    }).pipe(
+      map(({ craftsmen, professions }) => {
+        if (!craftsmen.success) {
+          throw new Error(craftsmen.message || 'Failed to fetch craftsmen');
+        }
+        return this.mapper.filterGasTechnicians(craftsmen.data, professions);
+      })
+    );
+  }
+
+  /**
+   * Search gas technicians with filters (governorate, city, profession)
+   * NEW METHOD - Use this for filtered searches
+   */
+  searchGasTechniciansWithFilters(
+    governorateId?: number,
+    cityId?: number,
+    name?: string
+  ): Observable<GasTechnician[]> {
+    let params = new HttpParams();
+    
+    if (governorateId) {
+      params = params.set('governorateId', governorateId.toString());
+    }
+    if (cityId) {
+      params = params.set('cityId', cityId.toString());
+    }
+    if (name) {
+      params = params.set('name', name);
+    }
+    // Add profession filter for gas technicians (professionId = 7)
+    params = params.set('professionId', '7');
+
+    return forkJoin({
+      craftsmen: this.http.get<ApiResponse<CraftsmanApi[]>>(
+        `${this.apiUrl}/craftsmen/search`,
+        { params }
+      ),
       professions: this.http.get<ProfessionApi[]>(`${this.apiUrl}/professions`)
     }).pipe(
       map(({ craftsmen, professions }) => {
@@ -80,7 +119,7 @@ export class GasTechnicianService {
   }
 
   /**
-   * Search gas technicians by query
+   * Search gas technicians by query (text search only)
    */
   searchGasTechnicians(query: string): Observable<GasTechnician[]> {
     return this.getGasTechnicians().pipe(

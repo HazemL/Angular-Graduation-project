@@ -1,7 +1,7 @@
 // src/components/aluminum-technician/aluminum-technician-list.component.ts
 import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AluminumTechnicianService } from '../../services/aluminum-technician.service';
 import { AluminumTechnician } from '../../../model/aluminum-technician.model';
 
@@ -14,6 +14,7 @@ import { AluminumTechnician } from '../../../model/aluminum-technician.model';
 })
 export class AluminumTechnicianList implements OnInit {
   private readonly aluminumTechnicianService = inject(AluminumTechnicianService);
+  private readonly route = inject(ActivatedRoute);
   
   // All technicians from API
   private readonly allAluminumTechnicians = signal<AluminumTechnician[]>([]);
@@ -26,6 +27,10 @@ export class AluminumTechnicianList implements OnInit {
   
   // Filter state
   readonly activeFilter = signal<'all' | 'verified' | 'warranty' | 'top-rated'>('all');
+
+  // Store current filter params
+  private currentGovernorateId = signal<number | undefined>(undefined);
+  private currentCityId = signal<number | undefined>(undefined);
 
   // Filtered by search
   readonly filteredAluminumTechnicians = computed(() => {
@@ -57,14 +62,28 @@ export class AluminumTechnicianList implements OnInit {
   );
 
   ngOnInit(): void {
-    this.loadAluminumTechnicians();
+    // Read query params and load aluminum technicians with filters
+    this.route.queryParams.subscribe(params => {
+      const governorateId = params['governorateId'] ? +params['governorateId'] : undefined;
+      const cityId = params['cityId'] ? +params['cityId'] : undefined;
+      
+      this.currentGovernorateId.set(governorateId);
+      this.currentCityId.set(cityId);
+      
+      this.loadAluminumTechnicians(governorateId, cityId);
+    });
   }
 
-  loadAluminumTechnicians(): void {
+  loadAluminumTechnicians(governorateId?: number, cityId?: number): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.aluminumTechnicianService.getAluminumTechnicians().subscribe({
+    // Use search endpoint if filters are provided, otherwise get all
+    const request = (governorateId || cityId)
+      ? this.aluminumTechnicianService.searchAluminumTechniciansWithFilters(governorateId, cityId)
+      : this.aluminumTechnicianService.getAluminumTechnicians();
+
+    request.subscribe({
       next: (data) => {
         this.allAluminumTechnicians.set(data);
         this.aluminumTechnicians.set(data);
@@ -83,7 +102,7 @@ export class AluminumTechnicianList implements OnInit {
     this.searchQuery.set(input.value);
   }
 
-  // Filter methods
+  // Filter methods - maintain location filters
   showAll(): void {
     this.activeFilter.set('all');
     this.aluminumTechnicians.set(this.allAluminumTechnicians());

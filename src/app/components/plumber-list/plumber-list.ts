@@ -1,7 +1,7 @@
 // src/components/plumber/plumber-list.component.ts
 import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PlumberService } from '../../services/plumber.service';
 import { Plumber } from '../../../model/plumber.model';
 
@@ -15,6 +15,7 @@ import { Plumber } from '../../../model/plumber.model';
 })
 export class PlumberList implements OnInit {
   private readonly plumberService = inject(PlumberService);
+  private readonly route = inject(ActivatedRoute);
   
   // All plumbers from API
   private readonly allPlumbers = signal<Plumber[]>([]);
@@ -27,6 +28,10 @@ export class PlumberList implements OnInit {
   
   // Filter state
   readonly activeFilter = signal<'all' | 'verified' | 'top-rated'>('all');
+
+  // Store current filter params
+  private currentGovernorateId = signal<number | undefined>(undefined);
+  private currentCityId = signal<number | undefined>(undefined);
 
   // Filtered by search
   readonly filteredPlumbers = computed(() => {
@@ -52,14 +57,28 @@ export class PlumberList implements OnInit {
   );
 
   ngOnInit(): void {
-    this.loadPlumbers();
+    // Read query params and load plumbers with filters
+    this.route.queryParams.subscribe(params => {
+      const governorateId = params['governorateId'] ? +params['governorateId'] : undefined;
+      const cityId = params['cityId'] ? +params['cityId'] : undefined;
+      
+      this.currentGovernorateId.set(governorateId);
+      this.currentCityId.set(cityId);
+      
+      this.loadPlumbers(governorateId, cityId);
+    });
   }
 
-  loadPlumbers(): void {
+  loadPlumbers(governorateId?: number, cityId?: number): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.plumberService.getPlumbers().subscribe({
+    // Use search endpoint if filters are provided, otherwise get all
+    const request = (governorateId || cityId)
+      ? this.plumberService.searchPlumbersWithFilters(governorateId, cityId)
+      : this.plumberService.getPlumbers();
+
+    request.subscribe({
       next: (data) => {
         this.allPlumbers.set(data);
         this.plumbers.set(data);
@@ -78,7 +97,7 @@ export class PlumberList implements OnInit {
     this.searchQuery.set(input.value);
   }
 
-  // Filter methods
+  // Filter methods - maintain location filters
   showAll(): void {
     this.activeFilter.set('all');
     this.plumbers.set(this.allPlumbers());

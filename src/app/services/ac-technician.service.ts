@@ -1,6 +1,6 @@
 // src/services/ac-technician.service.ts
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, forkJoin, map } from 'rxjs';
 import { AcTechnician, AcTechnicianRegistration } from '../../model/ac-technician.model';
@@ -25,6 +25,45 @@ export class AcTechnicianService {
   getAcTechnicians(): Observable<AcTechnician[]> {
     return forkJoin({
       craftsmen: this.http.get<ApiResponse<CraftsmanApi[]>>(`${this.apiUrl}/craftsmen`),
+      professions: this.http.get<ProfessionApi[]>(`${this.apiUrl}/professions`)
+    }).pipe(
+      map(({ craftsmen, professions }) => {
+        if (!craftsmen.success) {
+          throw new Error(craftsmen.message || 'Failed to fetch craftsmen');
+        }
+        return this.mapper.filterAcTechnicians(craftsmen.data, professions);
+      })
+    );
+  }
+
+  /**
+   * Search AC technicians with filters (governorate, city, profession)
+   * NEW METHOD - Use this for filtered searches
+   */
+  searchAcTechniciansWithFilters(
+    governorateId?: number,
+    cityId?: number,
+    name?: string
+  ): Observable<AcTechnician[]> {
+    let params = new HttpParams();
+    
+    if (governorateId) {
+      params = params.set('governorateId', governorateId.toString());
+    }
+    if (cityId) {
+      params = params.set('cityId', cityId.toString());
+    }
+    if (name) {
+      params = params.set('name', name);
+    }
+    // Add profession filter for AC technicians (professionId = 4)
+    params = params.set('professionId', '4');
+
+    return forkJoin({
+      craftsmen: this.http.get<ApiResponse<CraftsmanApi[]>>(
+        `${this.apiUrl}/craftsmen/search`,
+        { params }
+      ),
       professions: this.http.get<ProfessionApi[]>(`${this.apiUrl}/professions`)
     }).pipe(
       map(({ craftsmen, professions }) => {
@@ -80,7 +119,7 @@ export class AcTechnicianService {
   }
 
   /**
-   * Search AC technicians by query
+   * Search AC technicians by query (text search only)
    */
   searchAcTechnicians(query: string): Observable<AcTechnician[]> {
     return this.getAcTechnicians().pipe(

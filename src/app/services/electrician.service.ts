@@ -1,6 +1,6 @@
 // src/services/electrician.service.ts
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, forkJoin, map } from 'rxjs';
 import { Electrician, ElectricianRegistration } from '../../model/electrician.model';
@@ -25,6 +25,45 @@ export class ElectricianService {
   getElectricians(): Observable<Electrician[]> {
     return forkJoin({
       craftsmen: this.http.get<ApiResponse<CraftsmanApi[]>>(`${this.apiUrl}/craftsmen`),
+      professions: this.http.get<ProfessionApi[]>(`${this.apiUrl}/professions`)
+    }).pipe(
+      map(({ craftsmen, professions }) => {
+        if (!craftsmen.success) {
+          throw new Error(craftsmen.message || 'Failed to fetch craftsmen');
+        }
+        return this.mapper.filterElectricians(craftsmen.data, professions);
+      })
+    );
+  }
+
+  /**
+   * Search electricians with filters (governorate, city, profession)
+   * NEW METHOD - Use this for filtered searches
+   */
+  searchElectriciansWithFilters(
+    governorateId?: number,
+    cityId?: number,
+    name?: string
+  ): Observable<Electrician[]> {
+    let params = new HttpParams();
+    
+    if (governorateId) {
+      params = params.set('governorateId', governorateId.toString());
+    }
+    if (cityId) {
+      params = params.set('cityId', cityId.toString());
+    }
+    if (name) {
+      params = params.set('name', name);
+    }
+    // Add profession filter for electricians (professionId = 2)
+    params = params.set('professionId', '2');
+
+    return forkJoin({
+      craftsmen: this.http.get<ApiResponse<CraftsmanApi[]>>(
+        `${this.apiUrl}/craftsmen/search`,
+        { params }
+      ),
       professions: this.http.get<ProfessionApi[]>(`${this.apiUrl}/professions`)
     }).pipe(
       map(({ craftsmen, professions }) => {
@@ -73,14 +112,14 @@ export class ElectricianService {
           throw new Error(response.message || 'Failed to register electrician');
         }
         return this.mapper.mapToElectrician(response.data, [
-          { id: 2, name: 'Electrician', arabicName: 'فني كهرباء', description: 'Electrical installation & repair' }
+          { id: 2, name: 'Electrician', arabicName: 'كهربائي', description: 'Electrical maintenance and wiring' }
         ]);
       })
     );
   }
 
   /**
-   * Search electricians by query
+   * Search electricians by query (text search only)
    */
   searchElectricians(query: string): Observable<Electrician[]> {
     return this.getElectricians().pipe(
@@ -110,6 +149,17 @@ export class ElectricianService {
     return this.getElectricians().pipe(
       map(electricians => electricians.filter(e => 
         e.certifications?.some(c => c.toLowerCase().includes(certification.toLowerCase()))
+      ))
+    );
+  }
+
+  /**
+   * Filter by governorate
+   */
+  filterByGovernorate(governorate: string): Observable<Electrician[]> {
+    return this.getElectricians().pipe(
+      map(electricians => electricians.filter(e => 
+        e.governorate?.toLowerCase() === governorate.toLowerCase()
       ))
     );
   }
