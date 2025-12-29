@@ -9,6 +9,8 @@ import { Plumber } from '../../model/plumber.model';
 import { AluminumTechnician } from '../../model/aluminum-technician.model'; 
 import { GasTechnician } from '../../model/gas-technician.model';
 
+import { DeviceRepair } from '../../model/device-repair.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -513,6 +515,118 @@ private generateLicenseAuthority(): string | undefined {
   ];
   const selected = authorities[Math.floor(Math.random() * authorities.length)];
   return selected || undefined;
+}
+// Add to mapper.service.ts after the gas technician methods
+
+/**
+ * Map API craftsman data to DeviceRepair model
+ */
+mapToDeviceRepair(craftsmanApi: CraftsmanApi, professions: ProfessionApi[]): DeviceRepair {
+  const profession = professions.find(p => p.id === craftsmanApi.professionId);
+  
+  return {
+    id: craftsmanApi.id,
+    name: craftsmanApi.fullName,
+    phone: craftsmanApi.phone,
+    email: this.generatePlaceholderEmail(craftsmanApi.userId),
+    address: `${craftsmanApi.cityName}, ${craftsmanApi.governorateName}`,
+    specialization: profession?.arabicName || 'غير محدد',
+    experience: craftsmanApi.experienceYears,
+    rating: this.generatePlaceholderRating(),
+    availability: craftsmanApi.isVerified,
+    governorate: craftsmanApi.governorateName,
+    city: craftsmanApi.cityName,
+    bio: craftsmanApi.bio,
+    minPrice: craftsmanApi.minPrice,
+    maxPrice: craftsmanApi.maxPrice,
+    isVerified: craftsmanApi.isVerified,
+    verificationDate: craftsmanApi.verificationDate,
+    deviceTypes: this.generateDeviceTypes(),
+    brands: this.generateDeviceBrands(),
+    services: this.generateDeviceServices(),
+    warranty: Math.random() > 0.3, // Random for now
+    warrantyPeriod: this.generateWarrantyPeriod(),
+    imageUrl: craftsmanApi.profileImageUrl || undefined
+  };
+}
+
+/**
+ * Filter device repair technicians from craftsmen list
+ */
+filterDeviceRepairs(craftsmen: CraftsmanApi[], professions: ProfessionApi[]): DeviceRepair[] {
+  const deviceRepairProfession = professions.find(p => p.arabicName === 'إصلاح أجهزة');
+  if (!deviceRepairProfession) return [];
+  
+  return craftsmen
+    .filter(c => c.professionId === deviceRepairProfession.id)
+    .map(c => this.mapToDeviceRepair(c, professions));
+}
+
+// Add these private helper methods
+private generateDeviceTypes(): string[] {
+  const allDevices = [
+    'غسالات ملابس',
+    'ثلاجات',
+    'ديب فريزر',
+    'غسالات أطباق',
+    'بوتاجازات',
+    'أفران كهربائية',
+    'ميكروويف',
+    'مكانس كهربائية',
+    'خلاطات',
+    'محضرات طعام'
+  ];
+  // Return random 3-5 device types
+  const count = Math.floor(Math.random() * 3) + 3;
+  return allDevices.sort(() => 0.5 - Math.random()).slice(0, count);
+}
+
+private generateDeviceBrands(): string[] {
+  const allBrands = [
+    'سامسونج',
+    'ال جي',
+    'بوش',
+    'سيمنس',
+    'ويرلبول',
+    'هوفر',
+    'إنديست',
+    'زانوسي',
+    'كريازي',
+    'شارب',
+    'توشيبا',
+    'باناسونيك'
+  ];
+  // Return random 4-6 brands
+  const count = Math.floor(Math.random() * 3) + 4;
+  return allBrands.sort(() => 0.5 - Math.random()).slice(0, count);
+}
+
+private generateDeviceServices(): string[] {
+  const allServices = [
+    'صيانة دورية',
+    'إصلاح أعطال',
+    'تغيير قطع غيار',
+    'صيانة منزلية',
+    'فحص شامل',
+    'تنظيف عميق',
+    'ضبط وبرمجة',
+    'استشارات فنية'
+  ];
+  // Return random 4-6 services
+  const count = Math.floor(Math.random() * 3) + 4;
+  return allServices.sort(() => 0.5 - Math.random()).slice(0, count);
+}
+
+private generateWarrantyPeriod(): string | undefined {
+  const periods = [
+    'شهر واحد',
+    '3 شهور',
+    '6 شهور',
+    'سنة',
+    'سنتين',
+    undefined
+  ];
+  return periods[Math.floor(Math.random() * periods.length)];
 }
 
 }

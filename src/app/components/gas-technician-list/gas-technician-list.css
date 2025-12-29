@@ -877,21 +877,132 @@
 }
 
 /* Spinner Colors - Orange/Dark */
-.gas-technician-showcase .custom-spinner .spinner-ring {
-  border-top-color: #ff6b35 !important;
-}
-
 .gas-technician-showcase .custom-spinner .spinner-ring:nth-child(2) {
-  border-top-color: #ff914d !important;
+border-top-color: #434343 !important;
 }
-
 .gas-technician-showcase .custom-spinner .spinner-ring:nth-child(3) {
-  border-top-color: #ffb380 !important;
+border-top-color: #f59e0b !important;
 }
-
-.gas-technician-showcase .custom-spinner  .spinner-icon {
-  color: #ff6b35 !important;
-}  
-.loading-text {
-  color: #ff6b35 !important;
+.gas-technician-showcase .custom-spinner .spinner-icon {
+color: #ff6b35 !important;
+}
+.gas-technician-showcase .loading-text {
+color: #ff6b35 !important;
+}
+/* Search Input Focus - Orange Accent */
+.gas-technician-showcase .search-input:focus {
+border-color: #ff6b35 !important;
+box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1) !important;
+}
+/* Active Filter Chip - Orange Gradient */
+.gas-technician-showcase .filter-chip.active {
+background: linear-gradient(135deg, #ff6b35, #434343) !important;
+}
+/* Results Text Strong - Orange Color */
+.gas-technician-showcase .results-text strong {
+color: #ff6b35 !important;
+}
+/* SVG Icons - Orange Accent */
+.gas-technician-showcase .carpenter-location svg {
+color: #ff6b35 !important;
+}
+.gas-technician-showcase .info-item svg {
+color: #ff6b35 !important;
+}
+.gas-technician-showcase .contact-item svg {
+color: #ff6b35 !important;
+}
+/* More Tag - Orange Background */
+.gas-technician-showcase .service-tag.more-tag {
+background: #ff6b35 !important;
+}
+/* Service Tag Hover - Orange Border */
+.gas-technician-showcase .service-tag:hover {
+border-color: #ff6b35 !important;
+color: #ff6b35 !important;
+}
+/* Special Badges for Gas Technicians */
+.badge-licensed {
+background: rgba(251, 191, 36, 0.95) !important;
+color: #1a1a1a !important;
+}
+.badge-emergency {
+background: rgba(239, 68, 68, 0.95) !important;
+color: white !important;
+animation: pulse-emergency 2s ease-in-out infinite;
+}
+@keyframes pulse-emergency {
+0%, 100% {
+box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+50% {
+box-shadow: 0 4px 20px rgba(239, 68, 68, 0.6);
+}
+}
+/* License Alert Box */
+.license-alert {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+padding: 0.75rem 1rem;
+background: rgba(251, 191, 36, 0.1);
+border: 2px solid rgba(251, 191, 36, 0.3);
+border-radius: 12px;
+color: #f59e0b;
+font-size: 0.875rem;
+font-weight: 600;
+margin-bottom: 1rem;
+}
+.license-alert svg {
+color: #f59e0b;
+flex-shrink: 0;
+}
+/* Safety Alert Styling */
+.gas-alert {
+background: rgba(255, 107, 53, 0.1);
+border: 2px solid rgba(255, 107, 53, 0.3);
+border-radius: 16px;
+padding: 1.25rem;
+}
+.gas-alert .alert-content {
+display: flex;
+align-items: start;
+gap: 1rem;
+}
+.gas-alert .alert-icon {
+color: #ff6b35;
+flex-shrink: 0;
+margin-top: 0.125rem;
+}
+.gas-alert .alert-text {
+flex: 1;
+}
+.gas-alert .alert-heading {
+font-size: 1rem;
+font-weight: 700;
+color: #ff6b35;
+margin-bottom: 0.5rem;
+}
+.gas-alert .alert-message {
+font-size: 0.875rem;
+color: #4a5568;
+margin: 0;
+line-height: 1.5;
+}
+/* Dark Card Theme for Gas Technicians */
+.gas-card {
+border: 1px solid rgba(255, 107, 53, 0.2);
+}
+.gas-card:hover {
+border-color: rgba(255, 107, 53, 0.4);
+box-shadow: 0 20px 60px rgba(255, 107, 53, 0.2);
+}
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+.gas-alert .alert-content {
+flex-direction: column;
+}
+.license-alert {
+font-size: 0.8125rem;
+}
 }
