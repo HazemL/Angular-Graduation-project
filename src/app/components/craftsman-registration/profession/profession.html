@@ -15,7 +15,7 @@
             <div class="d-flex align-items-center gap-2">
                 <button type="button" class="btn btn-primary-custom rounded-3 px-3 py-2 fw-bold small">تسجيل
                     الدخول</button>
-                   </div>
+            </div>
         </div>
     </header>
 
@@ -67,48 +67,6 @@
                         </div>
                         }
                     </div>
-
-                    <!-- Skills Selection -->
-                    @if (professionForm.controls.professionId.value) {
-                    <div>
-                        <label class="form-label fw-bold mb-3">المهارات <span class="text-danger">*</span></label>
-
-                        @if (isLoadingSkills()) {
-                        <div class="text-center py-3 text-secondary">
-                            <span class="spinner-border spinner-border-sm text-primary-custom" role="status"></span>
-                            <span class="ms-2">جاري تحميل المهارات...</span>
-                        </div>
-                        } @else {
-                        <div class="row g-2">
-                            @for (skill of availableSkills(); track skill) {
-                            <div class="col-6 col-md-4">
-                                <div class="form-check p-0">
-                                    <input type="checkbox" class="btn-check" [id]="'skill-' + skill"
-                                        [checked]="isSkillSelected(skill)" (change)="onSkillToggle(skill, $event)">
-                                    <label
-                                        class="btn btn-outline-secondary w-100 text-end d-flex justify-content-between align-items-center px-3"
-                                        [for]="'skill-' + skill" style="min-height: 45px;">
-                                        <span class="small">{{ skill }}</span>
-                                        @if (isSkillSelected(skill)) {
-                                        <i class="bi bi-check-lg text-primary-custom"></i>
-                                        }
-                                    </label>
-                                </div>
-                            </div>
-                            }
-                        </div>
-                        @if (availableSkills().length === 0) {
-                        <p class="text-secondary small fst-italic mt-2">لا توجد مهارات متاحة لهذه المهنة حالياً</p>
-                        }
-                        }
-
-                        @if (professionForm.controls.skills.invalid && professionForm.controls.skills.touched) {
-                        <div class="text-danger small mt-2">
-                            يرجى اختيار مهارة واحدة على الأقل
-                        </div>
-                        }
-                    </div>
-                    }
 
                     <!-- Years of Experience -->
                     <div class="form-floating">

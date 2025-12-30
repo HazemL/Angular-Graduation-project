@@ -20,8 +20,6 @@ export class Profession {
     private router = inject(Router);
 
     protected readonly isSubmitting = signal(false);
-    protected readonly availableSkills = signal<string[]>([]);
-    protected readonly isLoadingSkills = signal(false);
     protected readonly professions = signal<any[]>([]);
 
     protected readonly steps: RegistrationStep[] = [
@@ -36,10 +34,6 @@ export class Profession {
         }),
         professionName: new FormControl('', {
             nonNullable: true
-        }),
-        skills: new FormControl<string[]>([], {
-            nonNullable: true,
-            validators: [Validators.required, Validators.minLength(1)]
         }),
         yearsOfExperience: new FormControl<number | null>(null, {
             validators: [Validators.min(0), Validators.max(50)]
@@ -82,32 +76,6 @@ export class Profession {
             this.professionForm.controls.professionId.setValue(selectedId);
             this.professionForm.controls.professionName.setValue(selectedProfession.name);
         }
-
-        this.isLoadingSkills.set(true);
-        this.professionForm.controls.skills.setValue([]);
-        
-        // Mock skills - replace with actual API if available
-        // You can create an endpoint like: /api/professions/${selectedId}/skills
-        const mockSkills = ['إصلاح الأنابيب', 'تركيب المواسير', 'صيانة السباكة', 'كشف التسريبات'];
-        setTimeout(() => {
-            this.availableSkills.set(mockSkills);
-            this.isLoadingSkills.set(false);
-        }, 500);
-    }
-
-    onSkillToggle(skill: string, event: Event): void {
-        const isChecked = (event.target as HTMLInputElement).checked;
-        const currentSkills = this.professionForm.controls.skills.value;
-
-        if (isChecked) {
-            this.professionForm.controls.skills.setValue([...currentSkills, skill]);
-        } else {
-            this.professionForm.controls.skills.setValue(currentSkills.filter(s => s !== skill));
-        }
-    }
-
-    isSkillSelected(skill: string): boolean {
-        return this.professionForm.controls.skills.value.includes(skill);
     }
 
     onSubmit(): void {
@@ -121,7 +89,6 @@ export class Profession {
         this.registrationService.setProfessionData({
             professionId: formValue.professionId,
             professionName: formValue.professionName,
-            skills: formValue.skills,
             yearsOfExperience: formValue.yearsOfExperience,
             description: formValue.description
         });
